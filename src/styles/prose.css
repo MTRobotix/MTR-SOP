@@ -1,0 +1,205 @@
+/* Rendered SOP Markdown (doc page, editor preview, visual editor). */
+.prose {
+  max-width: var(--measure);
+  overflow-wrap: anywhere;
+}
+
+.prose > * + * {
+  margin-top: var(--space-4);
+}
+
+.prose h2 {
+  margin-top: var(--space-7);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-line);
+  font-size: var(--text-xl);
+}
+
+.prose h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.prose h3 {
+  margin-top: var(--space-6);
+  font-size: var(--text-lg);
+}
+
+.prose h4 {
+  margin-top: var(--space-5);
+  font-size: var(--text-base);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: var(--space-5);
+}
+
+.prose li + li {
+  margin-top: var(--space-1);
+}
+
+.prose li > ul,
+.prose li > ol {
+  margin-top: var(--space-1);
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 0.1em 0.35em;
+  border-radius: var(--radius-sm);
+  background: var(--color-code-bg);
+}
+
+.prose pre {
+  max-width: calc(100vw - 2 * var(--space-page-gutter));
+  overflow-x: auto;
+  padding: var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-code-bg);
+  line-height: 1.5;
+  overflow-wrap: normal;
+}
+
+.prose pre code {
+  padding: 0;
+  background: none;
+  font-size: var(--text-sm);
+}
+
+.prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.prose th,
+.prose td {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  background: var(--color-bg-soft);
+  font-weight: 500;
+}
+
+.prose blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--color-line-strong);
+  color: var(--color-text-muted);
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.prose kbd {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--color-line-strong);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.prose details {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+
+.prose summary {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Callouts: > [!NOTE] / [!WARNING] / [!TODO] */
+.prose .callout {
+  border-left: 0;
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  background: var(--color-accent-soft);
+}
+
+.prose .callout > * + * {
+  margin-top: var(--space-2);
+}
+
+.prose .callout-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.prose .callout-warning,
+.prose .callout-caution {
+  background: var(--color-danger-soft);
+}
+
+.prose .callout-warning .callout-label,
+.prose .callout-caution .callout-label {
+  color: var(--color-danger);
+}
+
+/* TODO shows unwritten content honestly (mtr-sop-ui §6). */
+.prose .callout-todo {
+  background: transparent;
+  border: 1px dashed var(--color-line-strong);
+}
+
+.prose .callout-todo .callout-label {
+  color: var(--color-text-muted);
+}
+
+/* highlight.js tokens */
+.hljs-keyword,
+.hljs-built_in,
+.hljs-selector-tag,
+.hljs-literal {
+  color: var(--syntax-keyword);
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition {
+  color: var(--syntax-string);
+}
+
+.hljs-number,
+.hljs-variable,
+.hljs-template-variable {
+  color: var(--syntax-number);
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-meta {
+  color: var(--syntax-comment);
+  font-style: italic;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-name,
+.hljs-type {
+  color: var(--syntax-title);
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-deletion {
+  color: var(--syntax-attr);
+}

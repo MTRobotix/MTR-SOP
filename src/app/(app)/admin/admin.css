@@ -1,0 +1,74 @@
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  padding: var(--space-5);
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3) var(--space-4);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table .tag {
+  margin-left: var(--space-2);
+}
+
+.inline-form {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.input-sm {
+  min-height: 2rem;
+  width: auto;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.review-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.diff {
+  overflow-x: auto;
+  padding: var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.diff span {
+  display: block;
+  white-space: pre-wrap;
+}
+
+.diff-add {
+  background: var(--color-accent-soft);
+}
+
+.diff-del {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.diff-same {
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 900px) {
+  .admin-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,167 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: var(--space-3) var(--space-4);
+  pointer-events: none;
+}
+
+.header-inner {
+  pointer-events: auto;
+  position: relative;
+  max-width: var(--shell);
+  min-height: 3.3rem;
+  margin: 0 auto;
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border-radius: var(--radius-pill);
+}
+
+.brand {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand-sop {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.header-nav {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.header-nav a {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  color: var(--color-nav-text);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.header-nav a:hover {
+  background: var(--color-hover);
+}
+
+.header-nav a[aria-current="page"] {
+  color: var(--color-text);
+  background: var(--color-hover);
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.header-actions .btn {
+  border-color: transparent;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-menu > summary {
+  list-style: none;
+}
+
+.user-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.user-menu-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--space-2));
+  min-width: 15rem;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  animation: fade-in var(--dur) var(--ease) both;
+}
+
+.user-menu-panel hr {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  margin: var(--space-2) 0;
+}
+
+.user-menu-name {
+  font-weight: 500;
+}
+
+.user-menu-panel a,
+.user-menu-panel .linklike {
+  display: block;
+  width: 100%;
+  padding: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.user-menu-panel a:hover,
+.user-menu-panel .linklike:hover {
+  background: var(--color-hover);
+}
+
+.site-footer {
+  padding: var(--space-6) 0;
+  border-top: 1px solid var(--color-line);
+  color: var(--color-text-faint);
+  font-size: var(--text-xs);
+}
+
+@media (max-width: 720px) {
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  .header-nav {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + var(--space-2));
+    flex-direction: column;
+    padding: var(--space-2);
+    border-radius: var(--radius-lg);
+    background: var(--glass-fallback);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-float);
+  }
+
+  .header-nav.is-open {
+    display: flex;
+    animation: fade-in var(--dur) var(--ease) both;
+  }
+
+  .header-nav a {
+    min-height: var(--hit);
+    display: flex;
+    align-items: center;
+  }
+}

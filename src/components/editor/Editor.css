@@ -1,0 +1,230 @@
+.editor-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18rem;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.editor-page h1 {
+  font-size: var(--text-xl);
+  font-weight: 500;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3) var(--space-4);
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  border: 0;
+}
+
+.meta-grid .span-2 {
+  grid-column: 1 / -1;
+}
+
+.meta-grid .hint {
+  margin-top: var(--space-1);
+}
+
+.check {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.check input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--color-accent);
+}
+
+.mode-tabs {
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  margin-bottom: var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-soft);
+}
+
+.mode-tab {
+  min-height: 2.1rem;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.mode-tab[aria-selected="true"] {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
+}
+
+.mode-tab:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.editor-surface {
+  margin-top: var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  overflow: clip;
+}
+
+.editor-loading {
+  padding: var(--space-6);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.toolbar {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-2));
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  margin: var(--space-2);
+  padding: var(--space-1);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  /* Solid, not glass: code scrolling underneath must not show through (mtr-sop-ui §3). */
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.tb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.tb-btn:hover {
+  background: var(--color-hover);
+}
+
+.tb-btn[aria-pressed="true"] {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.tb-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tb-sep {
+  width: 1px;
+  height: 1.2rem;
+  margin: 0 var(--space-1);
+  background: var(--color-line-strong);
+}
+
+.visual-surface {
+  min-height: 28rem;
+  max-width: none;
+  padding: var(--space-4) var(--space-5) var(--space-6);
+  outline: none;
+}
+
+.visual-surface table {
+  display: table;
+  width: 100%;
+}
+
+.visual-surface .selectedCell {
+  background: var(--color-accent-soft);
+}
+
+.preview {
+  min-height: 28rem;
+  max-width: none;
+  padding: var(--space-5);
+}
+
+.editor-side {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-4));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.side-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.side-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.issues {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-height: 20rem;
+  overflow-y: auto;
+  font-size: var(--text-xs);
+  color: var(--color-danger);
+}
+
+.issues li {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.issues svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.side-card .hint svg {
+  vertical-align: -2px;
+  color: var(--color-ok);
+}
+
+.save-btn {
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .editor-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .editor-side {
+    position: static;
+  }
+
+  .meta-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
