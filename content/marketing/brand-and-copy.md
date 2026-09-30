@@ -10,16 +10,16 @@ updated: 2026-09-27
 
 ## Names
 
-| Use           | Never                              |
-| ------------- | ---------------------------------- |
-| MTR           | MTRobotics (retired name)          |
-| BoltEye       | Bolt Eye, Bolteye, BOLTEYE         |
-| SensQ         | Sensq, SENSQ, Sens-Q               |
-| the robot arm | Any product name — it has none yet |
+| Use           | Never                               |
+| ------------- | ----------------------------------- |
+| MTRobotics    | MTR (retired name)                  |
+| MTR-Q         | BoltEye, Bolt Eye, Bolteye, BOLTEYE |
+| SensQ         | Sensq, SENSQ, Sens-Q                |
+| the robot arm | Any product name — it has none yet  |
 
 ## Voice
 
-- MTR is an engineer-led studio. Write first-person plural ("we build") or founder voice ("I build").
+- MTRobotics is an engineer-led studio. Write first-person plural ("we build") or founder voice ("I build").
 - Plain words. Short sentences. Numbers with units.
 - No hype words: "revolutionary", "cutting-edge", "world-class", "seamless".
 

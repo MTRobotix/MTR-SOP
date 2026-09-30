@@ -41,14 +41,14 @@ Expected: no errors; output in `dist/`. Deploys to Vercel as a static site (`out
 
 ## Where things live
 
-| Change                                    | File                                        |
-| ----------------------------------------- | ------------------------------------------- |
-| Home, about, contact copy (EN + VI)       | `src/data/site.ts`                          |
-| Product pages (BoltEye, SensQ, robot arm) | `src/data/products.ts`                      |
-| Nav labels (EN + VI)                      | `src/data/i18n.ts`                          |
-| Page routes                               | `src/pages/*.astro`, `src/pages/vi/*.astro` |
-| Mobile nav, scroll reveal, header glass   | `src/scripts/site.ts`                       |
-| Colours, spacing, fonts                   | `src/styles/tokens.css`                     |
+| Change                                  | File                                        |
+| --------------------------------------- | ------------------------------------------- |
+| Home, about, contact copy (EN + VI)     | `src/data/site.ts`                          |
+| Product pages (MTR-Q, SensQ, robot arm) | `src/data/products.ts`                      |
+| Nav labels (EN + VI)                    | `src/data/i18n.ts`                          |
+| Page routes                             | `src/pages/*.astro`, `src/pages/vi/*.astro` |
+| Mobile nav, scroll reveal, header glass | `src/scripts/site.ts`                       |
+| Colours, spacing, fonts                 | `src/styles/tokens.css`                     |
 
 ## Rules that fail review
 

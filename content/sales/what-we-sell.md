@@ -12,11 +12,11 @@ updated: 2026-09-27
 
 | Product   | Status           | Sell?          |
 | --------- | ---------------- | -------------- |
-| BoltEye   | Live             | Yes            |
+| MTR-Q     | Live             | Yes            |
 | SensQ     | Live             | Yes            |
 | Robot arm | Work in progress | No — demo only |
 
-## BoltEye
+## MTR-Q
 
 Automated inspection for live production lines. Conveyor with custom optical hardware and real-time vision. Detects surface defects down to ≤ 2 mm with end-to-end latency under 100 ms.
 

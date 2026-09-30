@@ -12,13 +12,13 @@ updated: 2026-09-27
 
 | Product   | Status           | One-liner                                              |
 | --------- | ---------------- | ------------------------------------------------------ |
-| BoltEye   | Live             | Automated inspection system for live production lines. |
+| MTR-Q     | Live             | Automated inspection system for live production lines. |
 | SensQ     | Live             | Compact AMR platform for warehouse and SME automation. |
 | Robot arm | Work in progress | 6-DOF robotic arm, in development for pick-and-place.  |
 
 ## Longer descriptions
 
-- **BoltEye**: A custom optical inspection rig with a real-time computer vision pipeline, built to catch surface defects at line speed.
+- **MTR-Q**: A custom optical inspection rig with a real-time computer vision pipeline, built to catch surface defects at line speed.
 - **SensQ**: A compact autonomous mobile robot for small and medium manufacturers who want warehouse automation without the cost of a full industrial fleet.
 - **Robot arm**: A six-axis arm with custom kinematics and optimization-based path planning, being extended into a pick-and-place demo.
 
@@ -26,8 +26,8 @@ updated: 2026-09-27
 
 | Product | Claim                                        |
 | ------- | -------------------------------------------- |
-| BoltEye | Surface defects down to ≤ 2 mm               |
-| BoltEye | End-to-end latency under 100 ms              |
+| MTR-Q   | Surface defects down to ≤ 2 mm               |
+| MTR-Q   | End-to-end latency under 100 ms              |
 | SensQ   | Nav2 + SLAM Toolbox mapping and localization |
 | SensQ   | AprilTag docking to its charging station     |
 

@@ -61,6 +61,6 @@ Default run skips `model` and `hardware` tests.
 Tag `vXX.XX.XX`. Label `[major]`, `[minor]` or `[patch]` (default `[patch]`).
 
 > [!TODO]
-> Confirm the owner of MTR Vision and whether it is the BoltEye software. Owner: Thong Huynh.
+> Confirm the owner of MTR Vision and whether it is the MTR-Q software. Owner: Thong Huynh.
 
 Source: `~/MTR/MTR-vision/AI_CORE/README.md`, `~/MTR/MTR-vision/AI_CORE/CLAUDE.md`, `~/MTR/MTR-vision/AI_CORE/V3/README.md`

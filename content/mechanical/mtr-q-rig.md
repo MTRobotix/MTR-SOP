@@ -1,7 +1,7 @@
 ---
-title: BoltEye inspection rig
+title: MTR-Q inspection rig
 summary: What the rig is, its published specs, and what is still undocumented.
-tags: [bolteye, inspection, hardware]
+tags: [mtr-q, inspection, hardware]
 owner: Thong Huynh
 featured: true
 order: 20
