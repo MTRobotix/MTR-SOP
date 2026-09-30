@@ -14,10 +14,12 @@ function cfg() {
   return { token, repo, branch: process.env.GITHUB_BRANCH || "main" };
 }
 
-class GitHubError extends Error {
+export class GitHubError extends Error {
   constructor(
     public status: number,
     message: string,
+    /** GitHub's own short reason, safe to show to admins (never contains the token). */
+    public reason = "",
   ) {
     super(message);
   }
@@ -36,7 +38,16 @@ async function gh<T>(method: string, route: string, body?: unknown): Promise<T> 
     body: body ? JSON.stringify(body) : undefined,
     cache: "no-store",
   });
-  if (!res.ok) throw new GitHubError(res.status, `GitHub ${method} ${route} failed: ${res.status} ${await res.text()}`);
+  if (!res.ok) {
+    const text = await res.text();
+    let reason = text.slice(0, 200);
+    try {
+      reason = (JSON.parse(text) as { message?: string }).message ?? reason;
+    } catch {
+      /* not JSON: keep raw text */
+    }
+    throw new GitHubError(res.status, `GitHub ${method} ${route} failed: ${res.status} ${text}`, reason);
+  }
   return (res.status === 204 ? undefined : await res.json()) as T;
 }
 

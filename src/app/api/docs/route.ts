@@ -4,6 +4,22 @@ import { hasRole } from "@/lib/auth/roles";
 import { isValidId, getDepartment } from "@/lib/content/repo";
 import { prepareDoc } from "@/lib/content/save";
 import { store, ConflictError } from "@/lib/store";
+import { GitHubError } from "@/lib/store/github";
+
+/** Turns a failed GitHub call into a message that says what to fix. */
+function explain(e: unknown): string | null {
+  if (e instanceof GitHubError) {
+    const hint =
+      e.status === 401
+        ? "GITHUB_TOKEN is invalid or expired. Create a new one and update it in Vercel."
+        : e.status === 403 || e.status === 404
+          ? `GITHUB_TOKEN cannot write to ${process.env.GITHUB_REPO}. Give it Contents and Pull requests: Read and write.`
+          : "Check the GitHub settings in Vercel.";
+    return `GitHub refused the save (${e.status}: ${e.reason}). ${hint}`;
+  }
+  if (e instanceof Error && /GITHUB_(TOKEN|REPO)/.test(e.message)) return e.message;
+  return null;
+}
 
 type Body = { dept?: string; slug?: string; content?: string; baseSha?: string | null; message?: string };
 
@@ -38,7 +54,7 @@ export async function POST(req: Request) {
   } catch (e) {
     if (e instanceof ConflictError) return NextResponse.json({ error: e.message, conflict: true }, { status: 409 });
     console.error(e);
-    return NextResponse.json({ error: "Save failed. Try again; if it repeats, tell an admin." }, { status: 500 });
+    return NextResponse.json({ error: explain(e) ?? "Save failed. Try again; if it repeats, tell an admin." }, { status: 500 });
   }
 }
 
@@ -53,6 +69,6 @@ export async function DELETE(req: Request) {
   } catch (e) {
     if (e instanceof ConflictError) return NextResponse.json({ error: e.message, conflict: true }, { status: 409 });
     console.error(e);
-    return NextResponse.json({ error: "Delete failed." }, { status: 500 });
+    return NextResponse.json({ error: explain(e) ?? "Delete failed." }, { status: 500 });
   }
 }
