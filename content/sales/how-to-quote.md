@@ -10,13 +10,13 @@ updated: 2026-09-27
 
 ## Before you quote
 
-1. Confirm the product is sellable: BoltEye or SensQ. See [What we can sell](/d/sales/what-we-sell).
+1. Confirm the product is sellable: MTR-Q or SensQ. See [What we can sell](/d/sales/what-we-sell).
 2. Collect the requirements in [Scope checklist](#scope-checklist).
 3. Get an engineering review of scope. Owner: Thong Huynh.
 
 ## Scope checklist
 
-| Item                   | BoltEye                           | SensQ                            |
+| Item                   | MTR-Q                             | SensQ                            |
 | ---------------------- | --------------------------------- | -------------------------------- |
 | Site and contact       | Required                          | Required                         |
 | Parts or items handled | Part type, size, defect types     | Load type, weight                |
