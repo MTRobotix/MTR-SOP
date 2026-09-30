@@ -4,6 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { blobSha } from "../content/sha";
+import { isValidAttachmentPath } from "../content/attachments";
 import { ConflictError, type ContentStore, type Proposal, type ProposalDetail, type SaveInput } from "./types";
 
 const ROOT = process.cwd();
@@ -42,6 +43,15 @@ export const localStore: ContentStore = {
   async read(dept, slug) {
     const content = await readFile(file(dept, slug));
     return content === null ? null : { content, sha: blobSha(content) };
+  },
+
+  async readBinary(relPath) {
+    if (!isValidAttachmentPath(relPath)) return null;
+    try {
+      return await fs.readFile(path.join(ROOT, relPath));
+    } catch {
+      return null;
+    }
   },
 
   async commit(input: SaveInput) {

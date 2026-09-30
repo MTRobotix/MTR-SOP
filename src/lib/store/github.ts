@@ -1,5 +1,6 @@
 // Production store: every admin save is a commit on main; every editor save is a pull request.
 // Uses the GitHub REST API with a fine-grained token scoped to this repo (Contents + Pull requests RW).
+import { isValidAttachmentPath } from "../content/attachments";
 import { ConflictError, type ContentStore, type Proposal, type ProposalDetail, type SaveInput } from "./types";
 
 const API = "https://api.github.com";
@@ -102,6 +103,20 @@ export const githubStore: ContentStore = {
 
   async read(dept, slug) {
     return readAt(filePath(dept, slug), cfg().branch);
+  },
+
+  async readBinary(relPath) {
+    if (!isValidAttachmentPath(relPath)) return null;
+    try {
+      // The Contents API only inlines base64 for files under ~1MB, which every attachment must
+      // stay under anyway (see the content skill's embed size note).
+      const r = await gh<{ content: string; encoding: string }>("GET", `/contents/${relPath}?ref=${encodeURIComponent(cfg().branch)}`);
+      if (r.encoding !== "base64") return null;
+      return Buffer.from(r.content, "base64");
+    } catch (e) {
+      if (e instanceof GitHubError && e.status === 404) return null;
+      throw e;
+    }
   },
 
   async commit(input) {

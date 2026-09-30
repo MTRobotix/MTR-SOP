@@ -33,6 +33,8 @@ export interface ContentStore {
   mode: "local" | "github";
   /** Latest version on main (not the deployed copy, which can lag behind a redeploy). */
   read(dept: string, slug: string): Promise<{ content: string; sha: string } | null>;
+  /** Raw bytes of any repo file by its exact relative path (e.g. an embedded attachment). Not for `.md` docs. */
+  readBinary(relPath: string): Promise<Buffer | null>;
   commit(input: SaveInput): Promise<void>;
   propose(input: SaveInput): Promise<{ id: string; url?: string }>;
   remove(dept: string, slug: string, baseSha: string, user: User): Promise<void>;

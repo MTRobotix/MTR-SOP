@@ -65,7 +65,8 @@ every save; outside the app run `npm run content:format`. Do not fight it by han
 - No `#` H1 — the title comes from frontmatter. Body starts with `##`. Heading levels 2–4 only.
 - `##` heading text is unique within the file (it becomes the anchor id).
 - Steps: ordered list `1.` `2.` `3.`. Unordered: `-`. Bold `**x**`. Italic `_x_`.
-- Code: fenced with ```` ``` ```` and a language tag (`bash`, `python`, `ts`, `sql`, `yaml`, `text`).
+- Code: fenced with ```` ``` ```` and a language tag (`bash`, `python`, `ts`, `sql`, `yaml`, `text`,
+  `embed-xlsx` — see below).
   Inline code for every path, command, env var, port, topic or file name.
 - Tables: GitHub-flavoured Markdown tables.
 - Callouts: `> [!NOTE]`, `> [!WARNING]`, `> [!TODO]` (first line of a blockquote).
@@ -73,6 +74,34 @@ every save; outside the app run `npm run content:format`. Do not fight it by han
 - No hard line wraps inside paragraphs. One blank line between blocks. LF line endings. File ends
   with one newline.
 - Images: not supported yet. Link to the file in its repo instead.
+
+### Embedding a spreadsheet
+
+An ` ```embed-xlsx ` fenced block renders one sheet of a committed `.xlsx`/`.xls` file as a normal
+table — the same HTML a hand-written Markdown table produces, so it needs nothing added to the
+HTML allowlist. Implementation: `src/lib/content/attachments.ts` (parsing + path rule) and
+`remarkEmbedXlsx` in `src/lib/content/render.ts` (the render step).
+
+```embed-xlsx
+path: content/<dept>/attachments/<file>.xlsx
+sheet: Sheet1          # optional, defaults to the first sheet
+title: Shown above the table   # optional
+skip_rows: 0            # optional, rows to skip before the header row (default 0)
+max_rows: 500           # optional, hard cap 500
+```
+
+Rules:
+
+- `path` must be exactly `content/<dept>/attachments/<file>.xlsx` — nothing else validates. This
+  is the only place a binary file may live in this repo.
+- The first row after `skip_rows` becomes the table header. Get this right by counting rows in
+  the actual file — a title or note row at the top of a sheet needs `skip_rows` to skip past it.
+- Formulas are shown as their last-saved value, not re-evaluated. Re-open and re-save the
+  spreadsheet in Excel/LibreOffice/Google Sheets after editing so the cached values are current.
+- A missing file, unknown sheet, or bad path renders as a plain "Could not embed…" line instead
+  of failing the page. Wrong output here is a silent authoring mistake, not a build error — check
+  the rendered page after editing an embed.
+- Word/PDF embedding does not exist. Link to the file in its repo instead, same as images.
 
 ### Visual editor safety
 

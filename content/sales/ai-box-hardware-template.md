@@ -75,12 +75,17 @@ The priced version fills every row above with a real brand, model number, and ap
 market price (sourced by web search, single-unit USD, before shipping/duty/VAT — reverify with
 a distributor before quoting a customer).
 
-`content/sales/attachments/mtr-q-ai-box-bom.xlsx`
+```embed-xlsx
+path: content/sales/attachments/mtr-q-ai-box-bom.xlsx
+title: MTR-Q AI_BOX — priced bill of materials
+skip_rows: 3
+max_rows: 46
+```
 
 > [!TODO]
-> This app has no attachment or embed support yet — same gap as images (see
-> [Edit this SOP](/d/software/edit-this-sop)). The xlsx above is committed to git as a plain
-> file, not rendered inside the SOP page. Open it directly in Excel/Sheets. Owner: Thong Huynh.
+> Formulas render as their last-saved value, not live. If you edit the spreadsheet, re-save it
+> in Excel/LibreOffice/Sheets so the cached totals are current before committing. Owner: Thong
+> Huynh.
 
 ## Never
 
