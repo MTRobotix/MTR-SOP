@@ -5,7 +5,7 @@ tags: [sop, editing]
 owner: Thong Huynh
 featured: true
 order: 90
-updated: 2026-09-27
+updated: 2026-10-02
 ---
 
 ## Roles
@@ -18,7 +18,7 @@ updated: 2026-09-27
 
 ## Source of truth
 
-The only source of truth is `content/**/*.md` on `main` in the MTR-SOP repo. The database holds users only. One file = one document. One `##` heading = one section that search returns.
+The only source of truth is `content/**/*.md` on `main` in the MTR-HOME repo. The database holds users, projects, tasks and hours — never SOP content. One file = one document. One `##` heading = one section that search returns.
 
 ## Edit in the app
 
@@ -48,6 +48,6 @@ Open a pull request unless you are an admin.
 - Unknown fact → `> [!TODO]` with what is missing and who fills it. Never guess.
 - End each section with `Source:` and the file or person.
 
-Full rules: `.claude/skills/mtr-sop-content/SKILL.md` in the MTR-SOP repo.
+Full rules: `.claude/skills/mtr-sop-content/SKILL.md` in the MTR-HOME repo.
 
-Source: `.claude/skills/mtr-sop-content/SKILL.md` in the MTR-SOP repo
+Source: `.claude/skills/mtr-sop-content/SKILL.md` in the MTR-HOME repo
