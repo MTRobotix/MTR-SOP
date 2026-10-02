@@ -12,10 +12,10 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     <main className="login">
       <div className="login-card card fade-in">
         <p className="login-brand">
-          MTR <span>SOP</span>
+          MTR <span>HOME</span>
         </p>
         <h1>Sign in</h1>
-        <p className="login-lead">Standard operating procedures for MTR staff.</p>
+        <p className="login-lead">SOP, hours and projects for MTR staff.</p>
         <LoginForm next={next} />
       </div>
     </main>

@@ -3,8 +3,8 @@ import "@/styles/globals.css";
 import "@/styles/prose.css";
 
 export const metadata: Metadata = {
-  title: { default: "MTR SOP", template: "%s · MTR SOP" },
-  description: "MTR standard operating procedures.",
+  title: { default: "MTR Home", template: "%s · MTR Home" },
+  description: "MTR standard operating procedures, hours and projects.",
   robots: { index: false, follow: false },
 };
 

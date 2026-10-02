@@ -15,7 +15,7 @@ export default async function UsersPage() {
       <div className="page-head">
         <div>
           <h1>Users</h1>
-          <p>Viewers read. Editors propose changes. Admins publish, review and manage users.</p>
+          <p>The role sets SOP rights: viewers read, editors propose changes, admins publish and review. Admins also manage users, create projects and see everyone&apos;s hours. Every role logs hours and can lead or work on projects.</p>
         </div>
       </div>
       <AddUserForm />

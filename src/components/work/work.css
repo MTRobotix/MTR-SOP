@@ -1,0 +1,196 @@
+/* Shared by Home, Hours and Projects: stat tiles, budget meter, status labels, filter pills (mtr-home-ui §6). */
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0 0 var(--space-6);
+  padding: 0;
+  list-style: none;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+}
+
+.stat-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.stat-value {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.num,
+.table .num {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Budget meter: the fill carries the state; the track is a lighter step of the same colour. */
+.meter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+}
+
+.meter-track {
+  --fill: var(--color-accent);
+  height: 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-soft);
+  overflow: hidden;
+}
+
+.meter-fill {
+  display: block;
+  height: 100%;
+  min-width: 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--fill);
+}
+
+.meter-warn .meter-track {
+  --fill: var(--color-warning);
+  background: var(--color-warning-soft);
+}
+
+.meter-over .meter-track {
+  --fill: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.meter-text {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.meter-text strong {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+/* Status words: overdue, over budget, nearly used. Icon + word, never colour alone. */
+.flag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.flag-danger {
+  color: var(--color-danger);
+}
+
+.flag-warn {
+  color: var(--color-warning);
+}
+
+.tag-strong {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+/* Filter pills: links that narrow a list. Same look as the header nav. */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.pills a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--hit);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  color: var(--color-nav-text);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.pills a:hover {
+  background: var(--color-hover);
+}
+
+.pills a[aria-current="page"] {
+  border-color: var(--color-line-strong);
+  background: var(--color-hover);
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.pills .count {
+  color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.empty {
+  padding: var(--space-5);
+  border: 1px dashed var(--color-line-strong);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3) var(--space-4);
+}
+
+.form-grid .span-2 {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.form-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+}
+
+.card-title {
+  font-size: var(--text-lg);
+}
+
+@media (max-width: 900px) {
+  .stat-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.nowrap {
+  white-space: nowrap;
+}

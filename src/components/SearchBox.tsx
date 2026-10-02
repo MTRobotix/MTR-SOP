@@ -9,7 +9,7 @@ type Item = { id: string; heading: string; docTitle: string; deptTitle: string; 
 
 type Props = {
   initial?: string;
-  /** Input id; the header's "/" shortcut focuses #sop-search on the home page. */
+  /** Input id; the header's "/" shortcut focuses #sop-search on the SOP page. */
   inputId?: string;
   autoFocus?: boolean;
   /** Called before navigating away, e.g. to close the header search dialog. */
@@ -56,7 +56,7 @@ export function SearchBox({ initial = "", inputId = "sop-search", autoFocus = fa
 
   const submit = () => {
     const term = q.trim();
-    go(term ? `/?q=${encodeURIComponent(term)}` : "/");
+    go(term ? `/sop?q=${encodeURIComponent(term)}` : "/sop");
   };
 
   const showPopup = open && q.trim().length >= 2;

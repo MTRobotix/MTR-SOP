@@ -50,7 +50,7 @@
   font-size: var(--text-xs);
 }
 
-/* Suggestion popup — rounded, solid: it opens over page text (mtr-sop-ui §3, §6). */
+/* Suggestion popup — rounded, solid: it opens over page text (mtr-home-ui §3, §6). */
 .search-popup {
   background: var(--color-surface);
   border: 1px solid var(--color-line);
@@ -97,7 +97,7 @@
   color: var(--color-accent);
 }
 
-/* AI answer bubble — rounded, accent hairline (mtr-sop-ui §6). */
+/* AI answer bubble — rounded, accent hairline (mtr-home-ui §6). */
 .answer {
   max-width: 44rem;
   padding: var(--space-4) var(--space-5);

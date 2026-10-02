@@ -7,7 +7,7 @@ import { SearchBox } from "./SearchBox";
 
 /**
  * Search from any page. Button, "/" or Ctrl/Cmd+K:
- * - on the home page, focuses the page's search bar;
+ * - on the SOP page, focuses the page's search bar;
  * - elsewhere, opens a search dialog with the same suggestions. Enter goes to full results.
  */
 export function HeaderSearch() {
@@ -16,7 +16,7 @@ export function HeaderSearch() {
   const [open, setOpen] = useState(false);
 
   const openSearch = () => {
-    const pageInput = pathname === "/" ? document.getElementById("sop-search") : null;
+    const pageInput = pathname === "/sop" ? document.getElementById("sop-search") : null;
     if (pageInput) {
       window.scrollTo({ top: 0 });
       pageInput.focus();

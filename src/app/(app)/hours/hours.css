@@ -1,0 +1,260 @@
+.sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Lets the grid scroll inside its card instead of widening the page. */
+.sheet > * {
+  min-width: 0;
+}
+
+.sheet-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.sheet-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sheet-week {
+  margin-left: var(--space-2);
+  font-weight: 500;
+}
+
+.sheet-total {
+  color: var(--color-text-muted);
+}
+
+.sheet-total .num {
+  color: var(--color-text);
+  font-size: var(--text-xl);
+  font-weight: 600;
+}
+
+/* The grid scrolls sideways inside its card on narrow screens; the project column stays put. */
+.sheet-wrap {
+  /* Contains the visually hidden header text too, so it cannot widen the page. */
+  position: relative;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.sheet-table {
+  width: 100%;
+  min-width: 46rem;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.sheet-table th,
+.sheet-table td {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--color-line);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.sheet-table thead th {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.sheet-table tfoot th,
+.sheet-table tfoot td {
+  border-bottom: 0;
+  color: var(--color-text-muted);
+}
+
+.sheet-table tfoot strong {
+  color: var(--color-text);
+}
+
+.sheet-table .num {
+  text-align: right;
+  padding-right: var(--space-3);
+}
+
+.sheet-project {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 13rem;
+  padding-left: var(--space-4) !important;
+  background: var(--color-surface);
+  text-align: left !important;
+  font-weight: 400;
+}
+
+thead .sheet-project,
+tfoot .sheet-project {
+  font-weight: 500;
+}
+
+.sheet-project-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.sheet-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 500;
+}
+
+.sheet-note {
+  width: 100%;
+  margin-top: var(--space-1);
+}
+
+.sheet-day span {
+  display: block;
+}
+
+.sheet-date {
+  font-size: var(--text-xs);
+  font-weight: 400;
+  color: var(--color-text-faint);
+}
+
+.sheet-table .is-today {
+  background: var(--color-bg-soft);
+}
+
+.sheet-table thead .is-today {
+  color: var(--color-text);
+}
+
+.sheet-table .is-zero {
+  color: var(--color-text-faint);
+}
+
+.sheet-table .is-over {
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+.sheet-cell {
+  width: 3.6rem;
+  min-height: var(--hit);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.sheet-cell:focus-visible {
+  border-color: var(--color-accent);
+}
+
+.sheet-cell[aria-invalid="true"] {
+  border-color: var(--color-danger);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.sheet-remove {
+  border-color: transparent;
+  color: var(--color-text-muted);
+}
+
+.sheet-add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.sheet-add-field {
+  flex: 1 1 16rem;
+  max-width: 24rem;
+}
+
+.sheet-save {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-line);
+}
+
+/* Team hours (admin). */
+.report-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3) var(--space-4);
+  align-items: end;
+  margin-bottom: var(--space-6);
+  padding: var(--space-5);
+}
+
+.report-filters .form-actions {
+  grid-column: 1 / -1;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.report-section {
+  padding: var(--space-4) var(--space-5);
+}
+
+.report-section h2 {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-lg);
+}
+
+.report-entries {
+  margin-bottom: var(--space-6);
+}
+
+.report-entries h2,
+.custom-names h2 {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-lg);
+}
+
+.custom-names .hint {
+  margin-bottom: var(--space-3);
+}
+
+.promote-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.promote-form select {
+  max-width: 16rem;
+}
+
+@media (max-width: 720px) {
+  .sheet-project {
+    min-width: 9rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .report-filters,
+  .report-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
