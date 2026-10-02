@@ -1,4 +1,4 @@
-// Creates the users table and the first admin from ADMIN_EMAIL / ADMIN_PASSWORD.
+// Creates all tables (users, projects, tasks, hours) and the first admin from ADMIN_EMAIL / ADMIN_PASSWORD.
 // Usage: ADMIN_EMAIL=you@x.com ADMIN_PASSWORD='…' npm run db:setup
 import { query } from "../src/lib/db";
 import { createUser, MIN_PASSWORD, normalizeEmail } from "../src/lib/auth/users";

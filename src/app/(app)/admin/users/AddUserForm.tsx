@@ -1,13 +1,26 @@
 "use client";
 
-import { useActionState } from "react";
+import { startTransition, useActionState, useEffect, useRef } from "react";
 import { addUser, type ActionState } from "./actions";
 import { MIN_PASSWORD } from "@/lib/auth/roles";
 
 export function AddUserForm() {
   const [state, action, pending] = useActionState<ActionState, FormData>(addUser, {});
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (state.ok) formRef.current?.reset();
+  }, [state]);
   return (
-    <form action={action} className="card admin-form">
+    <form
+      ref={formRef}
+      className="card admin-form"
+      onSubmit={(e) => {
+        // Submit by hand so a rejected form keeps what was typed; a form action would reset it.
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        startTransition(() => action(data));
+      }}
+    >
       <h2 className="side-title">Add user</h2>
       <div className="admin-form-grid">
         <div>
@@ -25,9 +38,9 @@ export function AddUserForm() {
         <div>
           <label className="label" htmlFor="u-role">Role</label>
           <select className="input" id="u-role" name="role" defaultValue="viewer">
-            <option value="viewer">Viewer — read</option>
-            <option value="editor">Editor — edits go to review</option>
-            <option value="admin">Admin — edits go live, approves, manages users</option>
+            <option value="viewer">Viewer — reads the SOP</option>
+            <option value="editor">Editor — SOP edits go to review</option>
+            <option value="admin">Admin — SOP edits go live; manages users, projects and team hours</option>
           </select>
         </div>
       </div>

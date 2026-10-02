@@ -99,7 +99,7 @@
   padding: var(--space-1);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-pill);
-  /* Solid, not glass: code scrolling underneath must not show through (mtr-sop-ui §3). */
+  /* Solid, not glass: code scrolling underneath must not show through (mtr-home-ui §3). */
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
 }

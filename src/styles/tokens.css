@@ -1,5 +1,5 @@
 /* The only place values are defined. Source palette: /home/tom/Portfolio/src/index.css.
-   Rules: mtr-sop-ui skill §2. Every token exists in both themes. */
+   Rules: mtr-home-ui skill §2. Every token exists in both themes. */
 :root {
   /* Soft ivory ground — off-white, warm enough to take the glare off pure #fff. */
   --color-bg: #faf9f6;
@@ -19,6 +19,9 @@
   --color-danger: #a4332b;
   --color-danger-soft: rgba(164, 51, 43, 0.08);
   --color-ok: #2f6b3f;
+  /* Status only, always with an icon and a word (mtr-home-ui §3): budget nearly used. Danger = overdue, over budget. */
+  --color-warning: #8a5310;
+  --color-warning-soft: rgba(138, 83, 16, 0.12);
   --color-code-bg: #f2f1ec;
   /* Syntax highlighting (code blocks, editor). */
   --syntax-keyword: #7a3e9d;
@@ -99,6 +102,8 @@
   --color-danger: #f0968e;
   --color-danger-soft: rgba(240, 150, 142, 0.12);
   --color-ok: #8fd4a0;
+  --color-warning: #f0c38e;
+  --color-warning-soft: rgba(240, 195, 142, 0.14);
   --color-code-bg: #111a2e;
   --syntax-keyword: #c8a2f0;
   --syntax-string: #9fd8a8;
