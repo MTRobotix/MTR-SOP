@@ -33,9 +33,10 @@ only an admin merges to `main`. Never force-push `main`.
 
 ```text
 content/
-  <dept>/                 # software, mechanical, marketing, sales — lowercase, kebab-case
+  <dept>/                 # software, mechanical, marketing, sales, business — lowercase, kebab-case
     _department.md        # department card: frontmatter only (title, summary, order)
     <slug>.md             # one SOP document; slug = [a-z0-9-]+, max 60 chars
+    attachments/          # optional: .pdf .docx .xlsx .csv embedded by docs in this dept
 ```
 
 Renaming or moving a file breaks links. Do it only as an admin, and update every link
@@ -73,6 +74,10 @@ every save; outside the app run `npm run content:format`. Do not fight it by han
 - No hard line wraps inside paragraphs. One blank line between blocks. LF line endings. File ends
   with one newline.
 - Images: not supported yet. Link to the file in its repo instead.
+- Attachments: `.pdf`, `.docx`, `.xlsx`, `.csv` only, stored in `content/<dept>/attachments/`, file
+  name `[a-z0-9._-]`. A paragraph holding only `[Title](attachments/<file>)` renders as an embedded
+  preview; a link inside a sentence renders as a download link. `content:check` fails on a missing
+  file or another type. Attachments follow the same source and no-secrets rules as Markdown.
 
 ### Visual editor safety
 

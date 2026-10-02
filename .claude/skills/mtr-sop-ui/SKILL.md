@@ -105,6 +105,9 @@ Plain, short, exact. The reader may be new, non-native, or in a hurry.
 - Forbidden: Tailwind, CSS-in-JS, UI kits (MUI, Chakra, shadcn, Bootstrap), animation libraries.
 - Allowed exceptions (editor only): Tiptap, CodeMirror 6, markdownlint. Record any new exception
   here with its reason before adding it.
+- Allowed exceptions (server-side attachment previews, `src/lib/content/embeds.ts`): mammoth
+  (Word → HTML), read-excel-file (Excel → rows), rehype-parse (re-sanitize the Word HTML). No
+  client JavaScript; previews render as plain HTML styled by `.prose .embed*` tokens.
 
 ## Review checklist
 

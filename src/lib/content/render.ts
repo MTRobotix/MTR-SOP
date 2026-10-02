@@ -1,5 +1,6 @@
 // Markdown → safe HTML for doc pages.
 // Raw HTML outside the allowlist (mtr-sop-content §5) is shown as literal text, then everything is sanitized.
+import path from "node:path";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
@@ -70,18 +71,23 @@ const schema: SanitizeSchema = {
   },
 };
 
-const processor = unified()
-  .use(remarkParse)
-  .use(remarkGfm)
-  .use(remarkGuardHtml)
-  .use(remarkRehype, { allowDangerousHtml: true })
-  .use(rehypeRaw)
-  .use(rehypeSanitize, schema)
-  .use(rehypeSlug)
-  .use(rehypeCallouts)
-  .use(rehypeHighlight, { detect: false, ignoreMissing: true } as never)
-  .use(rehypeStringify);
+const base = () =>
+  unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkGuardHtml)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeRaw)
+    .use(rehypeSanitize, schema)
+    .use(rehypeSlug)
+    .use(rehypeCallouts)
+    .use(rehypeHighlight, { detect: false, ignoreMissing: true } as never);
 
-export async function renderMarkdown(body: string): Promise<string> {
-  return String(await processor.process(body));
+const processor = base().use(rehypeStringify);
+
+/** `dept` turns `attachments/<file>` link paragraphs into embedded previews (embeds.ts, loaded lazily so scripts stay light). */
+export async function renderMarkdown(body: string, dept?: string): Promise<string> {
+  if (!dept) return String(await processor.process(body));
+  const { rehypeEmbeds } = await import("./embeds");
+  return String(await base().use(rehypeEmbeds, { dept, contentDir: path.join(process.cwd(), "content") }).use(rehypeStringify).process(body));
 }

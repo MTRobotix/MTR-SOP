@@ -20,7 +20,7 @@ export default async function DocPage({ params }: P) {
   const { dept, slug } = await params;
   const [d, doc, user] = await Promise.all([getDepartment(dept), getDoc(dept, slug), getCurrentUser()]);
   if (!d || !doc) notFound();
-  const html = await renderMarkdown(doc.body);
+  const html = await renderMarkdown(doc.body, dept);
   const toc = outline(doc.sections);
 
   return (

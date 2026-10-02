@@ -164,6 +164,126 @@
   color: var(--color-text-muted);
 }
 
+/* Embedded attachments: a paragraph holding only an attachments/<file> link (mtr-sop-content §5). */
+.prose .embed {
+  margin-left: 0;
+  margin-right: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.prose .embed-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-bg-soft);
+}
+
+.prose .embed-kind {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.prose .embed-title {
+  font-weight: 500;
+}
+
+.prose .embed-meta {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.prose .embed-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.prose .embed-actions .btn {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.prose .embed-body {
+  padding: var(--space-4);
+}
+
+.prose .embed-body > * + * {
+  margin-top: var(--space-3);
+}
+
+.prose .embed-pdf {
+  display: block;
+  width: 100%;
+  height: 70vh;
+  min-height: 24rem;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-soft);
+}
+
+.prose .embed-scroll {
+  max-height: 32rem;
+  overflow: auto;
+}
+
+.prose .embed-scroll table {
+  display: table;
+  width: max-content;
+  min-width: 100%;
+  overflow-wrap: normal;
+}
+
+.prose .embed-scroll td,
+.prose .embed-scroll th {
+  max-width: 24rem;
+}
+
+.prose .embed-doc {
+  max-height: 36rem;
+  overflow: auto;
+}
+
+.prose .embed-doc > * + * {
+  margin-top: var(--space-3);
+}
+
+/* Word headings are document-level; keep them below the page's own h2. */
+.prose .embed-doc :is(h1, h2, h3, h4, h5, h6) {
+  margin-top: var(--space-5);
+  padding-top: 0;
+  border-top: 0;
+  font-size: var(--text-lg);
+}
+
+.prose .embed-doc :is(h3, h4, h5, h6) {
+  font-size: var(--text-base);
+}
+
+.prose .embed-sheet {
+  font-weight: 500;
+}
+
+.prose .embed-note {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.prose .embed-missing {
+  padding: var(--space-3) var(--space-4);
+  border-style: dashed;
+  color: var(--color-text-muted);
+}
+
 /* highlight.js tokens */
 .hljs-keyword,
 .hljs-built_in,

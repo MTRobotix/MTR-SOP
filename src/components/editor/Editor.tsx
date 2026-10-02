@@ -126,12 +126,12 @@ export function Editor(p: Props) {
   useEffect(() => {
     if (mode !== "preview") return;
     const ctrl = new AbortController();
-    fetch("/api/preview", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ body }), signal: ctrl.signal })
+    fetch("/api/preview", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ body, dept: p.dept }), signal: ctrl.signal })
       .then((r) => r.json())
       .then((j: { html: string }) => setPreview(j.html))
       .catch(() => undefined);
     return () => ctrl.abort();
-  }, [mode, body]);
+  }, [mode, body, p.dept]);
 
   const visualBlocked = hasHtml || visualCheck === "lossy";
 

@@ -14,6 +14,7 @@ import { toString } from "mdast-util-to-string";
 import { normalizeFile, splitFrontmatter, kindForPath } from "./normalize";
 import { validateDocMeta, validateDeptMeta, SLUG_RE } from "./schema";
 import { disallowedTags } from "./render";
+import { attachmentRelPath, parseAttachmentLink } from "./attachments";
 
 export type Issue = { line?: number; message: string };
 
@@ -77,6 +78,15 @@ export function validateFile(relPath: string, content: string, config: Configura
     if (bad.length) issues.push({ line: (n.position?.start.line ?? 0) + fmLines, message: `HTML not allowed: <${bad.join(">, <")}>.` });
   });
   visit(tree, "link", (l: Link) => {
+    const line = (l.position?.start.line ?? 0) + fmLines;
+    if (l.url.startsWith("attachments/")) {
+      const ref = parseAttachmentLink(l.url);
+      if (!ref) issues.push({ line, message: `Attachment "${l.url}": use a lowercase file name ending in .pdf, .docx, .xlsx or .csv.` });
+      else if (!fs.existsSync(path.join(process.cwd(), attachmentRelPath(m[1], ref.file)))) {
+        issues.push({ line, message: `Attachment not found: ${attachmentRelPath(m[1], ref.file)}.` });
+      }
+      return;
+    }
     const lm = /^\/d\/([^/#?]+)\/([^/#?]+)(?:#(.+))?$/.exec(l.url);
     if (lm) links.push({ dept: lm[1], slug: lm[2], anchor: lm[3] ?? null, line: (l.position?.start.line ?? 0) + fmLines });
     else if (l.url.startsWith("/") && !l.url.startsWith("/d/")) {
