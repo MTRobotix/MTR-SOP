@@ -28,7 +28,7 @@ export default async function DocPage({ params }: P) {
       <div className="doc-layout">
         <article className="doc">
           <nav className="breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link> <span aria-hidden="true">›</span> <Link href={`/d/${dept}`}>{d.meta.title}</Link>
+            <Link href="/sop">SOP</Link> <span aria-hidden="true">›</span> <Link href={`/d/${dept}`}>{d.meta.title}</Link>
           </nav>
           <div className="doc-head">
             <h1>{doc.meta.title}</h1>

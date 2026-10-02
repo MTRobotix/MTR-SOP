@@ -221,7 +221,7 @@ export function Editor(p: Props) {
   return (
     <div className="shell page editor-page">
       <nav className="breadcrumb" aria-label="Breadcrumb">
-        <Link href="/">Home</Link> <span aria-hidden="true">›</span> <Link href={`/d/${p.dept}`}>{p.deptTitle}</Link>
+        <Link href="/sop">SOP</Link> <span aria-hidden="true">›</span> <Link href={`/d/${p.dept}`}>{p.deptTitle}</Link>
         {!isNew && (
           <>
             <span aria-hidden="true">›</span> <Link href={`/d/${p.dept}/${slug}`}>{fields.title || slug}</Link>

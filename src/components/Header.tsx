@@ -9,9 +9,16 @@ import { ThemeToggle } from "./ThemeToggle";
 import { HeaderSearch } from "./HeaderSearch";
 import "./Header.css";
 
-type Props = { user: User; depts: { id: string; title: string }[] };
+type Props = { user: User };
 
-export function Header({ user, depts }: Props) {
+// The three areas. "match" lists the path prefixes that count as being inside the area.
+const AREAS = [
+  { href: "/sop", label: "SOP", match: ["/sop", "/d/"] },
+  { href: "/hours", label: "Hours", match: ["/hours"] },
+  { href: "/projects", label: "Projects", match: ["/projects"] },
+];
+
+export function Header({ user }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDetailsElement>(null);
@@ -21,19 +28,19 @@ export function Header({ user, depts }: Props) {
     menuRef.current?.removeAttribute("open");
   };
 
-  const isActive = (id: string) => pathname === `/d/${id}` || pathname.startsWith(`/d/${id}/`);
+  const isActive = (match: string[]) => match.some((m) => pathname === m || pathname.startsWith(m.endsWith("/") ? m : `${m}/`));
 
   return (
     <header className="site-header">
       <div className="header-inner glass">
-        <Link href="/" className="brand" aria-label="MTR SOP home" onClick={closeMenus}>
-          MTR <span className="brand-sop">SOP</span>
+        <Link href="/" className="brand" aria-label="MTR Home" onClick={closeMenus}>
+          MTR <span className="brand-sub">HOME</span>
         </Link>
 
-        <nav aria-label="Departments" className={`header-nav${open ? " is-open" : ""}`} id="header-nav">
-          {depts.map((d) => (
-            <Link key={d.id} href={`/d/${d.id}`} aria-current={isActive(d.id) ? "page" : undefined} onClick={closeMenus}>
-              {d.title}
+        <nav aria-label="Main" className={`header-nav${open ? " is-open" : ""}`} id="header-nav">
+          {AREAS.map((a) => (
+            <Link key={a.href} href={a.href} aria-current={isActive(a.match) ? "page" : undefined} onClick={closeMenus}>
+              {a.label}
             </Link>
           ))}
         </nav>
@@ -54,7 +61,8 @@ export function Header({ user, depts }: Props) {
               <Link href="/account">Change password</Link>
               {user.role === "admin" && (
                 <>
-                  <Link href="/admin/reviews">Review edits</Link>
+                  <Link href="/hours/team">Team hours</Link>
+                  <Link href="/admin/reviews">Review SOP edits</Link>
                   <Link href="/admin/users">Users</Link>
                 </>
               )}

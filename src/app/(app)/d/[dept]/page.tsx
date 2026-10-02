@@ -24,7 +24,7 @@ export default async function DepartmentPage({ params }: { params: Promise<{ dep
       <div className="page-head">
         <div>
           <nav className="breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link> <span aria-hidden="true">›</span>
+            <Link href="/sop">SOP</Link> <span aria-hidden="true">›</span>
           </nav>
           <h1>{d.meta.title}</h1>
           <p>{d.meta.summary}</p>

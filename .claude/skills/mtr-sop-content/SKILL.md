@@ -1,9 +1,9 @@
 ---
 name: mtr-sop-content
-description: Source-of-truth, file format, writing and editing rules for SOP documents in MTR-SOP/content. Read before creating, editing, moving or reviewing any SOP section — whether through the app editor, VS Code, a script or an AI agent.
+description: Source-of-truth, file format, writing and editing rules for SOP documents in MTR-HOME/content. Read before creating, editing, moving or reviewing any SOP section — whether through the app editor, VS Code, a script or an AI agent.
 ---
 
-# MTR SOP — content and editing rules
+# MTR Home — SOP content and editing rules
 
 The SOP is edited by different people through different tools (the in-app editor, VS Code, AI
 agents, scripts). These rules make every tool produce the same files, so no editor can drift the
@@ -11,8 +11,9 @@ source of truth.
 
 ## 1. Source of truth
 
-1. **The only source of truth is `MTR-SOP/content/**/*.md` on the `main` branch of the git repo.**
-   The database stores users and roles only — never content. Browser drafts are not content.
+1. **The only source of truth for SOP content is `MTR-HOME/content/**/*.md` on the `main` branch
+   of the git repo.** The database stores users, roles, projects, tasks and hours — never SOP
+   content. Browser drafts are not content.
 2. One file = one SOP document. One `##` heading inside it = one section (the unit search returns
    and links jump to).
 3. Every change reaches `main` through git: an app save is a commit (admin) or a pull request
@@ -127,7 +128,7 @@ Write for someone who has never seen the project and must act correctly on the f
 
 ## 9. Agent-specific rules
 
-- Load this skill and `mtr-sop-ui` before touching `MTR-SOP`.
+- Load this skill and `mtr-home-ui` before touching `MTR-HOME`.
 - Change only the files the task names. Never mass-reformat content outside `content:format`.
 - Never write secrets, tokens, passwords or customer data into `content/`.
 - Report every section you changed with its path.

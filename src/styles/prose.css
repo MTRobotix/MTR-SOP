@@ -154,7 +154,7 @@
   color: var(--color-danger);
 }
 
-/* TODO shows unwritten content honestly (mtr-sop-ui §6). */
+/* TODO shows unwritten content honestly (mtr-home-ui §6). */
 .prose .callout-todo {
   background: transparent;
   border: 1px dashed var(--color-line-strong);

@@ -1,25 +1,30 @@
 ---
-name: mtr-sop-ui
-description: UI, UX, layout, theme, motion and copy rules for the MTR SOP app (MTR-SOP). Read before writing or reviewing any page, component, style or UI copy in MTR-SOP, and follow it for every change.
+name: mtr-home-ui
+description: UI, UX, layout, theme, motion and copy rules for the MTR Home app (MTR-HOME) — SOP, Hours and Projects. Read before writing or reviewing any page, component, style or UI copy in MTR-HOME, and follow it for every change.
 ---
 
-# MTR SOP — UI/UX rules
+# MTR Home — UI/UX rules
 
-Binding for every agent and contributor working in `MTR-SOP/`. If a request conflicts with a rule,
+Binding for every agent and contributor working in `MTR-HOME/`. If a request conflicts with a rule,
 say so and propose the in-system alternative. Extend by adding a rule here, never by making a
 one-off exception in a component.
 
 Theme source: the Portfolio site (`/home/tom/Portfolio/src/index.css`) — ivory paper, grey glass,
-navy dark mode. The token file is `MTR-SOP/src/styles/tokens.css`. That file is the only place
+navy dark mode. The token file is `MTR-HOME/src/styles/tokens.css`. That file is the only place
 values are defined.
 
 ## 1. Purpose drives every decision
 
-The SOP is a tool, not a showcase. A person arrives with a question and must leave with the
-answer in the fewest steps.
+MTR Home is a tool, not a showcase. A person arrives with a job and must finish it in the fewest
+steps. Three areas: SOP (`/sop`, docs at `/d/…`), Hours (`/hours`), Projects (`/projects`).
 
-- Every screen answers one question: "where is it?" (home, department) or "how do I do it?" (doc).
-- Maximum two clicks from home to any section: home card → featured link, or search → result.
+- Every screen answers one question:
+  - Home `/`: "where do I go, and what is mine?" — one card per area, then "Your open tasks".
+  - SOP: "where is it?" (SOP page, department) or "how do I do it?" (doc).
+  - Hours: "what did I work on this week?" Team hours (admin): "who worked on what, when?"
+  - Projects: "what is running, who works on it, what is next?"
+- Maximum two clicks from the SOP page to any section: department card → featured link, or
+  search → result. The header search reaches any section from every page.
 - No hero images, no marketing blocks, no decorative illustrations, no carousels.
 
 ## 2. Tokens are the only source of values
@@ -32,7 +37,11 @@ answer in the fewest steps.
 ## 3. Look
 
 - Ground: `--color-bg` (ivory). Text: `--color-text`. One accent (`--color-accent`) for links,
-  focus rings, active tab, AI bubble border. Nothing else is coloured.
+  focus rings, active tab, AI bubble border, the normal budget meter and the Active status tag.
+- Status colours, and only for state: `--color-warning` (hour budget ≥ 90% used) and
+  `--color-danger` (overdue, over budget, invalid input). Always with a Lucide icon and a word
+  ("Overdue", "Over by 12 h"), never colour alone: the two look alike to colour-blind readers.
+  Nothing else is coloured.
 - Glass only on floating surfaces: header island (`.glass`) and AI answer bubble (`.glass-panel`,
   more opaque for text contrast). Content cards are solid `--color-surface`.
 - Never glass over dense text or code (e.g. the editor toolbar, the search suggestion list): the
@@ -69,6 +78,14 @@ answer in the fewest steps.
 | Editor toolbar | Solid surface pill, sticky under the header. Icon buttons with `aria-label`. |
 | Tag | Small pill, `--color-bg-soft` fill, muted text. |
 | TODO marker | `> [!TODO]` renders as a dashed-border callout — shows unwritten content honestly. |
+| Area card (home) | Solid surface, Lucide icon + area name, one-line purpose, the one number that matters (hours this week, ongoing projects), one link or button. The home view's one primary button is "Log hours". |
+| Stat tile | Solid surface, label in muted text, value `--text-xl` semibold. A row holds up to 4; 2 per row below 900px. No sparkline unless there is a trend to show. |
+| Budget meter | Track `--color-accent-soft`, fill `--color-accent`; warn/danger fills sit on their own `*-soft` track. Text under it always shows "37 of 120 h" plus the state word. `role="meter"` with `aria-valuetext`. No budget → hours only, no bar. |
+| Status tag | The Tag pill with the status word. Only Active uses the accent tint. |
+| Filter pills | Links, one per filter, with a faint count; the current one has `aria-current="page"`. |
+| Timesheet grid | Days are columns, projects are rows; project column sticky on the left; the grid scrolls sideways inside its card, never the page. Cells are pill inputs that accept `1.5`, `1,5` and `1:30`. Today's column on `--color-bg-soft`. Invalid cells and days over 24 h are marked and block Save. Unsaved changes warn before leaving. |
+| Task board | Four columns on `--color-bg-soft` (To do, In progress, Review, Done), one column below 900px. Cards are solid surface: title link, assignee, due date, and a status select for whoever may move it. No drag and drop: the select is keyboard- and touch-friendly. |
+| Numbers in tables | Right-aligned, `tabular-nums` (`.num`). |
 | Icons | `lucide-react`, `strokeWidth={1.5}`, 16–20px. No emoji. |
 
 ## 7. Motion
@@ -112,5 +129,6 @@ Plain, short, exact. The reader may be new, non-native, or in a hurry.
 ## Review checklist
 
 Tokens only · light + dark checked · glass only on floating surfaces · pill controls · one accent ·
-Lucide 1.5 · one `<h1>` · focus ring visible · reduced motion honoured · copy has no filler ·
-no invented facts · 320px no sideways scroll · content edits follow `mtr-sop-content`.
+status colour only with icon + word · Lucide 1.5 · one `<h1>` · focus ring visible · reduced motion
+honoured · copy has no filler · no invented facts · 320px no sideways scroll · content edits follow
+`mtr-sop-content`.

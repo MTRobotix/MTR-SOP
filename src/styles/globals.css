@@ -86,7 +86,7 @@ select {
   white-space: nowrap;
 }
 
-/* Floating surfaces only (mtr-sop-ui §3). */
+/* Floating surfaces only (mtr-home-ui §3). */
 .glass {
   background: rgba(var(--glass-rgb), var(--glass-a));
   border: 1px solid var(--glass-border);
@@ -229,8 +229,10 @@ select.input {
   color: var(--color-danger);
 }
 
+/* Top and bottom only: .page sits on .shell, whose side padding is the page gutter. */
 .page {
-  padding: var(--space-6) 0 var(--space-8);
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-8);
 }
 
 .page-head {
@@ -278,6 +280,30 @@ select.input {
 .table th {
   color: var(--color-text-muted);
   font-weight: 500;
+}
+
+.section-title {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.inline-form {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.input-sm {
+  min-height: 2rem;
+  width: auto;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
 }
 
 .account-form {
