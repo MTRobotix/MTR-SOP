@@ -1,0 +1,36 @@
+Area,ID,Task,Done when,Priority,Status,Owner
+Website,W-1,Merge the website pull request,"MTR-Site PR #8 is merged to main and the live site shows the new home, MTR-Q and About pages",P1,To do,Thong Huynh
+Website,W-2,Activate the contact form,First test message sent; FormSubmit confirmation email clicked in mtrobotix@gmail.com; a second test arrives,P1,To do,Thong Huynh
+Website,W-3,Apply the Kick-leg logo everywhere,"Nav, footer and social share image use logo concept 18 (favicon already done)",P1,To do,Thong Huynh
+Website,W-4,Write the real About story,Story section has founder-approved text in English and Vietnamese,P2,To do,Thong Huynh
+Website,W-5,Confirm MTR-Q claims,"100+ parts/s, < 1 mm and > 99.5% are measured on a real line, or the site is changed to measured numbers",P1,To do,Thong Huynh
+Website,W-6,Add MTR-M specs,"MTR-M page shows measured payload, speed, runtime and footprint instead of ""coming soon""",P2,To do,Thong Huynh
+Website,W-7,Decide the robot arm page,"Page is either removed or clearly marked ""in development, not for sale""",P3,To do,Thong Huynh
+Website,W-8,Add a first case study,"One pilot result (before/after numbers, customer permission) is published",P2,To do,Thong Huynh
+Website,W-9,Replace duplicate images,The conveyor photo appears once; other slots use real MTR-Q photos,P3,To do,Thong Huynh
+Website,W-10,Fix Vietnamese text wrapping,Home stats and hero do not break mid-word on a 320 px wide phone,P3,To do,Thong Huynh
+Website,W-11,Set up search and sharing,"Site added to Google Search Console, sitemap submitted, share image set for each page",P2,To do,Thong Huynh
+Website,W-12,Company email on own domain,@mtrobotix email address works and replaces the Gmail address on the site,P2,To do,Thong Huynh
+Software,S-1,Package zero-shot detection,"A new defect type is set up by describing it, with no retraining, and works on the demo line the same day",P1,To do,Thong Huynh
+Software,S-2,Measure accuracy and speed,"Test report with parts per second, smallest defect found and catch rate on 3 product types",P1,To do,Thong Huynh
+Software,S-3,Update approved numbers,Product one-liners matches the test report and the website,P1,To do,Thong Huynh
+Software,S-4,Reject output,MTR-Q fires the I/O module (ADAM-6060) or a PLC signal and the diverter removes the flagged part,P1,To do,Thong Huynh
+Software,S-5,Shift and batch reports,A PDF or CSV report with counts and defect types is created at the end of each shift,P2,To do,Thong Huynh
+Software,S-6,Operator screen,"Touchscreen shows live pass/fail, counts and a stop/override button",P2,To do,Thong Huynh
+Software,S-7,Installer and setup checklist,A new unit goes from power-on to inspecting in under 4 hours by following one checklist,P1,To do,Thong Huynh
+Software,S-8,Document MTR Vision AI Core V3,"MTR Vision AI Core has run, train and deploy steps with no TODOs",P2,To do,Thong Huynh
+Software,S-9,Remote support and updates,A deployed unit can be updated and checked remotely without a site visit,P2,To do,Thong Huynh
+Software,S-10,MTR-M navigation,"MTR-M maps a room and docks itself to charge, repeatable 10 times in a row",P3,To do,Thong Huynh
+Software,S-11,SOP file upload,"Editors can upload Word, Excel, CSV and PDF files from the SOP editor (today: commit to content/<dept>/attachments/)",P3,To do,Thong Huynh
+Software,S-12,Quote template and price list,How to quote has an approved price list and a quote template,P1,To do,Thong Huynh
+Hardware,H-1,Choose the computer (Pro vs Lite),Throughput test on Jetson AGX Orin (Option A) and mini PC (Option B) recorded; the line speed each supports is known,P1,To do,Thong Huynh
+Hardware,H-2,Build 2 demo stations,"Two complete MTR-Q stations run on a demo conveyor (one for Vietnam, one for Canada)",P1,To do,Thong Huynh
+Hardware,H-3,"Fix camera, lens and lighting part numbers","Bill of materials lists exact part numbers and a supplier for each; no ""TBD"" rows",P1,To do,Thong Huynh
+Hardware,H-4,Enclosure and mounting drawings,"CAD drawings and a cut list for the enclosure and conveyor mount, stored in the repo",P2,To do,Thong Huynh
+Hardware,H-5,Reject kit,"Air-jet or pusher diverter with sensor and wiring, tested at line speed",P1,To do,Thong Huynh
+Hardware,H-6,Calibration procedure,"Step-by-step camera and lighting calibration in the SOP, done by a new person in under 30 minutes",P2,To do,Thong Huynh
+Hardware,H-7,Maintenance schedule,"Cleaning, inspection and spare-parts list for customers in the SOP",P3,To do,Thong Huynh
+Hardware,H-8,Electrical safety certification,Plan and quote for CE (Vietnam/export) and CSA (Canada) approval of the station,P2,To do,Thong Huynh
+Hardware,H-9,Supplier quotes for 10 units,"Volume quotes for every BOM line, with lead times, to replace single-unit prices",P2,To do,Thong Huynh
+Hardware,H-10,MTR-M measurements and motors,"Motor chosen (12 V 170 RPM or 24 V 330 RPM), payload, speed and runtime measured",P3,To do,Thong Huynh
+Hardware,H-11,Robot arm pick-and-place demo,Arm picks rejected parts from the conveyor in a recorded demo,P3,To do,Thong Huynh

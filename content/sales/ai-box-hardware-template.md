@@ -5,7 +5,7 @@ tags: [mtr-q, hardware, bom, ai-box]
 owner: Thong Huynh
 featured: true
 order: 50
-updated: 2026-09-30
+updated: 2026-10-02
 ---
 
 ## What this is
@@ -16,7 +16,7 @@ spec fields. It has no dollar amounts, so it never goes stale and never needs a
 `npm run content:check` update just because a supplier's price moved.
 
 The priced version — real brands, models, and approximate market prices — is a separate
-spreadsheet, not committed as Markdown. See [Priced BOM](#priced-bom).
+spreadsheet, embedded below. See [Priced BOM](#priced-bom).
 
 ## Compute
 
@@ -75,12 +75,7 @@ The priced version fills every row above with a real brand, model number, and ap
 market price (sourced by web search, single-unit USD, before shipping/duty/VAT — reverify with
 a distributor before quoting a customer).
 
-`content/sales/attachments/mtr-q-ai-box-bom.xlsx`
-
-> [!TODO]
-> This app has no attachment or embed support yet — same gap as images (see
-> [Edit this SOP](/d/software/edit-this-sop)). The xlsx above is committed to git as a plain
-> file, not rendered inside the SOP page. Open it directly in Excel/Sheets. Owner: Thong Huynh.
+[Priced BOM — AI_BOX](attachments/mtr-q-ai-box-bom.xlsx)
 
 ## Never
 
