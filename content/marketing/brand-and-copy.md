@@ -5,17 +5,17 @@ tags: [brand, copy]
 owner: Thong Huynh
 featured: true
 order: 10
-updated: 2026-09-27
+updated: 2026-10-08
 ---
 
 ## Names
 
-| Use           | Never                               |
-| ------------- | ----------------------------------- |
-| MTRobotics    | MTR (retired name)                  |
-| MTR-Q         | BoltEye, Bolt Eye, Bolteye, BOLTEYE |
-| SensQ         | Sensq, SENSQ, Sens-Q                |
-| the robot arm | Any product name — it has none yet  |
+| Use           | Never                                     |
+| ------------- | ----------------------------------------- |
+| MTRobotics    | MTR (retired name)                        |
+| MetriQ        | MTR-Q (old name), BoltEye, Metriq, METRIQ |
+| SensQ         | Sensq, SENSQ, Sens-Q                      |
+| the robot arm | Any product name — it has none yet        |
 
 ## Voice
 

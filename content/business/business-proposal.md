@@ -1,24 +1,24 @@
 ---
-title: Business proposal — MTR-Q
-summary: Pitch and bank-loan proposal for MTR-Q — problem, product, market, prices, costs, timeline and funding ask.
-tags: [proposal, funding, pitch, mtr-q, pricing]
+title: Business proposal — MetriQ
+summary: Pitch and bank-loan proposal for MetriQ — problem, product, market, prices, costs, timeline and funding ask.
+tags: [proposal, funding, pitch, metriq, pricing]
 owner: Thong Huynh
 featured: true
 order: 10
-updated: 2026-10-02
+updated: 2026-10-08
 ---
 
 ## Summary
 
-MTRobotics builds MTR-Q: a camera inspection station that sits on an existing production line and removes bad products automatically. It finds new defect types without weeks of photo collection and model training (zero-shot detection), and it is installed in hours, without stopping the line.
+MTRobotics builds MetriQ: a camera inspection station that sits on an existing production line and removes bad products automatically. It finds new defect types without weeks of photo collection and model training (zero-shot detection), and it is installed in hours, without stopping the line.
 
 We sell to small and mid-size food, agriculture and light manufacturing plants in Vietnam and Canada — plants that still check products by eye and cannot afford a USD 50,000+ vision system.
 
-We ask for a **USD 120,000 loan** to build stock for 10 units, two demo stations, and the first paid installations. Each MTR-Q sold at the proposed price returns about **USD 8,900 gross profit**; selling 4 units a year covers the loan repayment.
+We ask for a **USD 120,000 loan** to build stock for 10 units, two demo stations, and the first paid installations. Each MetriQ sold at the proposed price returns about **USD 8,900 gross profit**; selling 4 units a year covers the loan repayment.
 
 | Item                     | Value                               |
 | ------------------------ | ----------------------------------- |
-| Product                  | MTR-Q AI inspection station (live)  |
+| Product                  | MetriQ AI inspection station (live) |
 | Markets                  | Vietnam (first), Canada             |
 | Proposed price           | USD 9,000 (Lite) – USD 14,000 (Pro) |
 | Hardware cost per unit   | USD 2,133 (Lite) – USD 3,619 (Pro)  |
@@ -40,11 +40,11 @@ Source: averroes.ai and iFactory pricing guides (see [Sources](#sources)).
 
 ## What we do
 
-MTR-Q is a complete inspection station: camera, lighting, edge computer, software and reject output, delivered and installed by one team.
+MetriQ is a complete inspection station: camera, lighting, edge computer, software and reject output, delivered and installed by one team.
 
 1. Mount the station over the existing conveyor. No line changes, no downtime.
-2. Tell MTR-Q what a defect looks like. It starts finding it the same day.
-3. MTR-Q checks every product in real time and signals the reject system to remove bad ones.
+2. Tell MetriQ what a defect looks like. It starts finding it the same day.
+3. MetriQ checks every product in real time and signals the reject system to remove bad ones.
 4. The plant gets counts, defect types and reports for each shift.
 
 What it does on the line:
@@ -59,11 +59,11 @@ Published performance: 100+ parts per second, under 1 mm accuracy, more than 99.
 > [!TODO]
 > These numbers are from the website (`MTR-Site/src/data/products.ts`). Approved numbers in [Product one-liners](/d/marketing/product-messaging#approved-numbers) still say ≤ 2 mm and under 100 ms. Measure on a real line and update both before pitching. Owner: Thong Huynh.
 
-Source: `MTR-Site/src/data/products.ts`, mtrobotix website (MTR-Q page).
+Source: `MTR-Site/src/data/products.ts`, mtrobotix website (MetriQ page).
 
 ## Why we are different
 
-| What matters to the plant               | Typical vision system                       | MTR-Q                                                             |
+| What matters to the plant               | Typical vision system                       | MetriQ                                                            |
 | --------------------------------------- | ------------------------------------------- | ----------------------------------------------------------------- |
 | New defect type                         | Collect and label photos, retrain for weeks | **Zero-shot detection** — describe the defect, works the same day |
 | Installation                            | Weeks, often a line stop                    | **Hours, no downtime**                                            |
@@ -115,46 +115,46 @@ Source: `MTR-Q_Competitors_and_Customers` (Google Drive, September 2026).
 
 | Product      | What it is                                         | Status           | Proposed price (USD)       |
 | ------------ | -------------------------------------------------- | ---------------- | -------------------------- |
-| MTR-Q Pro    | GPU edge computer, zero-shot detection, full speed | Live             | 14,000 one-time, installed |
-| MTR-Q Lite   | CPU computer, for simpler or slower lines          | Live             | 9,000 one-time, installed  |
+| MetriQ Pro   | GPU edge computer, zero-shot detection, full speed | Live             | 14,000 one-time, installed |
+| MetriQ Lite  | CPU computer, for simpler or slower lines          | Live             | 9,000 one-time, installed  |
 | Support plan | Remote support, updates, new defect setup          | Planned          | 1,200–1,500 per year       |
 | Paid pilot   | 4-week trial on the customer's line                | Planned          | Credited to the purchase   |
 | MTR-M        | Autonomous mobile robot for moving materials       | In development   | Not priced yet             |
 | Robot arm    | Pick-and-place arm                                 | Work in progress | Not for sale               |
 
-Market reference: entry-level AI inspection USD 3,000–10,000 (software or camera only), mid-range USD 50,000–150,000 plus installation. MTR-Q is a complete installed station priced near the entry level.
+Market reference: entry-level AI inspection USD 3,000–10,000 (software or camera only), mid-range USD 50,000–150,000 plus installation. MetriQ is a complete installed station priced near the entry level.
 
 > [!TODO]
 > Proposed prices are not yet in [How to quote](/d/sales/how-to-quote). Approve them, then add the price list there. Owner: Thong Huynh.
 
-Source: `content/sales/attachments/mtr-q-ai-box-bom.xlsx`, averroes.ai and iFactory pricing guides.
+Source: `content/sales/attachments/metriq-ai-box-bom.xlsx`, averroes.ai and iFactory pricing guides.
 
 ## Cost and margin
 
 Hardware cost comes from the priced AI_BOX BOM (single unit, before shipping, duty and VAT).
 
-| Cost item (USD)                | MTR-Q Pro | MTR-Q Lite |
-| ------------------------------ | --------- | ---------- |
-| Edge computer + storage        | 2,075     | 589        |
-| Camera, lighting, cable        | 584       | 584        |
-| Trigger sensor and reject I/O  | 230       | 230        |
-| Enclosure and mounting         | 300       | 300        |
-| Power and networking           | 125       | 125        |
-| Stack light, touchscreen, UPS  | 305       | 305        |
-| **Hardware total**             | **3,619** | **2,133**  |
-| Shipping, duty, assembly (20%) | 724       | 427        |
-| Installation and travel        | 800       | 800        |
-| **Delivered cost**             | **5,143** | **3,360**  |
-| Proposed price                 | 14,000    | 9,000      |
-| **Gross profit**               | **8,857** | **5,640**  |
-| Gross margin                   | 63%       | 63%        |
+| Cost item (USD)                | MetriQ Pro | MetriQ Lite |
+| ------------------------------ | ---------- | ----------- |
+| Edge computer + storage        | 2,075      | 589         |
+| Camera, lighting, cable        | 584        | 584         |
+| Trigger sensor and reject I/O  | 230        | 230         |
+| Enclosure and mounting         | 300        | 300         |
+| Power and networking           | 125        | 125         |
+| Stack light, touchscreen, UPS  | 305        | 305         |
+| **Hardware total**             | **3,619**  | **2,133**   |
+| Shipping, duty, assembly (20%) | 724        | 427         |
+| Installation and travel        | 800        | 800         |
+| **Delivered cost**             | **5,143**  | **3,360**   |
+| Proposed price                 | 14,000     | 9,000       |
+| **Gross profit**               | **8,857**  | **5,640**   |
+| Gross margin                   | 63%        | 63%         |
 
 Customer payback (Vietnam): one station replaces about 2 inspectors per shift. Two shifts × 2 inspectors × USD 332 × 12 months = USD 15,936 saved per year. A Pro unit pays back in under 11 months. Payback is faster in Canada, where wages are higher.
 
 > [!TODO]
 > 20% landed-cost allowance, USD 800 installation cost and "2 inspectors per shift" are assumptions. Replace with real numbers after the first two installations. Owner: Thong Huynh.
 
-Source: `content/sales/attachments/mtr-q-ai-box-bom.xlsx`, `content/business/attachments/mtr-q-cost-model.xlsx`.
+Source: `content/sales/attachments/metriq-ai-box-bom.xlsx`, `content/business/attachments/metriq-cost-model.xlsx`.
 
 ## Competition
 
@@ -204,7 +204,7 @@ We ask for **USD 120,000**, repaid over 5 years.
 - Year-1 target is 12 units (8 Pro, 4 Lite): about USD 148,000 revenue and USD 93,000 gross profit.
 - Stock bought with the loan is converted to cash as each unit is sold; paid pilots bring cash in before full sales.
 
-Source: `content/business/attachments/mtr-q-cost-model.xlsx`.
+Source: `content/business/attachments/metriq-cost-model.xlsx`.
 
 ## Risks
 
@@ -237,7 +237,7 @@ Pitch-ready version of this proposal:
 
 Cost model — change the blue input cells to test other prices and volumes:
 
-[MTR-Q cost model](attachments/mtr-q-cost-model.xlsx)
+[MetriQ cost model](attachments/metriq-cost-model.xlsx)
 
 Editable Word version: [business-proposal.docx](attachments/business-proposal.docx).
 

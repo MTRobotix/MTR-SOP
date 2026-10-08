@@ -5,7 +5,7 @@ tags: [sop, editing]
 owner: Thong Huynh
 featured: true
 order: 90
-updated: 2026-10-02
+updated: 2026-10-08
 ---
 
 ## Roles
@@ -44,9 +44,9 @@ Open a pull request unless you are an admin.
 
 Goal: show a `.docx`, `.xlsx`, `.csv` or `.pdf` file inside a SOP page, with **Open** and **Download** buttons.
 
-1. Name the file in lowercase kebab-case, for example `mtr-q-cost-model.xlsx`. Allowed types: `.pdf`, `.docx`, `.xlsx`, `.csv`.
+1. Name the file in lowercase kebab-case, for example `metriq-cost-model.xlsx`. Allowed types: `.pdf`, `.docx`, `.xlsx`, `.csv`.
 2. Copy it to `content/<dept>/attachments/` in the same department as the doc.
-3. Put a link to it alone in its own paragraph, for example `[MTR-Q cost model](attachments/mtr-q-cost-model.xlsx)`. The link text becomes the card title.
+3. Put a link to it alone in its own paragraph, for example `[MetriQ cost model](attachments/metriq-cost-model.xlsx)`. The link text becomes the card title.
 4. For a plain download link instead of a preview, put the link inside a sentence: `Download the [Word version](attachments/business-proposal.docx).`
 5. Run `npm run content:check`. It fails if the file is missing or the type is not allowed.
 6. Commit the file and the doc together.

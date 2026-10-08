@@ -107,7 +107,8 @@ Write for someone who has never seen the project and must act correctly on the f
   path at the end of the section as `Source: \`<path>\``.
 - Never invent prices, margins, customers, headcount, dates or product claims. Unknown →
   `> [!TODO]` with what is missing and who should fill it.
-- Product names are fixed: BoltEye, SensQ, robot arm (work in progress — say so). Company: MTR.
+- Product names are fixed: MetriQ (formerly MTR-Q and BoltEye — never use the old names), SensQ, robot arm
+  (work in progress — say so). Company: MTRobotics.
 
 ## 7. Before committing (any tool)
 

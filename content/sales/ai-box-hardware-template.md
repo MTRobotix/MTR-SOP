@@ -1,17 +1,17 @@
 ---
 title: AI_BOX hardware template
 summary: Category template for quoting an AI_BOX build. No prices here — see the priced file.
-tags: [mtr-q, hardware, bom, ai-box]
+tags: [metriq, hardware, bom, ai-box]
 owner: Thong Huynh
 featured: true
 order: 50
-updated: 2026-10-02
+updated: 2026-10-08
 ---
 
 ## What this is
 
 A category template for pricing an AI_BOX hardware build — the compute + camera + sensing
-enclosure that runs MTR-Q on a line. This file holds structure only: categories, items, and
+enclosure that runs MetriQ on a line. This file holds structure only: categories, items, and
 spec fields. It has no dollar amounts, so it never goes stale and never needs a
 `npm run content:check` update just because a supplier's price moved.
 
@@ -20,7 +20,7 @@ spreadsheet, embedded below. See [Priced BOM](#priced-bom).
 
 ## Compute
 
-Pick one. Option A if MTR-Q is running a trained detection/classification model at line speed.
+Pick one. Option A if MetriQ is running a trained detection/classification model at line speed.
 Option B only if inference is classical CV, a very light model, or offloaded elsewhere — confirm
 throughput before committing to it for a live line.
 
@@ -75,7 +75,7 @@ The priced version fills every row above with a real brand, model number, and ap
 market price (sourced by web search, single-unit USD, before shipping/duty/VAT — reverify with
 a distributor before quoting a customer).
 
-[Priced BOM — AI_BOX](attachments/mtr-q-ai-box-bom.xlsx)
+[Priced BOM — AI_BOX](attachments/metriq-ai-box-bom.xlsx)
 
 ## Never
 

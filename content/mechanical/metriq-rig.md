@@ -1,11 +1,11 @@
 ---
-title: MTR-Q inspection rig
+title: MetriQ inspection rig
 summary: What the rig is, its published specs, and what is still undocumented.
-tags: [mtr-q, inspection, hardware]
+tags: [metriq, inspection, hardware]
 owner: Thong Huynh
 featured: true
 order: 20
-updated: 2026-09-27
+updated: 2026-10-08
 ---
 
 ## What it is

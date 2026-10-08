@@ -5,18 +5,18 @@ tags: [products, sales]
 owner: Thong Huynh
 featured: true
 order: 20
-updated: 2026-09-27
+updated: 2026-10-08
 ---
 
 ## Status
 
 | Product   | Status           | Sell?          |
 | --------- | ---------------- | -------------- |
-| MTR-Q     | Live             | Yes            |
+| MetriQ    | Live             | Yes            |
 | SensQ     | Live             | Yes            |
 | Robot arm | Work in progress | No — demo only |
 
-## MTR-Q
+## MetriQ
 
 Automated inspection for live production lines. Conveyor with custom optical hardware and real-time vision. Detects surface defects down to ≤ 2 mm with end-to-end latency under 100 ms.
 
