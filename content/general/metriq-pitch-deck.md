@@ -12,7 +12,7 @@ updated: 2026-10-14
 
 [MetriQ demo video](attachments/metriq-demo.mp4)
 
-2 min 4 s, 1280 × 720, background music, no voice-over. It plays every slide with its animations. Send it with outreach emails or play it before a live demo.
+2 min 4 s, 1920 × 1080, background music, no voice-over. It plays every slide with its animations. Send it with outreach emails or play it before a live demo.
 
 Source: `content/general/attachments/metriq-demo.mp4`
 
