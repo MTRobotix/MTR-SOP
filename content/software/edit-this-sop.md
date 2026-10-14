@@ -5,7 +5,7 @@ tags: [sop, editing]
 owner: Thong Huynh
 featured: true
 order: 90
-updated: 2026-10-08
+updated: 2026-10-14
 ---
 
 ## Roles
@@ -40,18 +40,18 @@ git commit -m "sop(<dept>/<slug>): <what changed>"
 
 Open a pull request unless you are an admin.
 
-## Embed files (Word, Excel, CSV, PDF)
+## Embed files (Word, Excel, CSV, PDF, PowerPoint, video)
 
-Goal: show a `.docx`, `.xlsx`, `.csv` or `.pdf` file inside a SOP page, with **Open** and **Download** buttons.
+Goal: show a `.docx`, `.xlsx`, `.csv`, `.pdf`, `.pptx` or `.mp4` file inside a SOP page, with **Open** and **Download** buttons.
 
-1. Name the file in lowercase kebab-case, for example `metriq-cost-model.xlsx`. Allowed types: `.pdf`, `.docx`, `.xlsx`, `.csv`.
+1. Name the file in lowercase kebab-case, for example `metriq-cost-model.xlsx`. Allowed types: `.pdf`, `.docx`, `.xlsx`, `.csv`, `.pptx`, `.mp4`. Keep each file under 4 MB; larger files fail to load on Vercel.
 2. Copy it to `content/<dept>/attachments/` in the same department as the doc.
 3. Put a link to it alone in its own paragraph, for example `[MetriQ cost model](attachments/metriq-cost-model.xlsx)`. The link text becomes the card title.
 4. For a plain download link instead of a preview, put the link inside a sentence: `Download the [Word version](attachments/business-proposal.docx).`
-5. Run `npm run content:check`. It fails if the file is missing or the type is not allowed.
+5. Run `npm run content:check`. It fails if the file is missing, the type is not allowed or the file is over 4 MB.
 6. Commit the file and the doc together.
 
-Expected: PDF shows in a viewer; Word shows as formatted text; Excel shows one table per sheet; CSV shows as a table. Previews show the first 100 rows and 20 columns.
+Expected: PDF shows in a viewer; Word shows as formatted text; Excel shows one table per sheet; CSV shows as a table; MP4 plays in a video player; PowerPoint shows a download card only. Previews show the first 100 rows and 20 columns.
 
 > [!NOTE]
 > Upload from the app editor is not built yet. Add files through git. Never attach files with customer data, passwords or keys.

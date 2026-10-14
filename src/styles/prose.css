@@ -231,6 +231,14 @@
   background: var(--color-bg-soft);
 }
 
+.prose .embed-video {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-soft);
+}
+
 .prose .embed-scroll {
   max-height: 32rem;
   overflow: auto;
