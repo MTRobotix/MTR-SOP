@@ -126,6 +126,10 @@ async function preview(file: string, ref: AttachmentRef, url: string, title: str
       }
       return out;
     }
+    case "mp4":
+      return [h("video", { className: ["embed-video"], src: url, controls: true, preload: "metadata", playsInline: true, title })];
+    case "pptx":
+      return [h("p", { className: ["embed-note"] }, [t("No preview for slides. Download the file to open it in PowerPoint.")])];
     case "docx": {
       const { value } = await mammoth.convertToHtml({ buffer: await fs.readFile(file) });
       const clean = docxSanitizer.runSync(docxSanitizer.parse(value)) as Root;

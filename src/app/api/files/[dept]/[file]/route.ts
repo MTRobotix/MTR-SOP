@@ -16,13 +16,28 @@ export async function GET(req: Request, { params }: P) {
   if (!ref || !data) return NextResponse.json({ error: "File not found." }, { status: 404 });
 
   const download = new URL(req.url).searchParams.has("download");
-  return new NextResponse(new Uint8Array(data), {
-    headers: {
-      "Content-Type": EMBED_TYPES[ref.kind].mime,
-      "Content-Disposition": `${download ? "attachment" : "inline"}; filename="${ref.file}"`,
-      "Content-Length": String(data.length),
-      "Cache-Control": "private, max-age=300",
-      "X-Content-Type-Options": "nosniff",
-    },
-  });
+  const headers: Record<string, string> = {
+    "Content-Type": EMBED_TYPES[ref.kind].mime,
+    "Content-Disposition": `${download ? "attachment" : "inline"}; filename="${ref.file}"`,
+    "Accept-Ranges": "bytes",
+    "Cache-Control": "private, max-age=300",
+    "X-Content-Type-Options": "nosniff",
+  };
+
+  // Video players (Safari always) ask for byte ranges; answer with 206 so seeking works.
+  const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.get("range") ?? "");
+  if (range && (range[1] || range[2])) {
+    const size = data.length;
+    const start = range[1] ? Number(range[1]) : Math.max(size - Number(range[2]), 0);
+    const end = range[1] && range[2] ? Math.min(Number(range[2]), size - 1) : size - 1;
+    if (start > end || start >= size) {
+      return new NextResponse(null, { status: 416, headers: { ...headers, "Content-Range": `bytes */${size}` } });
+    }
+    return new NextResponse(new Uint8Array(data.subarray(start, end + 1)), {
+      status: 206,
+      headers: { ...headers, "Content-Range": `bytes ${start}-${end}/${size}`, "Content-Length": String(end - start + 1) },
+    });
+  }
+
+  return new NextResponse(new Uint8Array(data), { headers: { ...headers, "Content-Length": String(data.length) } });
 }

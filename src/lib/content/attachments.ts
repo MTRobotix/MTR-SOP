@@ -7,18 +7,23 @@ export const EMBED_TYPES = {
   docx: { label: "Word", mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
   xlsx: { label: "Excel", mime: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
   csv: { label: "CSV", mime: "text/csv; charset=utf-8" },
+  pptx: { label: "PowerPoint", mime: "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
+  mp4: { label: "Video", mime: "video/mp4" },
 } as const;
 
 export type EmbedKind = keyof typeof EMBED_TYPES;
 export type AttachmentRef = { file: string; kind: EmbedKind };
 
 /** Lowercase file name, no folders; the extension picks the preview. */
-const ATTACHMENT_RE = /^attachments\/([a-z0-9][a-z0-9._-]{0,99}\.(pdf|docx|xlsx|csv))$/;
+const ATTACHMENT_RE = /^attachments\/([a-z0-9][a-z0-9._-]{0,99}\.(pdf|docx|xlsx|csv|pptx|mp4))$/;
 
 export function parseAttachmentLink(url: string): AttachmentRef | null {
   const m = ATTACHMENT_RE.exec(url);
   return m ? { file: m[1], kind: m[2] as EmbedKind } : null;
 }
+
+/** Vercel caps a function response at 4.5 MB, so a larger file cannot be served by /api/files. */
+export const MAX_ATTACHMENT_BYTES = 4 * 1024 * 1024;
 
 export function attachmentRelPath(dept: string, file: string): string {
   return `content/${dept}/attachments/${file}`;
