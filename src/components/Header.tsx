@@ -64,6 +64,7 @@ export function Header({ user }: Props) {
                   <Link href="/hours/team">Team hours</Link>
                   <Link href="/admin/reviews">Review SOP edits</Link>
                   <Link href="/admin/users">Users</Link>
+                  <Link href="/admin/sign-ins">Sign-ins</Link>
                 </>
               )}
               <form action="/api/auth/logout" method="post">

@@ -1,7 +1,8 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { checkLogin, isThrottled, recordFailure } from "@/lib/auth/users";
+import { checkLogin } from "@/lib/auth/users";
+import { client, isThrottled, recordLogin } from "@/lib/auth/logins";
 import { startSession } from "@/lib/auth/session";
 
 export type LoginState = { error?: string };
@@ -16,12 +17,18 @@ export async function login(_prev: LoginState, form: FormData): Promise<LoginSta
   const email = String(form.get("email") ?? "");
   const password = String(form.get("password") ?? "");
   if (!email || !password) return { error: "Enter email and password." };
-  if (isThrottled(email)) return { error: "Too many attempts. Wait 15 minutes." };
-  const ok = await checkLogin(email, password);
-  if (!ok) {
-    recordFailure(email);
+  const c = await client();
+  if (await isThrottled(email, c.ip)) {
+    await recordLogin(email, "throttled", c);
+    return { error: "Too many attempts. Wait 15 minutes." };
+  }
+  const res = await checkLogin(email, password);
+  if (!res.ok) {
+    await recordLogin(email, res.reason, c, res.id);
+    // Same message for every failure, so the form does not reveal which emails have accounts.
     return { error: "Wrong email or password." };
   }
-  await startSession(ok.id, ok.sv);
+  await recordLogin(email, "success", c, res.id);
+  await startSession(res.id, res.sv);
   redirect(safeNext(form.get("next")));
 }

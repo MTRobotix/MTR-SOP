@@ -27,8 +27,12 @@ The MTR staff app, behind one login:
 | Create projects, set lead and budget | no | no | no | yes |
 | Change project status and dates, manage contributors, assign tasks | no | no | own projects | yes |
 | Move a task on the board | own tasks | own tasks | own projects | yes |
+| Manage users (add, role, disable, reset password) | no | no | no | yes, never their own account |
+| See the sign-in log (`/admin/sign-ins`) | no | no | no | yes |
 
 "Project lead" is not a role: an admin picks a lead per project, and any user can be one.
+
+Every role check runs on the server against the database on each request, so a role change or a disable applies at once. Passwords need at least 8 characters. After 5 failed sign-ins for one email, or 20 from one IP, within 15 minutes, sign-in is blocked for 15 minutes; the count is kept in the database, so it holds across server instances.
 
 Typed names on timesheets show up under **Team hours** (admin). Turn one into a project there: its hours move to the project and the people who logged it become contributors.
 
@@ -36,7 +40,7 @@ Typed names on timesheets show up under **Team hours** (admin). Turn one into a 
 
 ```bash
 npm install
-ADMIN_EMAIL=you@example.com ADMIN_PASSWORD='min4' npm run db:setup
+ADMIN_EMAIL=you@example.com ADMIN_PASSWORD='min8chars' npm run db:setup
 npm run dev
 ```
 

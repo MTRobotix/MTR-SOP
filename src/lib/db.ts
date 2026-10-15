@@ -80,6 +80,20 @@ CREATE TABLE IF NOT EXISTS time_entries (
   PRIMARY KEY (row_id, work_date)
 );
 CREATE INDEX IF NOT EXISTS time_entries_date_idx ON time_entries (work_date);
+
+-- Sign-in log: every attempt (and sign-out), shown to admins at /admin/sign-ins. Also backs the login throttle.
+CREATE TABLE IF NOT EXISTS login_events (
+  id BIGSERIAL PRIMARY KEY,
+  at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  email TEXT NOT NULL,
+  user_id INTEGER REFERENCES users(id),
+  outcome TEXT NOT NULL CHECK (outcome IN ('success', 'wrong_password', 'unknown_email', 'disabled', 'throttled', 'sign_out')),
+  ip TEXT NOT NULL DEFAULT '',
+  user_agent TEXT NOT NULL DEFAULT ''
+);
+CREATE INDEX IF NOT EXISTS login_events_at_idx ON login_events (at DESC);
+CREATE INDEX IF NOT EXISTS login_events_email_at_idx ON login_events (email, at DESC);
+CREATE INDEX IF NOT EXISTS login_events_ip_at_idx ON login_events (ip, at DESC);
 `;
 
 async function connect(): Promise<Driver> {
