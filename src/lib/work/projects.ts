@@ -7,6 +7,8 @@ export type Person = { id: number; name: string };
 
 export type Project = {
   id: number;
+  /** Short code people pick when they log hours, e.g. "P-007". Empty only if the automatic one was taken. */
+  code: string;
   name: string;
   customer: string;
   description: string;
@@ -25,6 +27,8 @@ export type Project = {
 };
 
 export type ProjectInput = {
+  /** Empty → the next free "P-###" code. */
+  code: string;
   name: string;
   customer: string;
   description: string;
@@ -37,6 +41,7 @@ export type ProjectInput = {
 
 type Row = {
   id: number;
+  code: string | null;
   name: string;
   customer: string;
   description: string;
@@ -52,7 +57,7 @@ type Row = {
 };
 
 const SELECT = `
-SELECT p.id, p.name, p.customer, p.description, p.status, p.lead_id, l.name AS lead_name,
+SELECT p.id, p.code, p.name, p.customer, p.description, p.status, p.lead_id, l.name AS lead_name,
   p.budget_hours::float8 AS budget_hours, p.start_date::text AS start_date, p.due_date::text AS due_date,
   COALESCE(h.hours, 0)::float8 AS hours, COALESCE(t.open, 0)::int AS open_tasks, COALESCE(t.done, 0)::int AS done_tasks
 FROM projects p
@@ -87,6 +92,7 @@ function toProject(r: Row, members: Person[]): Project {
   const sorted = [...members].sort((a, b) => Number(b.id === r.lead_id) - Number(a.id === r.lead_id));
   return {
     id: r.id,
+    code: r.code ?? "",
     name: r.name,
     customer: r.customer,
     description: r.description,
@@ -127,12 +133,23 @@ export async function projectNameTaken(name: string, exceptId?: number): Promise
   return row?.name ?? null;
 }
 
+/** The project that already uses this code (case-insensitive), or null. */
+export async function projectCodeTaken(code: string, exceptId?: number): Promise<string | null> {
+  if (!code) return null;
+  const [row] = await query<{ name: string }>("SELECT name FROM projects WHERE lower(code) = lower($1) AND id <> $2", [code, exceptId ?? 0]);
+  return row?.name ?? null;
+}
+
+/** "P-" plus one more than the highest number already used that way, at least 3 digits. */
+export const NEXT_CODE = `SELECT 'P-' || lpad((COALESCE(MAX(substring(code FROM '^P-([0-9]+)$')::int), 0) + 1)::text, 3, '0') AS code FROM projects`;
+
 export async function createProject(p: ProjectInput): Promise<number> {
   return transaction(async (tx) => {
+    const code = p.code || (await tx.query<{ code: string }>(NEXT_CODE))[0].code;
     const [row] = await tx.query<{ id: number }>(
-      `INSERT INTO projects (name, customer, description, status, lead_id, budget_hours, start_date, due_date)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-      [p.name, p.customer, p.description, p.status, p.leadId, p.budgetHours, p.startDate, p.dueDate],
+      `INSERT INTO projects (code, name, customer, description, status, lead_id, budget_hours, start_date, due_date)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
+      [code, p.name, p.customer, p.description, p.status, p.leadId, p.budgetHours, p.startDate, p.dueDate],
     );
     if (p.leadId) await tx.query("INSERT INTO project_members (project_id, user_id) VALUES ($1, $2)", [row.id, p.leadId]);
     return row.id;
@@ -142,10 +159,11 @@ export async function createProject(p: ProjectInput): Promise<number> {
 /** Full update (admin). The new lead becomes a contributor; the old lead stays one. */
 export async function updateProject(id: number, p: ProjectInput): Promise<void> {
   await transaction(async (tx) => {
+    const code = p.code || (await tx.query<{ code: string | null }>("SELECT code FROM projects WHERE id = $1", [id]))[0]?.code || (await tx.query<{ code: string }>(NEXT_CODE))[0].code;
     await tx.query(
-      `UPDATE projects SET name = $2, customer = $3, description = $4, status = $5, lead_id = $6, budget_hours = $7,
+      `UPDATE projects SET code = $10, name = $2, customer = $3, description = $4, status = $5, lead_id = $6, budget_hours = $7,
        start_date = $8, due_date = $9 WHERE id = $1`,
-      [id, p.name, p.customer, p.description, p.status, p.leadId, p.budgetHours, p.startDate, p.dueDate],
+      [id, p.name, p.customer, p.description, p.status, p.leadId, p.budgetHours, p.startDate, p.dueDate, code],
     );
     if (p.leadId) {
       await tx.query("INSERT INTO project_members (project_id, user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, p.leadId]);

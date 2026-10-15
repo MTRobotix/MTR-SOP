@@ -16,8 +16,8 @@ export async function GET(req: Request) {
   const f = parseReportFilter(Object.fromEntries(new URL(req.url).searchParams));
   const rows = await report(f);
   const lines = [
-    ["Date", "Person", "Email", "Project", "Customer", "Custom name", "Hours", "Week note"],
-    ...rows.map((r) => [r.date, r.person, r.email, r.project, r.customer, r.projectId === null ? "yes" : "no", r.hours, r.note]),
+    ["Date", "Person", "Email", "Code", "Project", "Customer", "Custom name", "Hours", "Note"],
+    ...rows.map((r) => [r.date, r.person, r.email, r.code, r.project, r.customer, r.projectId === null ? "yes" : "no", r.hours, r.note]),
   ];
   const body = lines.map((l) => l.map(csvCell).join(",")).join("\r\n") + "\r\n";
   return new Response(body, {

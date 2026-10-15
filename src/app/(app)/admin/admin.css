@@ -55,3 +55,28 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.signins-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.signins-more {
+  margin-top: var(--space-4);
+}
+
+.flag.muted {
+  color: var(--color-text-muted);
+}
+
+.signins-filters .pills {
+  margin: 0;
+}
+
+.signins-time {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

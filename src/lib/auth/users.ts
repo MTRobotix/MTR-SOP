@@ -17,7 +17,9 @@ export async function createUser(email: string, name: string, password: string, 
 
 let dummyHash: Promise<string> | undefined;
 
-export async function checkLogin(email: string, password: string): Promise<{ id: number; sv: number } | null> {
+export type LoginCheck = { ok: true; id: number; sv: number } | { ok: false; reason: "wrong_password" | "unknown_email" | "disabled"; id: number | null };
+
+export async function checkLogin(email: string, password: string): Promise<LoginCheck> {
   const [row] = await query<{ id: number; password_hash: string; disabled: boolean; session_version: number }>(
     "SELECT id, password_hash, disabled, session_version FROM users WHERE email = $1",
     [normalizeEmail(email)],
@@ -25,8 +27,10 @@ export async function checkLogin(email: string, password: string): Promise<{ id:
   // Compare against a dummy hash when the user is missing so timing does not reveal which emails exist.
   dummyHash ??= bcrypt.hash("not-a-real-password", 12);
   const ok = await bcrypt.compare(password, row?.password_hash ?? (await dummyHash));
-  if (!row || !ok || row.disabled) return null;
-  return { id: row.id, sv: row.session_version };
+  if (!row) return { ok: false, reason: "unknown_email", id: null };
+  if (!ok) return { ok: false, reason: "wrong_password", id: row.id };
+  if (row.disabled) return { ok: false, reason: "disabled", id: row.id };
+  return { ok: true, id: row.id, sv: row.session_version };
 }
 
 export async function listUsers(): Promise<UserListRow[]> {
@@ -55,20 +59,4 @@ export async function setPassword(id: number, password: string): Promise<number>
 export async function verifyPassword(id: number, password: string): Promise<boolean> {
   const [row] = await query<{ password_hash: string }>("SELECT password_hash FROM users WHERE id = $1", [id]);
   return !!row && (await bcrypt.compare(password, row.password_hash));
-}
-
-// Simple per-process login throttle: 5 failures per email per 15 minutes.
-const failures = new Map<string, number[]>();
-const WINDOW_MS = 15 * 60 * 1000;
-
-export function isThrottled(email: string): boolean {
-  const now = Date.now();
-  const list = (failures.get(normalizeEmail(email)) ?? []).filter((t) => now - t < WINDOW_MS);
-  failures.set(normalizeEmail(email), list);
-  return list.length >= 5;
-}
-
-export function recordFailure(email: string): void {
-  const key = normalizeEmail(email);
-  failures.set(key, [...(failures.get(key) ?? []), Date.now()]);
 }

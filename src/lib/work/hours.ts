@@ -1,83 +1,35 @@
 import "server-only";
-import { query, transaction } from "../db";
-import {
-  addDays,
-  cleanName,
-  formatDate,
-  formatWeekday,
-  isIsoDate,
-  mondayOf,
-  weekDays,
-  MAX_DAY_HOURS,
-  MAX_ROWS_PER_WEEK,
-  type ProjectStatus,
-} from "./shared";
+import { query, transaction, type Tx } from "../db";
+import { NEXT_CODE } from "./projects";
+import { cleanName, formatDate, formatHours, formatWeekday, isIsoDate, mondayOf, projectLabel, MAX_DAY_HOURS, type ProjectStatus } from "./shared";
 
-/** One line of a weekly timesheet. hours[0] is Monday; 0 means nothing logged that day. */
-export type SheetRow = {
-  projectId: number | null;
-  customName: string | null;
-  label: string;
-  customer: string;
-  projectStatus: ProjectStatus | null;
-  note: string;
-  hours: number[];
-};
+export type ProjectOption = { id: number; code: string; name: string; customer: string; mine: boolean };
 
-export type SheetRowInput = { projectId: number | null; customName: string | null; note: string; hours: number[] };
-
-export type ProjectOption = { id: number; name: string; customer: string; mine: boolean };
-
-export const MAX_NAME = 80;
 export const MAX_NOTE = 200;
 
-type RowRecord = {
-  id: number;
-  project_id: number | null;
-  custom_name: string | null;
+/** One logged entry: one person, one project (or an old free-text name), one day. */
+export type Entry = {
+  rowId: number;
+  date: string;
+  projectId: number | null;
+  code: string;
+  label: string;
+  customer: string;
+  hours: number;
   note: string;
-  name: string | null;
-  customer: string | null;
-  status: ProjectStatus | null;
 };
 
-async function rowsOfWeek(userId: number, monday: string): Promise<SheetRow[]> {
-  const rows = await query<RowRecord>(
-    `SELECT r.id, r.project_id, r.custom_name, r.note, p.name, p.customer, p.status
-     FROM timesheet_rows r LEFT JOIN projects p ON p.id = r.project_id
-     WHERE r.user_id = $1 AND r.week_start = $2 ORDER BY r.position, r.id`,
+/** Everything one person logged in the week that starts on monday, oldest day first. */
+export async function weekEntries(userId: number, monday: string): Promise<Entry[]> {
+  return query<Entry>(
+    `SELECT r.id AS "rowId", e.work_date::text AS date, r.project_id AS "projectId", COALESCE(p.code, '') AS code,
+       COALESCE(p.name, r.custom_name) AS label, COALESCE(p.customer, '') AS customer, e.hours::float8 AS hours,
+       COALESCE(NULLIF(e.note, ''), r.note) AS note
+     FROM time_entries e JOIN timesheet_rows r ON r.id = e.row_id LEFT JOIN projects p ON p.id = r.project_id
+     WHERE r.user_id = $1 AND r.week_start = $2
+     ORDER BY e.work_date, r.position, r.id`,
     [userId, monday],
   );
-  const entries = await query<{ row_id: number; work_date: string; hours: number }>(
-    `SELECT e.row_id, e.work_date::text AS work_date, e.hours::float8 AS hours
-     FROM time_entries e JOIN timesheet_rows r ON r.id = e.row_id WHERE r.user_id = $1 AND r.week_start = $2`,
-    [userId, monday],
-  );
-  const days = weekDays(monday);
-  const byRow = new Map<number, number[]>(rows.map((r) => [r.id, Array(7).fill(0)]));
-  for (const e of entries) {
-    const i = days.indexOf(e.work_date);
-    if (i >= 0) byRow.get(e.row_id)![i] = e.hours;
-  }
-  return rows.map((r) => ({
-    projectId: r.project_id,
-    customName: r.custom_name,
-    label: r.name ?? r.custom_name ?? "",
-    customer: r.customer ?? "",
-    projectStatus: r.status,
-    note: r.note,
-    hours: byRow.get(r.id)!,
-  }));
-}
-
-export function getWeek(userId: number, monday: string): Promise<SheetRow[]> {
-  return rowsOfWeek(userId, monday);
-}
-
-/** Last week's lines without hours, to start a new week from. Done projects are left out. */
-export async function previousWeekRows(userId: number, monday: string): Promise<SheetRow[]> {
-  const rows = await rowsOfWeek(userId, addDays(monday, -7));
-  return rows.filter((r) => r.projectStatus !== "done").map((r) => ({ ...r, note: "", hours: Array(7).fill(0) }));
 }
 
 export async function weekTotal(userId: number, monday: string): Promise<number> {
@@ -89,93 +41,117 @@ export async function weekTotal(userId: number, monday: string): Promise<number>
   return row.h;
 }
 
-/** Projects people can log hours on: everything not Done. "mine" = the person is a contributor. */
+/**
+ * Projects people can log hours on: everything not Done.
+ * "mine" = the person is a contributor or logged on it in the last 30 days; those come first, most recent first.
+ */
 export async function projectOptions(userId: number): Promise<ProjectOption[]> {
   return query<ProjectOption>(
-    `SELECT p.id, p.name, p.customer, (m.user_id IS NOT NULL) AS mine
-     FROM projects p LEFT JOIN project_members m ON m.project_id = p.id AND m.user_id = $1
-     WHERE p.status <> 'done' ORDER BY lower(p.name)`,
+    `SELECT p.id, COALESCE(p.code, '') AS code, p.name, p.customer,
+       (m.user_id IS NOT NULL OR l.last IS NOT NULL) AS mine
+     FROM projects p
+     LEFT JOIN project_members m ON m.project_id = p.id AND m.user_id = $1
+     LEFT JOIN (
+       SELECT r.project_id, MAX(e.work_date) AS last FROM timesheet_rows r JOIN time_entries e ON e.row_id = r.id
+       WHERE r.user_id = $1 AND e.work_date > CURRENT_DATE - 30 GROUP BY r.project_id
+     ) l ON l.project_id = p.id
+     WHERE p.status <> 'done'
+     ORDER BY (m.user_id IS NOT NULL OR l.last IS NOT NULL) DESC, l.last DESC NULLS LAST, lower(COALESCE(p.code, p.name))`,
     [userId],
   );
 }
 
-/** Replaces one person's week. Validates everything; returns the saved rows or an error to show. */
-export async function saveWeek(userId: number, monday: string, input: unknown): Promise<{ rows?: SheetRow[]; error?: string }> {
-  if (!isIsoDate(monday) || mondayOf(monday) !== monday) return { error: "That week does not exist. Reload the page." };
-  if (!Array.isArray(input)) return { error: "Nothing to save. Reload the page." };
-  if (input.length > MAX_ROWS_PER_WEEK) return { error: `A week holds at most ${MAX_ROWS_PER_WEEK} rows.` };
+type Result = { ok?: string; error?: string };
 
-  const projects = await query<{ id: number; name: string; status: ProjectStatus }>("SELECT id, name, status FROM projects");
-  const byId = new Map(projects.map((p) => [p.id, p]));
-  const byName = new Map(projects.map((p) => [p.name.toLowerCase(), p]));
-  const before = new Set((await rowsOfWeek(userId, monday)).map((r) => r.projectId).filter((id) => id !== null));
+async function dayTotal(tx: Tx, userId: number, date: string, except?: { rowId: number }): Promise<number> {
+  const [row] = await tx.query<{ h: number }>(
+    `SELECT COALESCE(SUM(e.hours), 0)::float8 AS h FROM time_entries e JOIN timesheet_rows r ON r.id = e.row_id
+     WHERE r.user_id = $1 AND e.work_date = $2 AND r.id <> $3`,
+    [userId, date, except?.rowId ?? 0],
+  );
+  return row.h;
+}
 
-  const rows: SheetRowInput[] = [];
-  const seen = new Set<string>();
-  for (const raw of input as Partial<SheetRowInput>[]) {
-    let projectId = Number.isInteger(raw?.projectId) ? (raw.projectId as number) : null;
-    let customName = typeof raw?.customName === "string" ? cleanName(raw.customName) : null;
-    const note = typeof raw?.note === "string" ? raw.note.replace(/\s+/g, " ").trim() : "";
-    const hours = Array.isArray(raw?.hours) ? raw.hours : [];
-    if (projectId === null && !customName) return { error: "Every row needs a project or a name." };
-    if (customName && customName.length > MAX_NAME) return { error: `Names: at most ${MAX_NAME} characters.` };
-    if (note.length > MAX_NOTE) return { error: `Notes: at most ${MAX_NOTE} characters.` };
-    // A typed name that matches a project is that project.
-    if (projectId === null && customName && byName.has(customName.toLowerCase())) {
-      projectId = byName.get(customName.toLowerCase())!.id;
-    }
-    if (projectId !== null) {
-      customName = null;
-      const p = byId.get(projectId);
-      if (!p) return { error: "A project on this sheet was deleted. Remove its row and save again." };
-      if (p.status === "done" && !before.has(projectId)) return { error: `${p.name} is done. Pick an ongoing project.` };
-    }
-    const key = projectId !== null ? `p${projectId}` : `c${customName!.toLowerCase()}`;
-    const label = projectId !== null ? byId.get(projectId)!.name : customName!;
-    if (seen.has(key)) return { error: `${label} is on this week twice. Keep one row.` };
-    seen.add(key);
-    if (hours.length !== 7 || !hours.every((h) => typeof h === "number" && Number.isFinite(h) && h >= 0 && h <= MAX_DAY_HOURS)) {
-      return { error: `Hours for ${label}: use numbers from 0 to ${MAX_DAY_HOURS}.` };
-    }
-    rows.push({ projectId, customName, note, hours: hours.map((h) => Math.round(h * 100) / 100) });
-  }
+const dayName = (date: string) => `${formatWeekday(date)} ${formatDate(date, date.slice(0, 4))}`;
 
-  const days = weekDays(monday);
-  for (let i = 0; i < 7; i++) {
-    const sum = rows.reduce((s, r) => s + r.hours[i], 0);
-    if (sum > MAX_DAY_HOURS) {
-      const day = `${formatWeekday(days[i])} ${formatDate(days[i], days[i].slice(0, 4))}`;
-      return { error: `${day}: ${Math.round(sum * 100) / 100} h is more than ${MAX_DAY_HOURS} h in one day.` };
+/**
+ * Adds hours to one project on one day. Logging the same project and day again adds to it.
+ * The project follows: the person becomes a contributor, and a project still in Planning becomes Active.
+ */
+export async function logTime(userId: number, input: { projectId: number; date: string; hours: number; note: string }, today: string): Promise<Result> {
+  const { projectId, date, hours } = input;
+  const note = input.note.replace(/\s+/g, " ").trim();
+  if (!isIsoDate(date)) return { error: "Pick a day." };
+  if (date > today) return { error: "You can log hours up to today, not ahead." };
+  if (!(hours > 0 && hours <= MAX_DAY_HOURS)) return { error: `Hours: a number above 0, at most ${MAX_DAY_HOURS}.` };
+  if (note.length > MAX_NOTE) return { error: `Note: at most ${MAX_NOTE} characters.` };
+  return transaction(async (tx) => {
+    const [p] = await tx.query<{ id: number; code: string | null; name: string; status: ProjectStatus }>(
+      "SELECT id, code, name, status FROM projects WHERE id = $1",
+      [projectId],
+    );
+    if (!p) return { error: "Pick a project from the list." };
+    if (p.status === "done") return { error: `${projectLabel(p)} is done. Pick an ongoing project.` };
+    const already = await dayTotal(tx, userId, date);
+    if (already + hours > MAX_DAY_HOURS) {
+      return { error: `${dayName(date)} already has ${formatHours(already)} h. ${formatHours(hours)} h more is over ${MAX_DAY_HOURS} h.` };
     }
-  }
-
-  await transaction(async (tx) => {
-    await tx.query("DELETE FROM timesheet_rows WHERE user_id = $1 AND week_start = $2", [userId, monday]);
-    const ids: number[] = [];
-    const dates: string[] = [];
-    const amounts: number[] = [];
-    for (const [pos, r] of rows.entries()) {
-      const [row] = await tx.query<{ id: number }>(
-        `INSERT INTO timesheet_rows (user_id, week_start, project_id, custom_name, note, position)
-         VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
-        [userId, monday, r.projectId, r.customName, r.note, pos],
-      );
-      r.hours.forEach((h, i) => {
-        if (h > 0) {
-          ids.push(row.id);
-          dates.push(days[i]);
-          amounts.push(h);
-        }
-      });
-    }
-    if (ids.length) {
-      await tx.query(
-        "INSERT INTO time_entries (row_id, work_date, hours) SELECT * FROM unnest($1::int[], $2::date[], $3::numeric[])",
-        [ids, dates, amounts],
+    const monday = mondayOf(date);
+    let [row] = await tx.query<{ id: number }>("SELECT id FROM timesheet_rows WHERE user_id = $1 AND week_start = $2 AND project_id = $3", [
+      userId,
+      monday,
+      projectId,
+    ]);
+    if (!row) {
+      [row] = await tx.query<{ id: number }>(
+        `INSERT INTO timesheet_rows (user_id, week_start, project_id, position)
+         SELECT $1, $2, $3, COALESCE(MAX(position) + 1, 0) FROM timesheet_rows WHERE user_id = $1 AND week_start = $2 RETURNING id`,
+        [userId, monday, projectId],
       );
     }
+    await tx.query(
+      `INSERT INTO time_entries (row_id, work_date, hours, note) VALUES ($1, $2, $3, $4)
+       ON CONFLICT (row_id, work_date) DO UPDATE SET hours = time_entries.hours + EXCLUDED.hours,
+         note = concat_ws('; ', NULLIF(time_entries.note, ''), NULLIF(EXCLUDED.note, ''))`,
+      [row.id, date, hours, note],
+    );
+    await tx.query("INSERT INTO project_members (project_id, user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [projectId, userId]);
+    await tx.query("UPDATE projects SET status = 'active' WHERE id = $1 AND status = 'planning'", [projectId]);
+    return { ok: `Logged ${formatHours(hours)} h on ${projectLabel(p)} for ${dayName(date)}.` };
   });
-  return { rows: await rowsOfWeek(userId, monday) };
+}
+
+/** Sets one entry's hours and note. Only the person who logged it can change it. */
+export async function updateEntry(userId: number, rowId: number, date: string, hours: number, note: string): Promise<Result> {
+  const clean = note.replace(/\s+/g, " ").trim();
+  if (!isIsoDate(date)) return { error: "That entry no longer exists. Reload the page." };
+  if (!(hours > 0 && hours <= MAX_DAY_HOURS)) return { error: `Hours: a number above 0, at most ${MAX_DAY_HOURS}. To remove the entry, delete it.` };
+  if (clean.length > MAX_NOTE) return { error: `Note: at most ${MAX_NOTE} characters.` };
+  return transaction(async (tx) => {
+    const others = await dayTotal(tx, userId, date, { rowId });
+    if (others + hours > MAX_DAY_HOURS) return { error: `${dayName(date)} would have ${formatHours(others + hours)} h, more than ${MAX_DAY_HOURS} h.` };
+    const done = await tx.query<{ row_id: number }>(
+      `UPDATE time_entries e SET hours = $3, note = $4 FROM timesheet_rows r
+       WHERE e.row_id = r.id AND r.id = $1 AND r.user_id = $2 AND e.work_date = $5 RETURNING e.row_id`,
+      [rowId, userId, hours, clean, date],
+    );
+    if (!done.length) return { error: "That entry no longer exists. Reload the page." };
+    return { ok: "Saved." };
+  });
+}
+
+/** Removes one entry. A week line left with no hours goes too. */
+export async function deleteEntry(userId: number, rowId: number, date: string): Promise<Result> {
+  return transaction(async (tx) => {
+    const gone = await tx.query<{ row_id: number }>(
+      `DELETE FROM time_entries e USING timesheet_rows r WHERE e.row_id = r.id AND r.id = $1 AND r.user_id = $2 AND e.work_date = $3
+       RETURNING e.row_id`,
+      [rowId, userId, date],
+    );
+    if (!gone.length) return { error: "That entry no longer exists. Reload the page." };
+    await tx.query("DELETE FROM timesheet_rows r WHERE r.id = $1 AND NOT EXISTS (SELECT 1 FROM time_entries e WHERE e.row_id = r.id)", [rowId]);
+    return { ok: "Deleted." };
+  });
 }
 
 // ── Team report (admin) ─────────────────────────────────────────────────────
@@ -188,6 +164,7 @@ export type ReportEntry = {
   person: string;
   email: string;
   projectId: number | null;
+  code: string;
   project: string;
   customer: string;
   hours: number;
@@ -208,7 +185,8 @@ export async function report(f: ReportFilter): Promise<ReportEntry[]> {
   }
   return query<ReportEntry>(
     `SELECT e.work_date::text AS date, u.id AS "userId", u.name AS person, u.email, r.project_id AS "projectId",
-       COALESCE(p.name, r.custom_name) AS project, COALESCE(p.customer, '') AS customer, e.hours::float8 AS hours, r.note
+       COALESCE(p.code, '') AS code, COALESCE(p.name, r.custom_name) AS project, COALESCE(p.customer, '') AS customer,
+       e.hours::float8 AS hours, COALESCE(NULLIF(e.note, ''), r.note) AS note
      FROM time_entries e
      JOIN timesheet_rows r ON r.id = e.row_id
      JOIN users u ON u.id = r.user_id
@@ -245,7 +223,11 @@ export async function promoteCustom(name: string, target: number | "new"): Promi
     if (target === "new") {
       const [taken] = await tx.query<{ id: number }>("SELECT id FROM projects WHERE lower(name) = lower($1)", [name]);
       if (taken) return { error: `A project named ${name} exists. Pick it from the list instead.` };
-      const [row] = await tx.query<{ id: number }>("INSERT INTO projects (name, status) VALUES ($1, 'active') RETURNING id", [cleanName(name)]);
+      const [{ code }] = await tx.query<{ code: string }>(NEXT_CODE);
+      const [row] = await tx.query<{ id: number }>("INSERT INTO projects (code, name, status) VALUES ($1, $2, 'active') RETURNING id", [
+        code,
+        cleanName(name),
+      ]);
       projectId = row.id;
     } else {
       const [p] = await tx.query<{ id: number }>("SELECT id FROM projects WHERE id = $1", [target]);
@@ -262,9 +244,10 @@ export async function promoteCustom(name: string, target: number | "new"): Promi
     );
     // Same person, same week, already has the project: add the hours to that row, then drop the free-text row.
     await tx.query(
-      `INSERT INTO time_entries (row_id, work_date, hours)
-       SELECT t.id, e.work_date, e.hours FROM timesheet_rows c JOIN time_entries e ON e.row_id = c.id, timesheet_rows t WHERE ${same}
-       ON CONFLICT (row_id, work_date) DO UPDATE SET hours = LEAST(${MAX_DAY_HOURS}, time_entries.hours + EXCLUDED.hours)`,
+      `INSERT INTO time_entries (row_id, work_date, hours, note)
+       SELECT t.id, e.work_date, e.hours, e.note FROM timesheet_rows c JOIN time_entries e ON e.row_id = c.id, timesheet_rows t WHERE ${same}
+       ON CONFLICT (row_id, work_date) DO UPDATE SET hours = LEAST(${MAX_DAY_HOURS}, time_entries.hours + EXCLUDED.hours),
+         note = concat_ws('; ', NULLIF(time_entries.note, ''), NULLIF(EXCLUDED.note, ''))`,
       params,
     );
     await tx.query(

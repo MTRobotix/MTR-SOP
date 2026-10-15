@@ -31,7 +31,6 @@ export function isTaskStatus(v: unknown): v is TaskStatus {
 /** A budget at or above this share of hours used shows as a warning. */
 export const BUDGET_WARN = 0.9;
 export const MAX_DAY_HOURS = 24;
-export const MAX_ROWS_PER_WEEK = 30;
 
 // Dates are plain "YYYY-MM-DD" strings everywhere. Calendar maths runs in UTC so the result never
 // depends on the server's or the browser's time zone.
@@ -105,4 +104,18 @@ export function parseHours(input: string): number | null {
 /** Collapses spaces in a free-text project name. */
 export function cleanName(v: string): string {
   return v.replace(/\s+/g, " ").trim();
+}
+
+/** Project codes: letters, digits and single dashes, 2–16 characters, stored upper case. "p 7" → "P-7". */
+export function cleanCode(v: string): string {
+  return v.trim().toUpperCase().replace(/[\s_]+/g, "-");
+}
+
+export function isProjectCode(v: string): boolean {
+  return /^[A-Z0-9]+(-[A-Z0-9]+)*$/.test(v) && v.length >= 2 && v.length <= 16;
+}
+
+/** "P-007 · MetriQ pilot", or the name alone for a project without a code. */
+export function projectLabel(p: { code: string | null; name: string }): string {
+  return p.code ? `${p.code} · ${p.name}` : p.name;
 }

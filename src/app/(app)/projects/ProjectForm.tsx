@@ -7,6 +7,7 @@ import type { FormState } from "./actions";
 
 export type ProjectValues = {
   id?: number;
+  code: string;
   name: string;
   customer: string;
   description: string;
@@ -39,8 +40,24 @@ export function ProjectForm({ action, values, people, lead = false, submitLabel 
       }}
     >
       {values.id && <input type="hidden" name="projectId" value={values.id} />}
-      {lead && <p className="hint">Name, customer, lead and hour budget are set by an admin.</p>}
+      {lead && <p className="hint">Code, name, customer, lead and hour budget are set by an admin.</p>}
       <div className="form-grid">
+        <div>
+          <label className="label" htmlFor="p-code">
+            Code {!values.id && <span className="hint">optional</span>}
+          </label>
+          <input
+            className="input"
+            id="p-code"
+            name="code"
+            defaultValue={values.code}
+            maxLength={16}
+            placeholder="Next free, like P-012"
+            autoCapitalize="characters"
+            disabled={lead}
+          />
+          {!lead && <p className="hint">People pick this code when they log hours.</p>}
+        </div>
         <div>
           <label className="label" htmlFor="p-name">
             Name

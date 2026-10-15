@@ -44,10 +44,33 @@
   color: var(--color-accent);
 }
 
-.project-customer {
+/* Code before the name, so people learn the code they log hours with. */
+.project-code {
+  margin-right: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.project-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
   margin-top: calc(var(--space-2) * -1);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
+}
+
+.project-log {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  align-self: flex-start;
+  min-height: var(--hit);
+  font-size: var(--text-sm);
+  font-weight: 500;
 }
 
 .project-card .meter {

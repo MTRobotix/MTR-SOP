@@ -3,7 +3,7 @@
 The MTR staff app, behind one login:
 
 - **SOP** (`/sop`) — standard operating procedures. Search with an AI answer, one card per department, in-app editing with review.
-- **Hours** (`/hours`) — a weekly timesheet. Each person logs hours per project per day, or under a typed name when the work is not a project yet.
+- **Hours** (`/hours`) — a timecard like Dayforce/SAP: pick a day in the week strip, pick a project by its code in the project panel, enter the hours. A week overview shows projects by day. The project's hours, contributors and status follow at once.
 - **Projects** (`/projects`) — a dashboard of ongoing projects with status, lead, contributors, dates, hours against budget, and a task board per project.
 
 ## How it works
@@ -27,16 +27,22 @@ The MTR staff app, behind one login:
 | Create projects, set lead and budget | no | no | no | yes |
 | Change project status and dates, manage contributors, assign tasks | no | no | own projects | yes |
 | Move a task on the board | own tasks | own tasks | own projects | yes |
+| Manage users (add, role, disable, reset password) | no | no | no | yes, never their own account |
+| See the sign-in log (`/admin/sign-ins`) | no | no | no | yes |
 
 "Project lead" is not a role: an admin picks a lead per project, and any user can be one.
 
-Typed names on timesheets show up under **Team hours** (admin). Turn one into a project there: its hours move to the project and the people who logged it become contributors.
+Every role check runs on the server against the database on each request, so a role change or a disable applies at once. Passwords need at least 8 characters. After 5 failed sign-ins for one email, or 20 from one IP, within 15 minutes, sign-in is blocked for 15 minutes; the count is kept in the database, so it holds across server instances.
+
+Every project has a code (`P-001`, `P-002`, …; an admin can set their own, like `MQ-VN`). Logging hours on a project makes you a contributor, and a project still in Planning becomes Active.
+
+Older timesheets may hold hours under a typed name instead of a project. They show up under **Team hours** (admin); turn one into a project there and its hours move to the project.
 
 ## Run locally
 
 ```bash
 npm install
-ADMIN_EMAIL=you@example.com ADMIN_PASSWORD='min4' npm run db:setup
+ADMIN_EMAIL=you@example.com ADMIN_PASSWORD='min8chars' npm run db:setup
 npm run dev
 ```
 

@@ -1,5 +1,5 @@
 /** Minimum password length. Used by the server checks and the forms. */
-export const MIN_PASSWORD = 4;
+export const MIN_PASSWORD = 8;
 
 export const ROLES = ["viewer", "editor", "admin"] as const;
 export type Role = (typeof ROLES)[number];

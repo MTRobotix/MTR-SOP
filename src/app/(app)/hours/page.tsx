@@ -1,28 +1,35 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/session";
-import { getWeek, previousWeekRows, projectOptions } from "@/lib/work/hours";
+import { projectOptions, weekEntries } from "@/lib/work/hours";
 import { isIsoDate, mondayOf } from "@/lib/work/shared";
 import { today } from "@/lib/work/today";
-import { Timesheet } from "./Timesheet";
+import { Timecard } from "./Timecard";
 import "@/components/work/work.css";
 import "./hours.css";
 
 export const metadata = { title: "Hours" };
 
-export default async function HoursPage({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
+type Search = { week?: string; day?: string; project?: string };
+
+export default async function HoursPage({ searchParams }: { searchParams: Promise<Search> }) {
   const user = await requireUser();
-  const { week } = await searchParams;
+  const { week, day, project } = await searchParams;
   const now = today();
   const thisMonday = mondayOf(now);
-  const monday = isIsoDate(week) ? mondayOf(week) : thisMonday;
-  const [rows, previous, options] = await Promise.all([getWeek(user.id, monday), previousWeekRows(user.id, monday), projectOptions(user.id)]);
+  const asked = isIsoDate(day) ? day : isIsoDate(week) ? week : now;
+  const monday = mondayOf(asked) <= thisMonday ? mondayOf(asked) : thisMonday;
+  const [entries, projects] = await Promise.all([weekEntries(user.id, monday), projectOptions(user.id)]);
+  const wanted = Number(project);
+  const initialProjectId = projects.some((p) => p.id === wanted) ? wanted : null;
+  // Open on the asked day, else today in this week, else the week's Monday.
+  const initialDay = isIsoDate(day) && mondayOf(day) === monday ? day : monday === thisMonday ? now : monday;
 
   return (
-    <div className="shell page">
+    <div className="shell page hours-page">
       <div className="page-head">
         <div>
           <h1>Hours</h1>
-          <p>One row per project. Enter the hours you worked on it each day, then save the week. Only you and admins see your hours.</p>
+          <p>Pick a day, pick a project, enter the hours. The project&apos;s hours update at once. Only you and admins see your hours.</p>
         </div>
         {user.role === "admin" && (
           <Link href="/hours/team" className="btn">
@@ -30,7 +37,16 @@ export default async function HoursPage({ searchParams }: { searchParams: Promis
           </Link>
         )}
       </div>
-      <Timesheet key={monday} monday={monday} thisMonday={thisMonday} today={now} initialRows={rows} previous={previous} options={options} />
+      <Timecard
+        key={`${monday}-${initialProjectId ?? ""}`}
+        monday={monday}
+        thisMonday={thisMonday}
+        today={now}
+        entries={entries}
+        projects={projects}
+        initialDay={initialDay}
+        initialProjectId={initialProjectId}
+      />
     </div>
   );
 }

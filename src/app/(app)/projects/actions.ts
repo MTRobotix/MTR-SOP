@@ -12,6 +12,7 @@ import {
   getProject,
   isMember,
   listActivePeople,
+  projectCodeTaken,
   projectNameTaken,
   removeMember,
   updateProject,
@@ -20,7 +21,7 @@ import {
   type ProjectInput,
 } from "@/lib/work/projects";
 import { createTask, deleteTask, getTask, setTaskStatus, updateTask, type TaskInput } from "@/lib/work/tasks";
-import { cleanName, isIsoDate, isProjectStatus, isTaskStatus } from "@/lib/work/shared";
+import { cleanCode, cleanName, isIsoDate, isProjectCode, isProjectStatus, isTaskStatus } from "@/lib/work/shared";
 
 export type FormState = { error?: string; ok?: string };
 
@@ -54,6 +55,7 @@ function refresh(projectId?: number) {
 // ── Projects ────────────────────────────────────────────────────────────────
 
 async function readProject(form: FormData): Promise<ProjectInput | string> {
+  const code = cleanCode(text(form, "code"));
   const name = cleanName(text(form, "name"));
   const customer = cleanName(text(form, "customer"));
   const description = text(form, "description");
@@ -62,6 +64,7 @@ async function readProject(form: FormData): Promise<ProjectInput | string> {
   const budgetRaw = text(form, "budgetHours").replace(",", ".");
   const startDate = optionalDate(form, "startDate");
   const dueDate = optionalDate(form, "dueDate");
+  if (code && !isProjectCode(code)) return "Code: 2–16 letters, digits or dashes, like P-012 or MQ-VN.";
   if (!name) return "Enter a project name.";
   if (name.length > 80) return "Project name: at most 80 characters.";
   if (customer.length > 80) return "Customer: at most 80 characters.";
@@ -76,7 +79,7 @@ async function readProject(form: FormData): Promise<ProjectInput | string> {
     if (!/^\d+(\.\d{1,2})?$/.test(budgetRaw) || budgetHours <= 0 || budgetHours > 100000) return "Hour budget: a number of hours above 0, or leave it empty.";
   }
   if (leadId !== null && !(await listActivePeople()).some((p) => p.id === leadId)) return "Pick a lead from the list.";
-  return { name, customer, description, status, leadId, budgetHours, startDate, dueDate };
+  return { code, name, customer, description, status, leadId, budgetHours, startDate, dueDate };
 }
 
 export async function createProjectAction(_prev: FormState, form: FormData): Promise<FormState> {
@@ -85,6 +88,8 @@ export async function createProjectAction(_prev: FormState, form: FormData): Pro
   if (typeof p === "string") return { error: p };
   const taken = await projectNameTaken(p.name);
   if (taken) return { error: `A project named ${taken} exists. Pick another name.` };
+  const codeTaken = await projectCodeTaken(p.code);
+  if (codeTaken) return { error: `${p.code} is already the code of ${codeTaken}. Pick another code or leave it empty.` };
   const newId = await createProject(p);
   refresh();
   redirect(`/projects/${newId}`);
@@ -97,6 +102,8 @@ export async function updateProjectAction(_prev: FormState, form: FormData): Pro
     if (typeof p === "string") return { error: p };
     const taken = await projectNameTaken(p.name, project.id);
     if (taken) return { error: `A project named ${taken} exists. Pick another name.` };
+    const codeTaken = await projectCodeTaken(p.code, project.id);
+    if (codeTaken) return { error: `${p.code} is already the code of ${codeTaken}. Pick another code.` };
     await updateProject(project.id, p);
   } else {
     // Leads change what the work needs, not the name, customer, lead or budget the admin set.
@@ -112,6 +119,7 @@ export async function updateProjectAction(_prev: FormState, form: FormData): Pro
 function withAdminFields(form: FormData, p: Project): FormData {
   const f = new FormData();
   for (const [k, v] of form) f.append(k, v);
+  f.set("code", p.code);
   f.set("name", p.name);
   f.set("customer", p.customer);
   f.set("leadId", p.leadId ? String(p.leadId) : "");

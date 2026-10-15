@@ -1,15 +1,23 @@
-.sheet {
+/* Hours timecard (mtr-home-ui §6): week bar with the day strip, project panel, day panel, week grid. */
+.timecard {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-4);
 }
 
-/* Lets the grid scroll inside its card instead of widening the page. */
-.sheet > * {
+.timecard > * {
   min-width: 0;
 }
 
-.sheet-bar {
+/* Week bar and day strip. */
+.week-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.week-bar-head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -17,178 +25,470 @@
   gap: var(--space-3);
 }
 
-.sheet-nav {
+.week-nav {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
 }
 
-.sheet-week {
-  margin-left: var(--space-2);
+.week-range {
+  min-width: 10rem;
   font-weight: 500;
+  text-align: center;
 }
 
-.sheet-total {
+.btn.is-disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.week-total {
   color: var(--color-text-muted);
 }
 
-.sheet-total .num {
+.week-total strong {
   color: var(--color-text);
   font-size: var(--text-xl);
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
-/* The grid scrolls sideways inside its card on narrow screens; the project column stays put. */
-.sheet-wrap {
-  /* Contains the visually hidden header text too, so it cannot widen the page. */
-  position: relative;
+.day-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.day-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  min-height: calc(var(--hit) * 1.75);
+  padding: var(--space-2) var(--space-1);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
 
-.sheet-table {
+.day-tile:hover {
+  background: var(--color-hover);
+}
+
+.day-tile[aria-pressed="true"] {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.day-name {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.day-date {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.day-tile.is-today .day-date {
+  color: var(--color-accent);
+}
+
+/* Today: accent date and an accent bar along the bottom, picked or not. */
+.day-tile.is-today {
+  box-shadow: inset 0 -3px 0 var(--color-accent);
+}
+
+.day-hours {
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+.day-tile[aria-pressed="true"] .day-hours {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.day-tile.is-future {
+  background: var(--color-bg-soft);
+}
+
+/* Project panel beside the day panel. */
+.timecard-body {
+  display: grid;
+  grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.project-panel,
+.day-panel,
+.week-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  min-width: 0;
+}
+
+.pp-search {
+  position: relative;
+}
+
+.pp-search svg {
+  position: absolute;
+  top: 50%;
+  left: var(--space-4);
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+}
+
+.pp-search .input {
+  padding-left: calc(var(--space-4) + 1.5rem);
+}
+
+.pp-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 26rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.pp-group {
+  padding: var(--space-3) var(--space-2) var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pp-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
   width: 100%;
-  min-width: 46rem;
+  min-height: var(--hit);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.pp-item:hover {
+  background: var(--color-hover);
+}
+
+.pp-item[aria-pressed="true"] {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.pp-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+  min-width: 0;
+}
+
+.pp-code {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.pp-name {
+  overflow-wrap: anywhere;
+}
+
+.pp-customer {
+  flex-basis: 100%;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.pp-hours {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Day panel: entries, then the log form. */
+.day-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.day-panel-total {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.log-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-line);
+}
+
+.log-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 8rem);
+  gap: var(--space-3);
+}
+
+/* Chips: pill toggles for the common choices. aria-pressed marks the chosen one. */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--hit);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+.chip:hover {
+  background: var(--color-hover);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.hint-error {
+  color: var(--color-danger);
+}
+
+.log-done {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.log-submit {
+  min-height: calc(var(--hit) * 1.2);
+  font-size: var(--text-base);
+}
+
+.entries {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.entry + .entry {
+  border-top: 1px solid var(--color-line);
+}
+
+.entry-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.entry-title {
+  overflow-wrap: anywhere;
+}
+
+.entry-code {
+  margin-right: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.entry-note {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+.entry-hours {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.entry-actions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.entry-editing {
+  display: block;
+}
+
+.entry-edit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.entry-edit-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+/* Week grid: projects by day. Scrolls inside its card, never the page. */
+.wg-scroll {
+  overflow-x: auto;
+}
+
+.wg-table {
+  width: 100%;
+  min-width: 36rem;
   border-collapse: collapse;
   font-size: var(--text-sm);
 }
 
-.sheet-table th,
-.sheet-table td {
-  padding: var(--space-2);
+.wg-table th,
+.wg-table td {
+  padding: var(--space-2) var(--space-3);
   border-bottom: 1px solid var(--color-line);
-  text-align: center;
-  vertical-align: middle;
+  text-align: left;
 }
 
-.sheet-table thead th {
-  color: var(--color-text-muted);
-  font-weight: 500;
-}
-
-.sheet-table tfoot th,
-.sheet-table tfoot td {
-  border-bottom: 0;
-  color: var(--color-text-muted);
-}
-
-.sheet-table tfoot strong {
-  color: var(--color-text);
-}
-
-.sheet-table .num {
+.wg-table .num {
   text-align: right;
-  padding-right: var(--space-3);
-}
-
-.sheet-project {
-  position: sticky;
-  left: 0;
-  z-index: 1;
-  min-width: 13rem;
-  padding-left: var(--space-4) !important;
-  background: var(--color-surface);
-  text-align: left !important;
-  font-weight: 400;
-}
-
-thead .sheet-project,
-tfoot .sheet-project {
-  font-weight: 500;
-}
-
-.sheet-project-inner {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.sheet-name {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-  font-weight: 500;
-}
-
-.sheet-note {
-  width: 100%;
-  margin-top: var(--space-1);
-}
-
-.sheet-day span {
-  display: block;
-}
-
-.sheet-date {
-  font-size: var(--text-xs);
-  font-weight: 400;
-  color: var(--color-text-faint);
-}
-
-.sheet-table .is-today {
-  background: var(--color-bg-soft);
-}
-
-.sheet-table thead .is-today {
-  color: var(--color-text);
-}
-
-.sheet-table .is-zero {
-  color: var(--color-text-faint);
-}
-
-.sheet-table .is-over {
-  color: var(--color-danger);
-  font-weight: 600;
-}
-
-.sheet-cell {
-  width: 3.6rem;
-  min-height: var(--hit);
-  padding: 0 var(--space-2);
-  border: 1px solid var(--color-line-strong);
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  text-align: center;
   font-variant-numeric: tabular-nums;
 }
 
-.sheet-cell:focus-visible {
-  border-color: var(--color-accent);
-}
-
-.sheet-cell[aria-invalid="true"] {
-  border-color: var(--color-danger);
-  background: var(--color-danger-soft);
-  color: var(--color-danger);
-}
-
-.sheet-remove {
-  border-color: transparent;
+.wg-table thead th {
   color: var(--color-text-muted);
+  font-weight: 500;
 }
 
-.sheet-add {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: var(--space-3);
+.wg-table tbody th {
+  font-weight: 400;
 }
 
-.sheet-add-field {
-  flex: 1 1 16rem;
-  max-width: 24rem;
+/* The project column stays put while the days scroll, like a frozen first column. */
+.wg-table th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 11rem;
+  background: var(--color-surface);
 }
 
-.sheet-save {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--color-line);
+.wg-table tfoot th,
+.wg-table tfoot td {
+  border-bottom: 0;
+  font-weight: 500;
+}
+
+.wg-table .is-picked {
+  background: var(--color-bg-soft);
+}
+
+.wg-table .is-zero {
+  color: var(--color-text-faint);
+}
+
+.wg-day {
+  min-height: var(--hit);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.wg-day:hover {
+  color: var(--color-accent);
+}
+
+@media (max-width: 900px) {
+  .timecard-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* On a phone the day comes first, the project list after it. */
+  .day-panel {
+    order: -1;
+  }
+
+  .pp-list {
+    max-height: 16rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .week-range {
+    min-width: 0;
+  }
+
+  .day-strip {
+    gap: var(--space-1);
+  }
+
+  .day-tile {
+    padding: var(--space-2) 0;
+  }
+
+  .log-row,
+  .entry-edit-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .entry {
+    flex-wrap: wrap;
+  }
+
+  .entry-main {
+    flex-basis: 100%;
+  }
+
+  .entry-hours {
+    margin-right: auto;
+  }
 }
 
 /* Team hours (admin). */
@@ -244,12 +544,6 @@ tfoot .sheet-project {
 
 .promote-form select {
   max-width: 16rem;
-}
-
-@media (max-width: 720px) {
-  .sheet-project {
-    min-width: 9rem;
-  }
 }
 
 @media (max-width: 900px) {
