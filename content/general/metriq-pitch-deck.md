@@ -12,7 +12,7 @@ updated: 2026-10-14
 
 [MetriQ demo video](attachments/metriq-demo.mp4)
 
-2 min 4 s, 1920 × 1080, background music, no voice-over. It plays every slide with its animations. Send it with outreach emails or play it before a live demo.
+1 min 48 s, 1920 × 1080, background music, no voice-over. It plays every slide with its animations, except slide 5: the video shows the capabilities on the photo of real parts only. Send it with outreach emails or play it before a live demo.
 
 Source: `content/general/attachments/metriq-demo.mp4`
 
@@ -54,10 +54,9 @@ Source: `content/general/attachments/metriq-pitch-deck.pptx`
 
 ## Before sending
 
+Slides 4 and 5 show the same capabilities two ways: on a photo of real parts and on generated cartons. Both stay in the deck.
+
 > [!TODO]
-> Two decisions before the deck goes to a customer. Owner: Thong Huynh.
->
-> 1. Slides 4 and 5 show the same capabilities two ways (photo of parts, generated cartons). Keep one and delete the other.
-> 2. Slide 9 has no MetriQ price. Add it once the price is confirmed (see [Business proposal](/d/business/business-proposal)).
+> Slide 9 has no MetriQ price. Add it once the price is confirmed (see [Business proposal](/d/business/business-proposal)).
 
 Source: Thong Huynh.
