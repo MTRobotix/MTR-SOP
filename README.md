@@ -3,7 +3,7 @@
 The MTR staff app, behind one login:
 
 - **SOP** (`/sop`) — standard operating procedures. Search with an AI answer, one card per department, in-app editing with review.
-- **Hours** (`/hours`) — log time one entry at a time: pick a project by its code, tap the hours, log. The project's hours, contributors and status follow at once.
+- **Hours** (`/hours`) — a timecard like Dayforce/SAP: pick a day in the week strip, pick a project by its code in the project panel, enter the hours. A week overview shows projects by day. The project's hours, contributors and status follow at once.
 - **Projects** (`/projects`) — a dashboard of ongoing projects with status, lead, contributors, dates, hours against budget, and a task board per project.
 
 ## How it works
