@@ -4,7 +4,7 @@ import { requireUser } from "@/lib/auth/session";
 import { customNames, report } from "@/lib/work/hours";
 import { listActivePeople, listProjects } from "@/lib/work/projects";
 import { filterQuery, parseReportFilter, type FilterParams } from "@/lib/work/filters";
-import { formatDate, formatHours } from "@/lib/work/shared";
+import { formatDate, formatHours, projectLabel } from "@/lib/work/shared";
 import { promote } from "./actions";
 import "@/components/work/work.css";
 import "../hours.css";
@@ -52,7 +52,7 @@ export default async function TeamHoursPage({ searchParams }: { searchParams: Pr
     (e) => (e.projectId !== null ? `p${e.projectId}` : `c${e.project.toLowerCase()}`),
     (e) => ({
       key: e.projectId !== null ? `p${e.projectId}` : `c${e.project}`,
-      label: e.project,
+      label: e.code ? projectLabel({ code: e.code, name: e.project }) : e.project,
       sub: e.projectId === null ? "custom" : e.customer,
       href: e.projectId !== null ? link({ project: String(e.projectId) }) : link({ project: "custom" }),
     }),
@@ -120,7 +120,7 @@ export default async function TeamHoursPage({ searchParams }: { searchParams: Pr
             <option value="custom">Typed names only</option>
             {projects.map((p) => (
               <option key={p.id} value={p.id}>
-                {p.name}
+                {projectLabel(p)}
               </option>
             ))}
           </select>
@@ -231,7 +231,7 @@ export default async function TeamHoursPage({ searchParams }: { searchParams: Pr
                       <td className="nowrap">{formatDate(e.date, year)}</td>
                       <td>{e.person}</td>
                       <td>
-                        {e.project}
+                        {e.code ? projectLabel({ code: e.code, name: e.project }) : e.project}
                         {e.projectId === null && <span className="tag">custom</span>}
                       </td>
                       <td className="num">{formatHours(e.hours)}</td>
@@ -285,7 +285,7 @@ export default async function TeamHoursPage({ searchParams }: { searchParams: Pr
                           <option value="new">New project “{c.name}”</option>
                           {projects.map((p) => (
                             <option key={p.id} value={p.id}>
-                              Move to {p.name}
+                              Move to {projectLabel(p)}
                             </option>
                           ))}
                         </select>

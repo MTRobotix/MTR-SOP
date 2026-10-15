@@ -3,7 +3,7 @@
 The MTR staff app, behind one login:
 
 - **SOP** (`/sop`) — standard operating procedures. Search with an AI answer, one card per department, in-app editing with review.
-- **Hours** (`/hours`) — a weekly timesheet. Each person logs hours per project per day, or under a typed name when the work is not a project yet.
+- **Hours** (`/hours`) — log time one entry at a time: pick a project by its code, tap the hours, log. The project's hours, contributors and status follow at once.
 - **Projects** (`/projects`) — a dashboard of ongoing projects with status, lead, contributors, dates, hours against budget, and a task board per project.
 
 ## How it works
@@ -34,7 +34,9 @@ The MTR staff app, behind one login:
 
 Every role check runs on the server against the database on each request, so a role change or a disable applies at once. Passwords need at least 8 characters. After 5 failed sign-ins for one email, or 20 from one IP, within 15 minutes, sign-in is blocked for 15 minutes; the count is kept in the database, so it holds across server instances.
 
-Typed names on timesheets show up under **Team hours** (admin). Turn one into a project there: its hours move to the project and the people who logged it become contributors.
+Every project has a code (`P-001`, `P-002`, …; an admin can set their own, like `MQ-VN`). Logging hours on a project makes you a contributor, and a project still in Planning becomes Active.
+
+Older timesheets may hold hours under a typed name instead of a project. They show up under **Team hours** (admin); turn one into a project there and its hours move to the project.
 
 ## Run locally
 

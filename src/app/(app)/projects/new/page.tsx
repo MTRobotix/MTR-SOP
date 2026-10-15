@@ -26,7 +26,7 @@ export default async function NewProjectPage() {
         action={createProjectAction}
         people={people}
         submitLabel="Create project"
-        values={{ name: "", customer: "", description: "", status: "active", leadId: null, budgetHours: null, startDate: null, dueDate: null }}
+        values={{ code: "", name: "", customer: "", description: "", status: "active", leadId: null, budgetHours: null, startDate: null, dueDate: null }}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CircleAlert, Pencil, Plus, X } from "lucide-react";
+import { CircleAlert, Clock, Pencil, Plus, X } from "lucide-react";
 import { requireUser } from "@/lib/auth/session";
 import { canManage, getProject, listActivePeople, projectHoursByPerson } from "@/lib/work/projects";
 import { listTasks } from "@/lib/work/tasks";
@@ -45,17 +45,27 @@ export default async function ProjectPage({ params }: P) {
           <nav className="breadcrumb" aria-label="Breadcrumb">
             <Link href="/projects">Projects</Link> <span aria-hidden="true">›</span>
           </nav>
-          <h1>{project.name}</h1>
+          <h1>
+            {project.code && <span className="project-code">{project.code}</span>}
+            {project.name}
+          </h1>
           <p className="project-sub">
             <span className={`tag${project.status === "active" ? " tag-strong" : ""}`}>{PROJECT_STATUS_LABEL[project.status]}</span>
             {project.customer && <span>{project.customer}</span>}
           </p>
         </div>
-        {manage && (
-          <Link href={`/projects/${project.id}/edit`} className="btn">
-            <Pencil size={16} strokeWidth={1.5} aria-hidden="true" /> Edit project
-          </Link>
-        )}
+        <div className="form-actions">
+          {project.status !== "done" && (
+            <Link href={`/hours?project=${project.id}`} className="btn btn-primary">
+              <Clock size={16} strokeWidth={1.5} aria-hidden="true" /> Log time
+            </Link>
+          )}
+          {manage && (
+            <Link href={`/projects/${project.id}/edit`} className="btn">
+              <Pencil size={16} strokeWidth={1.5} aria-hidden="true" /> Edit project
+            </Link>
+          )}
+        </div>
       </div>
 
       <div className="project-top">

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CircleAlert, Plus } from "lucide-react";
+import { CircleAlert, Clock, Plus } from "lucide-react";
 import { requireUser } from "@/lib/auth/session";
 import { listProjects, type Project } from "@/lib/work/projects";
 import { countOpenTasks } from "@/lib/work/tasks";
@@ -93,45 +93,29 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
             <li key={p.id} className="project-card card">
               <div className="project-card-head">
                 <h2>
-                  <Link href={`/projects/${p.id}`}>{p.name}</Link>
+                  <Link href={`/projects/${p.id}`}>
+                    {p.code && <span className="project-code">{p.code}</span>}
+                    {p.name}
+                  </Link>
                 </h2>
                 <span className={`tag${p.status === "active" ? " tag-strong" : ""}`}>{PROJECT_STATUS_LABEL[p.status]}</span>
               </div>
-              {p.customer && <p className="project-customer">{p.customer}</p>}
-              <dl className="facts">
-                <div>
-                  <dt>Lead</dt>
-                  <dd>{p.leadName ?? "No lead yet"}</dd>
-                </div>
-                <div>
-                  <dt>Contributors</dt>
-                  <dd>{p.members.length ? p.members.map((m) => m.name).join(", ") : "None yet"}</dd>
-                </div>
-                <div>
-                  <dt>Dates</dt>
-                  <dd>
-                    {p.startDate || p.dueDate ? (
-                      <>
-                        {p.startDate ? formatDate(p.startDate, year) : "No start"} → {p.dueDate ? formatDate(p.dueDate, year) : "no due date"}
-                      </>
-                    ) : (
-                      "Not set"
-                    )}
-                    {isOverdue(p) && (
-                      <span className="flag flag-danger">
-                        <CircleAlert size={14} strokeWidth={1.5} aria-hidden="true" /> Overdue
-                      </span>
-                    )}
-                  </dd>
-                </div>
-                <div>
-                  <dt>Tasks</dt>
-                  <dd>
-                    {p.openTasks} open · {p.doneTasks} done
-                  </dd>
-                </div>
-              </dl>
+              <p className="project-meta">
+                {[p.customer, p.leadName ? `Lead ${p.leadName}` : "No lead yet", p.dueDate ? `Due ${formatDate(p.dueDate, year)}` : null, `${p.openTasks} open ${p.openTasks === 1 ? "task" : "tasks"}`]
+                  .filter(Boolean)
+                  .join(" · ")}
+                {isOverdue(p) && (
+                  <span className="flag flag-danger">
+                    <CircleAlert size={14} strokeWidth={1.5} aria-hidden="true" /> Overdue
+                  </span>
+                )}
+              </p>
               <BudgetMeter hours={p.hours} budget={p.budgetHours} />
+              {p.status !== "done" && (
+                <Link className="project-log" href={`/hours?project=${p.id}`}>
+                  <Clock size={16} strokeWidth={1.5} aria-hidden="true" /> Log time
+                </Link>
+              )}
             </li>
           ))}
         </ul>

@@ -83,7 +83,9 @@ steps. Three areas: SOP (`/sop`, docs at `/d/…`), Hours (`/hours`), Projects (
 | Budget meter | Track `--color-accent-soft`, fill `--color-accent`; warn/danger fills sit on their own `*-soft` track. Text under it always shows "37 of 120 h" plus the state word. `role="meter"` with `aria-valuetext`. No budget → hours only, no bar. |
 | Status tag | The Tag pill with the status word. Only Active uses the accent tint. |
 | Filter pills | Links, one per filter, with a faint count; the current one has `aria-current="page"`. |
-| Timesheet grid | Days are columns, projects are rows; project column sticky on the left; the grid scrolls sideways inside its card, never the page. Cells are pill inputs that accept `1.5`, `1,5` and `1:30`. Today's column on `--color-bg-soft`. Invalid cells and days over 24 h are marked and block Save. Unsaved changes warn before leaving. |
+| Log time form | One entry at a time, three numbered steps: project, hours, day; note optional. Chips (pill toggles with `aria-pressed`) for the common choices: the person's projects (code + name), 1/2/4/8 h, Today/Yesterday; a native select, a text field (accepts `1.5`, `1,5`, `1:30`) and a date input for the rest. The submit button says what it does ("Log 2 h") and is the view's one primary button. After logging, a status line confirms it and hours and note clear; project and day stay. |
+| Week list | One card per day, newest first, day total on the right. Each entry: project code (mono) + name, note, hours, then Edit (in place: hours and note only) and Delete (asks first). Previous/next week links; no future weeks. |
+| Project code | Short upper-case code (`P-007`) shown before the project name wherever people pick or read a project, in `--font-mono`. |
 | Task board | Four columns on `--color-bg-soft` (To do, In progress, Review, Done), one column below 900px. Cards are solid surface: title link, assignee, due date, and a status select for whoever may move it. No drag and drop: the select is keyboard- and touch-friendly. |
 | Numbers in tables | Right-aligned, `tabular-nums` (`.num`). |
 | Icons | `lucide-react`, `strokeWidth={1.5}`, 16–20px. No emoji. |
