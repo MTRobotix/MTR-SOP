@@ -41,7 +41,8 @@ steps. Three areas: SOP (`/sop`, docs at `/d/…`), Hours (`/hours`), Projects (
 - Status colours, and only for state: `--color-warning` (hour budget ≥ 90% used) and
   `--color-danger` (overdue, over budget, invalid input). Always with a Lucide icon and a word
   ("Overdue", "Over by 12 h"), never colour alone: the two look alike to colour-blind readers.
-  Nothing else is coloured.
+  Nothing else is coloured, except the logo: the halftone mark (`BrandMark.tsx`, `icon.svg`) uses
+  `--color-brand` for its largest dots, and nothing else may use that token.
 - Glass only on floating surfaces: header island (`.glass`) and AI answer bubble (`.glass-panel`,
   more opaque for text contrast). Content cards are solid `--color-surface`.
 - Never glass over dense text or code (e.g. the editor toolbar, the search suggestion list): the

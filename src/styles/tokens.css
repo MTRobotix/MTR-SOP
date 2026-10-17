@@ -16,6 +16,8 @@
   --color-accent: #3d5a80;
   --color-accent-soft: rgba(61, 90, 128, 0.1);
   --color-on-accent: #ffffff;
+  /* Brand red: the logo's largest dots only (BrandMark, icon.svg). Never for UI state — that is --color-danger. */
+  --color-brand: #e5463d;
   --color-danger: #a4332b;
   --color-danger-soft: rgba(164, 51, 43, 0.08);
   --color-ok: #2f6b3f;
@@ -99,6 +101,7 @@
   --color-accent: #8fb3e8;
   --color-accent-soft: rgba(143, 179, 232, 0.14);
   --color-on-accent: #0a1020;
+  --color-brand: #ff6259;
   --color-danger: #f0968e;
   --color-danger-soft: rgba(240, 150, 142, 0.12);
   --color-ok: #8fd4a0;

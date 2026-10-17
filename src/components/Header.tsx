@@ -8,6 +8,7 @@ import type { User } from "@/lib/auth/roles";
 import { ThemeToggle } from "./ThemeToggle";
 import { HeaderSearch } from "./HeaderSearch";
 import "./Header.css";
+import { BrandMark } from "./BrandMark";
 
 type Props = { user: User };
 
@@ -34,7 +35,10 @@ export function Header({ user }: Props) {
     <header className="site-header">
       <div className="header-inner glass">
         <Link href="/" className="brand" aria-label="MTR Home" onClick={closeMenus}>
-          MTR <span className="brand-sub">HOME</span>
+          <BrandMark />
+          <span>
+            MTR <span className="brand-sub">HOME</span>
+          </span>
         </Link>
 
         <nav aria-label="Main" className={`header-nav${open ? " is-open" : ""}`} id="header-nav">
