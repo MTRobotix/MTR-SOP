@@ -32,7 +32,7 @@ export default async function ProjectPage({ params }: P) {
     manage ? listActivePeople() : Promise.resolve([]),
     admin ? projectHoursByPerson(project.id) : Promise.resolve([]),
   ]);
-  const now = today();
+  const now = await today();
   const year = now.slice(0, 4);
   const memberIds = new Set(project.members.map((m) => m.id));
   const addable = people.filter((p) => !memberIds.has(p.id));

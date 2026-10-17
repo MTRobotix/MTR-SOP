@@ -26,7 +26,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
   const { view: rawView } = await searchParams;
   const view: View = rawView === "all" || isProjectStatus(rawView) ? rawView : "ongoing";
   const [projects, openTasks] = await Promise.all([listProjects(), countOpenTasks()]);
-  const now = today();
+  const now = await today();
   const year = now.slice(0, 4);
 
   const ongoing = projects.filter(inView("ongoing"));
@@ -88,28 +88,30 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
             : "No projects with this status."}
         </p>
       ) : (
-        <ul className="project-grid">
+        <ul className="project-list card">
           {shown.map((p) => (
-            <li key={p.id} className="project-card card">
-              <div className="project-card-head">
-                <h2>
-                  <Link href={`/projects/${p.id}`}>
-                    {p.code && <span className="project-code">{p.code}</span>}
-                    {p.name}
-                  </Link>
-                </h2>
-                <span className={`tag${p.status === "active" ? " tag-strong" : ""}`}>{PROJECT_STATUS_LABEL[p.status]}</span>
+            <li key={p.id} className="project-row">
+              <div className="project-main">
+                <div className="project-title">
+                  <h2>
+                    <Link href={`/projects/${p.id}`}>
+                      {p.code && <span className="project-code">{p.code}</span>}
+                      {p.name}
+                    </Link>
+                  </h2>
+                  <span className={`tag${p.status === "active" ? " tag-strong" : ""}`}>{PROJECT_STATUS_LABEL[p.status]}</span>
+                </div>
+                <p className="project-meta">
+                  {[p.customer, p.leadName ? `Lead ${p.leadName}` : "No lead yet", p.dueDate ? `Due ${formatDate(p.dueDate, year)}` : null, `${p.openTasks} open ${p.openTasks === 1 ? "task" : "tasks"}`]
+                    .filter(Boolean)
+                    .join(" · ")}
+                  {isOverdue(p) && (
+                    <span className="flag flag-danger">
+                      <CircleAlert size={14} strokeWidth={1.5} aria-hidden="true" /> Overdue
+                    </span>
+                  )}
+                </p>
               </div>
-              <p className="project-meta">
-                {[p.customer, p.leadName ? `Lead ${p.leadName}` : "No lead yet", p.dueDate ? `Due ${formatDate(p.dueDate, year)}` : null, `${p.openTasks} open ${p.openTasks === 1 ? "task" : "tasks"}`]
-                  .filter(Boolean)
-                  .join(" · ")}
-                {isOverdue(p) && (
-                  <span className="flag flag-danger">
-                    <CircleAlert size={14} strokeWidth={1.5} aria-hidden="true" /> Overdue
-                  </span>
-                )}
-              </p>
               <BudgetMeter hours={p.hours} budget={p.budgetHours} />
               {p.status !== "done" && (
                 <Link className="project-log" href={`/hours?project=${p.id}`}>

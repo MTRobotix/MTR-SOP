@@ -1,34 +1,45 @@
-.area-grid {
+/* Areas: one row per area, stacked top down. Columns: icon, name + purpose, the one number, the action. */
+.area-list {
+  margin: 0 0 var(--space-7);
+  padding: 0;
+  list-style: none;
+}
+
+.area-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-4);
-  margin-bottom: var(--space-7);
-}
-
-.area-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-5);
-}
-
-.area-card h2 {
-  display: flex;
+  grid-template-columns: auto minmax(0, 1fr) 12rem 12rem;
   align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-lg);
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-4) var(--space-5);
 }
 
-.area-card h2 svg {
+.area-row + .area-row {
+  border-top: 1px solid var(--color-line);
+}
+
+.area-icon {
+  align-self: start;
+  margin-top: 0.15rem;
   color: var(--color-text-muted);
 }
 
-.area-card h2 a {
+.area-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.area-main h2 {
+  font-size: var(--text-lg);
+}
+
+.area-main h2 a {
   color: var(--color-text);
   text-decoration: none;
 }
 
-.area-card h2 a:hover {
+.area-main h2 a:hover {
   color: var(--color-accent);
 }
 
@@ -38,10 +49,18 @@
 }
 
 .area-figure {
-  font-size: var(--text-2xl);
+  grid-column: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.area-figure > p:first-child {
+  font-size: var(--text-xl);
   font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
 }
 
 .area-figure span {
@@ -52,16 +71,18 @@
 }
 
 .area-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-4);
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--color-line);
 }
 
 .area-links a {
-  display: block;
-  padding: var(--space-2) 0;
-  border-bottom: 1px solid var(--color-line);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--hit);
   font-size: var(--text-sm);
   text-decoration: none;
 }
@@ -70,8 +91,13 @@
   text-decoration: underline;
 }
 
+.area-more,
+.area-action {
+  grid-column: 4;
+  justify-self: end;
+}
+
 .area-more {
-  margin-top: auto;
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
@@ -83,11 +109,6 @@
 
 .area-more:hover {
   color: var(--color-accent);
-}
-
-.area-action {
-  margin-top: auto;
-  align-self: flex-start;
 }
 
 /* Task rows: home "Your open tasks". */
@@ -140,8 +161,15 @@
 }
 
 @media (max-width: 900px) {
-  .area-grid {
-    grid-template-columns: minmax(0, 1fr);
+  .area-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .area-figure,
+  .area-more,
+  .area-action {
+    grid-column: 2;
+    justify-self: start;
   }
 
   .task-row {

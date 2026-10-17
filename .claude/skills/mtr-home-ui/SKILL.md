@@ -19,7 +19,7 @@ MTR Home is a tool, not a showcase. A person arrives with a job and must finish 
 steps. Three areas: SOP (`/sop`, docs at `/d/…`), Hours (`/hours`), Projects (`/projects`).
 
 - Every screen answers one question:
-  - Home `/`: "where do I go, and what is mine?" — one card per area, then "Your open tasks".
+  - Home `/`: "where do I go, and what is mine?" — one row per area, stacked top down, then "Your open tasks".
   - SOP: "where is it?" (SOP page, department) or "how do I do it?" (doc).
   - Hours: "what did I work on this week?" Team hours (admin): "who worked on what, when?"
   - Projects: "what is running, who works on it, what is next?"
@@ -78,7 +78,8 @@ steps. Three areas: SOP (`/sop`, docs at `/d/…`), Hours (`/hours`), Projects (
 | Editor toolbar | Solid surface pill, sticky under the header. Icon buttons with `aria-label`. |
 | Tag | Small pill, `--color-bg-soft` fill, muted text. |
 | TODO marker | `> [!TODO]` renders as a dashed-border callout — shows unwritten content honestly. |
-| Area card (home) | Solid surface, Lucide icon + area name, one-line purpose, the one number that matters (hours this week, ongoing projects), one link or button. The home view's one primary button is "Log hours". |
+| Area list (home) | One solid card, one row per area (SOP, Hours, Projects), stacked top down with a hairline between rows. Row: Lucide icon, area name + one-line purpose (SOP adds its department links inline), the one number that matters (hours this week, ongoing projects), one link or button on the right. Below 900px the number and action move under the name. The home view's one primary button is "Log hours". |
+| Project list | One solid card, one row per project, stacked top down with a hairline between rows — not a card grid. Row: code + name + status tag, facts line (customer · lead · due · open tasks, Overdue flag), budget meter, "Log time". Below 900px everything stacks in that order. |
 | Stat tile | Solid surface, label in muted text, value `--text-xl` semibold. A row holds up to 4; 2 per row below 900px. No sparkline unless there is a trend to show. |
 | Budget meter | Track `--color-accent-soft`, fill `--color-accent`; warn/danger fills sit on their own `*-soft` track. Text under it always shows "37 of 120 h" plus the state word. `role="meter"` with `aria-valuetext`. No budget → hours only, no bar. |
 | Status tag | The Tag pill with the status word. Only Active uses the accent tint. |

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TimeZoneCookie } from "@/components/TimeZoneCookie";
 import "@/styles/globals.css";
 import "@/styles/prose.css";
 
@@ -17,7 +18,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <TimeZoneCookie />
+        {children}
+      </body>
     </html>
   );
 }

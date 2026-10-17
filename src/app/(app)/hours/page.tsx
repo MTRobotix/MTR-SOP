@@ -14,7 +14,7 @@ type Search = { week?: string; day?: string; project?: string };
 export default async function HoursPage({ searchParams }: { searchParams: Promise<Search> }) {
   const user = await requireUser();
   const { week, day, project } = await searchParams;
-  const now = today();
+  const now = await today();
   const thisMonday = mondayOf(now);
   const asked = isIsoDate(day) ? day : isIsoDate(week) ? week : now;
   const monday = mondayOf(asked) <= thisMonday ? mondayOf(asked) : thisMonday;
@@ -38,7 +38,7 @@ export default async function HoursPage({ searchParams }: { searchParams: Promis
         )}
       </div>
       <Timecard
-        key={`${monday}-${initialProjectId ?? ""}`}
+        key={`${monday}-${initialProjectId ?? ""}-${now}`}
         monday={monday}
         thisMonday={thisMonday}
         today={now}

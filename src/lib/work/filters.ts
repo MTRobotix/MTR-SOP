@@ -6,8 +6,8 @@ import { today } from "./today";
 export type FilterParams = { from?: string; to?: string; user?: string; project?: string };
 
 /** Team-hours filter from query params. Default range: the 1st of this month to today. */
-export function parseReportFilter(p: FilterParams): ReportFilter {
-  const now = today();
+export async function parseReportFilter(p: FilterParams): Promise<ReportFilter> {
+  const now = await today();
   let from = isIsoDate(p.from) ? p.from : `${now.slice(0, 8)}01`;
   let to = isIsoDate(p.to) ? p.to : now;
   if (from > to) [from, to] = [to, from];
