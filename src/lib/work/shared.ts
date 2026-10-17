@@ -1,5 +1,8 @@
 // Projects, tasks and hours: values and helpers shared by server and client code. No DB access here.
 
+/** Cookie holding the browser's IANA time zone, so the server knows which day it is for the person. */
+export const TZ_COOKIE = "tz";
+
 export const PROJECT_STATUSES = ["planning", "active", "on_hold", "done"] as const;
 export type ProjectStatus = (typeof PROJECT_STATUSES)[number];
 export const PROJECT_STATUS_LABEL: Record<ProjectStatus, string> = {

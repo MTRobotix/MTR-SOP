@@ -53,7 +53,7 @@ Stop `npm run dev` before `npm run db:setup`: PGlite allows one process at a tim
 Optional in `.env.local`:
 
 - `ANTHROPIC_API_KEY=...` turns on the AI answer. Without it the bubble is hidden.
-- `APP_TIME_ZONE=Asia/Ho_Chi_Minh` (any IANA name) decides which day is "today" for the timesheet and overdue dates. Default: UTC.
+- `APP_TIME_ZONE=Asia/Ho_Chi_Minh` (any IANA name): fallback time zone for "today" (timesheet days, overdue dates). Each browser sends its own time zone in a `tz` cookie, so people in Toronto and Ho Chi Minh City each see their own day; this is used only until that cookie is set. Default: UTC.
 
 ## Commands
 

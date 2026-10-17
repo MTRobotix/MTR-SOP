@@ -17,7 +17,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
   if (q) redirect(`/sop?q=${encodeURIComponent(q)}`);
 
   const user = await requireUser();
-  const now = today();
+  const now = await today();
   const monday = mondayOf(now);
   const [depts, hours, projects, tasks] = await Promise.all([listDepartments(), weekTotal(user.id, monday), listProjects(), listMyTasks(user.id)]);
   const ongoing = projects.filter((p) => ONGOING.includes(p.status));
@@ -33,58 +33,68 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         </div>
       </div>
 
-      <div className="area-grid">
-        <article className="area-card card">
-          <h2>
-            <BookOpen size={20} strokeWidth={1.5} aria-hidden="true" />
-            <Link href="/sop">SOP</Link>
-          </h2>
-          <p className="area-lead">How we do things, by department.</p>
-          <ul className="area-links" aria-label="Departments">
-            {depts.map((d) => (
-              <li key={d.id}>
-                <Link href={`/d/${d.id}`}>{d.meta.title}</Link>
-              </li>
-            ))}
-          </ul>
+      <ul className="area-list card" aria-label="Areas">
+        <li className="area-row">
+          <BookOpen className="area-icon" size={20} strokeWidth={1.5} aria-hidden="true" />
+          <div className="area-main">
+            <h2>
+              <Link href="/sop">SOP</Link>
+            </h2>
+            <p className="area-lead">How we do things, by department.</p>
+            <ul className="area-links" aria-label="Departments">
+              {depts.map((d) => (
+                <li key={d.id}>
+                  <Link href={`/d/${d.id}`}>{d.meta.title}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
           <Link href="/sop" className="area-more">
             Search the SOP <ArrowRight size={14} strokeWidth={1.5} aria-hidden="true" />
           </Link>
-        </article>
+        </li>
 
-        <article className="area-card card">
-          <h2>
-            <Clock size={20} strokeWidth={1.5} aria-hidden="true" />
-            <Link href="/hours">Hours</Link>
-          </h2>
-          <p className="area-lead">This week, {formatWeek(monday)}.</p>
-          <p className="area-figure">
-            {formatHours(hours)} <span>h logged</span>
-          </p>
+        <li className="area-row">
+          <Clock className="area-icon" size={20} strokeWidth={1.5} aria-hidden="true" />
+          <div className="area-main">
+            <h2>
+              <Link href="/hours">Hours</Link>
+            </h2>
+            <p className="area-lead">This week, {formatWeek(monday)}.</p>
+          </div>
+          <div className="area-figure">
+            <p>
+              {formatHours(hours)} <span>h logged</span>
+            </p>
+          </div>
           <Link href="/hours" className="btn btn-primary area-action">
             Log hours
           </Link>
-        </article>
+        </li>
 
-        <article className="area-card card">
-          <h2>
-            <FolderKanban size={20} strokeWidth={1.5} aria-hidden="true" />
-            <Link href="/projects">Projects</Link>
-          </h2>
-          <p className="area-lead">Status, contributors and tasks.</p>
-          <p className="area-figure">
-            {ongoing.length} <span>ongoing</span>
-          </p>
-          {overdue > 0 && (
-            <p className="flag flag-danger">
-              <CircleAlert size={14} strokeWidth={1.5} aria-hidden="true" /> {overdue} overdue
+        <li className="area-row">
+          <FolderKanban className="area-icon" size={20} strokeWidth={1.5} aria-hidden="true" />
+          <div className="area-main">
+            <h2>
+              <Link href="/projects">Projects</Link>
+            </h2>
+            <p className="area-lead">Status, contributors and tasks.</p>
+          </div>
+          <div className="area-figure">
+            <p>
+              {ongoing.length} <span>ongoing</span>
             </p>
-          )}
+            {overdue > 0 && (
+              <p className="flag flag-danger">
+                <CircleAlert size={14} strokeWidth={1.5} aria-hidden="true" /> {overdue} overdue
+              </p>
+            )}
+          </div>
           <Link href="/projects" className="area-more">
             Open the dashboard <ArrowRight size={14} strokeWidth={1.5} aria-hidden="true" />
           </Link>
-        </article>
-      </div>
+        </li>
+      </ul>
 
       <section aria-labelledby="my-tasks" className="home-tasks">
         <h2 className="section-title" id="my-tasks">

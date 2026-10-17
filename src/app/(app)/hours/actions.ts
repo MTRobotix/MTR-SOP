@@ -21,7 +21,7 @@ export async function logTimeAction(_prev: LogState, form: FormData): Promise<Lo
   const hours = parseHours(text(form, "hours"));
   if (!Number.isInteger(projectId) || projectId <= 0) return { error: "Pick a project." };
   if (!hours) return { error: "Enter the hours, like 2, 1.5 or 1:30." };
-  const res = await logTime(user.id, { projectId, date: text(form, "date"), hours, note: text(form, "note") }, today());
+  const res = await logTime(user.id, { projectId, date: text(form, "date"), hours, note: text(form, "note") }, await today());
   if (res.ok) refresh();
   return { ...res, at: Date.now() };
 }

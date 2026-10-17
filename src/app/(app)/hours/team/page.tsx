@@ -30,7 +30,7 @@ function sumBy<T>(items: T[], key: (x: T) => string, make: (x: T) => Omit<Sum, "
 export default async function TeamHoursPage({ searchParams }: { searchParams: Promise<FilterParams & { done?: string; error?: string }> }) {
   await requireUser("admin");
   const params = await searchParams;
-  const f = parseReportFilter(params);
+  const f = await parseReportFilter(params);
   const [entries, people, projects, custom] = await Promise.all([report(f), listActivePeople(), listProjects(), customNames()]);
   const qs = filterQuery(f);
   const total = entries.reduce((s, e) => s + e.hours, 0);

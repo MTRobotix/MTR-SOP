@@ -13,7 +13,7 @@ export async function GET(req: Request) {
   const user = await getCurrentUser();
   if (!user) return Response.json({ error: "Sign in required." }, { status: 401 });
   if (user.role !== "admin") return Response.json({ error: "Admins only." }, { status: 403 });
-  const f = parseReportFilter(Object.fromEntries(new URL(req.url).searchParams));
+  const f = await parseReportFilter(Object.fromEntries(new URL(req.url).searchParams));
   const rows = await report(f);
   const lines = [
     ["Date", "Person", "Email", "Code", "Project", "Customer", "Custom name", "Hours", "Note"],

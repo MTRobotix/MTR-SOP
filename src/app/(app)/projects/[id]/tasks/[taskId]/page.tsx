@@ -26,7 +26,7 @@ export default async function TaskPage({ params }: P) {
   const [project, task] = await Promise.all([getProject(Number(id)), getTask(Number(taskId))]);
   if (!project || !task || task.projectId !== project.id) notFound();
   const manage = canManage(user, project);
-  const now = today();
+  const now = await today();
   const year = now.slice(0, 4);
   const late = task.status !== "done" && !!task.dueDate && task.dueDate < now;
 
