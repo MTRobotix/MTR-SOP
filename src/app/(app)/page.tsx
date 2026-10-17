@@ -5,7 +5,7 @@ import { requireUser } from "@/lib/auth/session";
 import { listDepartments } from "@/lib/content/repo";
 import { weekTotal } from "@/lib/work/hours";
 import { listProjects } from "@/lib/work/projects";
-import { listMyTasks } from "@/lib/work/tasks";
+import { listLedTasks, listMyTasks, type MyTask } from "@/lib/work/tasks";
 import { today } from "@/lib/work/today";
 import { formatDate, formatHours, formatWeek, mondayOf, ONGOING, TASK_STATUS_LABEL } from "@/lib/work/shared";
 import "@/components/work/work.css";
@@ -19,10 +19,15 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
   const user = await requireUser();
   const now = await today();
   const monday = mondayOf(now);
-  const [depts, hours, projects, tasks] = await Promise.all([listDepartments(), weekTotal(user.id, monday), listProjects(), listMyTasks(user.id)]);
+  const [depts, hours, projects, tasks, ledTasks] = await Promise.all([
+    listDepartments(),
+    weekTotal(user.id, monday),
+    listProjects(),
+    listMyTasks(user.id),
+    listLedTasks(user.id),
+  ]);
   const ongoing = projects.filter((p) => ONGOING.includes(p.status));
   const overdue = ongoing.filter((p) => p.dueDate && p.dueDate < now).length;
-  const year = now.slice(0, 4);
 
   return (
     <div className="shell page home">
@@ -100,30 +105,43 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         <h2 className="section-title" id="my-tasks">
           Your open tasks
         </h2>
-        {tasks.length === 0 ? (
-          <p className="empty">No open tasks assigned to you.</p>
-        ) : (
-          <ul className="task-rows card">
-            {tasks.map((t) => (
-              <li key={t.id}>
-                <Link href={`/projects/${t.projectId}/tasks/${t.id}`} className="task-row">
-                  <span className="task-row-title">{t.title}</span>
-                  <span className="task-row-meta">
-                    {t.projectName} · {TASK_STATUS_LABEL[t.status]}
-                  </span>
-                  {t.dueDate && (
-                    <span className={`task-row-due${t.dueDate < now ? " flag flag-danger" : ""}`}>
-                      {t.dueDate < now && <CircleAlert size={14} strokeWidth={1.5} aria-hidden="true" />}
-                      {t.dueDate < now ? "Overdue · " : "Due "}
-                      {formatDate(t.dueDate, year)}
-                    </span>
-                  )}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
+        {tasks.length === 0 ? <p className="empty">No open tasks assigned to you.</p> : <TaskRows tasks={tasks} now={now} />}
       </section>
+
+      {ledTasks.length > 0 && (
+        <section aria-labelledby="led-tasks" className="home-tasks">
+          <h2 className="section-title" id="led-tasks">
+            In projects you lead
+          </h2>
+          <TaskRows tasks={ledTasks} now={now} showAssignee />
+        </section>
+      )}
     </div>
+  );
+}
+
+/** Open tasks, one row each: title, project and status (and who has it), due date or Overdue. */
+function TaskRows({ tasks, now, showAssignee = false }: { tasks: MyTask[]; now: string; showAssignee?: boolean }) {
+  const year = now.slice(0, 4);
+  return (
+    <ul className="task-rows card">
+      {tasks.map((t) => (
+        <li key={t.id}>
+          <Link href={`/projects/${t.projectId}/tasks/${t.id}`} className="task-row">
+            <span className="task-row-title">{t.title}</span>
+            <span className="task-row-meta">
+              {[t.projectName, TASK_STATUS_LABEL[t.status], showAssignee ? (t.assigneeName ?? "Unassigned") : null].filter(Boolean).join(" · ")}
+            </span>
+            {t.dueDate && (
+              <span className={`task-row-due${t.dueDate < now ? " flag flag-danger" : ""}`}>
+                {t.dueDate < now && <CircleAlert size={14} strokeWidth={1.5} aria-hidden="true" />}
+                {t.dueDate < now ? "Overdue · " : "Due "}
+                {formatDate(t.dueDate, year)}
+              </span>
+            )}
+          </Link>
+        </li>
+      ))}
+    </ul>
   );
 }

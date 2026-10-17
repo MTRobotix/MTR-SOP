@@ -19,7 +19,7 @@ MTR Home is a tool, not a showcase. A person arrives with a job and must finish 
 steps. Three areas: SOP (`/sop`, docs at `/d/…`), Hours (`/hours`), Projects (`/projects`).
 
 - Every screen answers one question:
-  - Home `/`: "where do I go, and what is mine?" — one row per area, stacked top down, then "Your open tasks".
+  - Home `/`: "where do I go, and what is mine?" — one row per area, stacked top down, then "Your open tasks" (assigned to you) and, for a project lead, "In projects you lead" (open tasks there assigned to someone else or to no one, with who has it).
   - SOP: "where is it?" (SOP page, department) or "how do I do it?" (doc).
   - Hours: "what did I work on this week?" Team hours (admin): "who worked on what, when?"
   - Projects: "what is running, who works on it, what is next?"
