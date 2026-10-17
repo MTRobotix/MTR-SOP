@@ -6,6 +6,8 @@ import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 import remarkStringify, { type Options as StringifyOptions } from "remark-stringify";
 import YAML from "yaml";
+import { visit } from "unist-util-visit";
+import type { Root, Heading } from "mdast";
 import { DOC_KEYS, DEPT_KEYS } from "./schema";
 
 export const STRINGIFY_OPTIONS: StringifyOptions = {
@@ -47,7 +49,48 @@ export function stringifyFrontmatter(data: Record<string, unknown>, kind: "doc" 
   return `---\n${lines.join("\n")}\n---\n`;
 }
 
-const processor = unified().use(remarkParse).use(remarkGfm).use(remarkStringify, STRINGIFY_OPTIONS);
+// Heading punctuation markdownlint MD026 rejects; "?" stays.
+const HEADING_TAIL_RE = /[.,;:!。，；：！]+$/;
+
+/**
+ * Fixes what people type by habit instead of rejecting it (mtr-sop-content §5):
+ * `#` headings move down a level, levels never skip or go past ####, headings lose a trailing ":" or ".",
+ * code fences get a language, tabs become spaces, images get alt text.
+ * A file that already follows the rules comes out unchanged.
+ */
+function remarkAutofix() {
+  return (tree: Root) => {
+    const headings: Heading[] = [];
+    visit(tree, "heading", (h: Heading) => {
+      headings.push(h);
+    });
+    const shift = headings.some((h) => h.depth === 1) ? 1 : 0;
+    let prev = 0;
+    for (const h of headings) {
+      let depth = Math.min(4, h.depth + shift);
+      if (prev && depth > prev + 1) depth = prev + 1;
+      h.depth = depth as Heading["depth"];
+      prev = depth;
+      const last = h.children[h.children.length - 1];
+      if (last?.type === "text") {
+        const trimmed = last.value.trimEnd().replace(HEADING_TAIL_RE, "").trimEnd();
+        if (trimmed) last.value = trimmed;
+      }
+    }
+    visit(tree, "code", (c) => {
+      if (!c.lang) c.lang = "text";
+      c.value = c.value.replace(/\t/g, "    ");
+    });
+    visit(tree, "text", (t) => {
+      t.value = t.value.replace(/[ ]*\t[\t ]*/g, " ");
+    });
+    visit(tree, "image", (i) => {
+      if (!i.alt) i.alt = "Image";
+    });
+  };
+}
+
+const processor = unified().use(remarkParse).use(remarkGfm).use(remarkAutofix).use(remarkStringify, STRINGIFY_OPTIONS);
 
 export function normalizeBody(body: string): string {
   const text = body.replace(/\r\n?/g, "\n").trim();

@@ -80,6 +80,15 @@ every save; outside the app run `npm run content:format`. Do not fight it by han
   preview; a link inside a sentence renders as a download link. `content:check` fails on a missing
   file, another type or a file over 4 MB. Attachments follow the same source and no-secrets rules as Markdown.
 
+### Auto-fix and style notes
+
+The normalizer also fixes common habits instead of rejecting them: a `#` heading moves down to `##`
+(and the rest with it), heading levels never skip or go past `####`, a trailing `.` `,` `;` `:` `!`
+leaves headings, a fence without a language gets `text`, tabs become spaces, images get alt text.
+markdownlint findings and duplicate headings that remain are **style notes**: shown in the editor and by
+`content:check`, but they never block a save or CI. Only real problems block: frontmatter, broken links,
+disallowed HTML, attachments, a file not in canonical format.
+
 ### Visual editor safety
 
 The app's visual editor may only edit a doc it can reproduce byte-for-byte. On open, it serializes

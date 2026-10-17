@@ -16,7 +16,10 @@ import { validateDocMeta, validateDeptMeta, SLUG_RE } from "./schema";
 import { disallowedTags } from "./render";
 import { MAX_ATTACHMENT_BYTES, attachmentRelPath, parseAttachmentLink } from "./attachments";
 
-export type Issue = { line?: number; message: string };
+/** `warning` = style advice: shown in the editor and by content:check, never blocks a save or CI. */
+export type Issue = { line?: number; message: string; level?: "warning" };
+
+export const isBlocking = (i: Issue) => i.level !== "warning";
 
 let cachedConfig: Configuration | null = null;
 
@@ -32,7 +35,8 @@ export function lintMarkdown(content: string, config: Configuration): Issue[] {
   const res = lint({ strings: { doc: content }, config });
   return (res.doc ?? []).map((e) => ({
     line: e.lineNumber,
-    message: `${e.ruleNames[0]} ${e.ruleDescription}${e.errorDetail ? ` (${e.errorDetail})` : ""}`,
+    message: `${e.ruleDescription}${e.errorDetail ? ` (${e.errorDetail})` : ""} [${e.ruleNames[0]}]`,
+    level: "warning" as const,
   }));
 }
 
@@ -70,7 +74,7 @@ export function validateFile(relPath: string, content: string, config: Configura
     anchors.push(slugger.slug(text));
     if (h.depth === 1) issues.push({ line, message: "No # H1 in the body. The title comes from frontmatter; start at ##." });
     if (h.depth > 4) issues.push({ line, message: "Heading deeper than ####." });
-    if (seen.has(text)) issues.push({ line, message: `Duplicate heading "${text}" (first on line ${seen.get(text)}).` });
+    if (seen.has(text)) issues.push({ line, message: `Duplicate heading "${text}" (first on line ${seen.get(text)}). Links to it go to the first one.`, level: "warning" });
     else seen.set(text, line);
   });
   visit(tree, "html", (n: Html) => {
@@ -99,8 +103,8 @@ export function validateFile(relPath: string, content: string, config: Configura
     }
   });
   for (const i of lintMarkdown(content, config)) {
-    // MD033 duplicates the allowlist check above with a less helpful message.
-    if (!i.message.startsWith("MD033")) issues.push(i);
+    // MD033 duplicates the allowlist check above; MD024 duplicates the duplicate-heading note.
+    if (!i.message.endsWith("[MD033]") && !i.message.endsWith("[MD024]")) issues.push(i);
   }
   return { issues, links, anchors };
 }

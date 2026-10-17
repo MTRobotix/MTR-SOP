@@ -60,7 +60,7 @@ export default function SourceEditor({ value, onChange, issues, bodyOffset }: Pr
     const diags: Diagnostic[] = issues.map((i) => {
       const n = i.line && i.line > bodyOffset ? Math.min(i.line - bodyOffset, doc.lines) : 1;
       const line = doc.line(Math.max(1, n));
-      return { from: line.from, to: line.to, severity: "error", message: i.message };
+      return { from: line.from, to: line.to, severity: i.level === "warning" ? "warning" : "error", message: i.message };
     });
     view.dispatch(setDiagnostics(view.state, diags));
   }, [issues, bodyOffset, value]);

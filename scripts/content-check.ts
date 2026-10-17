@@ -1,7 +1,7 @@
 // Fails (exit 1) if any SOP file breaks the rules in the mtr-sop-content skill.
 import fs from "node:fs";
 import { contentFiles } from "./content-files";
-import { validateFile, lintConfig, type LinkTarget } from "../src/lib/content/validate";
+import { validateFile, lintConfig, isBlocking, type LinkTarget } from "../src/lib/content/validate";
 import { splitFrontmatter } from "../src/lib/content/normalize";
 import { MAX_FEATURED_PER_DEPT } from "../src/lib/content/schema";
 
@@ -11,16 +11,18 @@ const linksByFile = new Map<string, LinkTarget[]>();
 const featured = new Map<string, number>();
 const depts = new Set<string>();
 let problems = 0;
+let warnings = 0;
 
-const report = (file: string, line: number | undefined, msg: string) => {
-  problems++;
-  console.log(`${file}${line ? `:${line}` : ""}  ${msg}`);
+const report = (file: string, line: number | undefined, msg: string, warning = false) => {
+  if (warning) warnings++;
+  else problems++;
+  console.log(`${file}${line ? `:${line}` : ""}  ${warning ? "warning: " : ""}${msg}`);
 };
 
 for (const file of contentFiles()) {
   const content = fs.readFileSync(file, "utf8");
   const { issues, links, anchors } = validateFile(file, content, config);
-  for (const i of issues) report(file, i.line, i.message);
+  for (const i of issues) report(file, i.line, i.message, !isBlocking(i));
   const [, dept, name] = file.split("/");
   const slug = name.slice(0, -3);
   if (slug === "_department") {
@@ -47,5 +49,5 @@ for (const key of anchorsByDoc.keys()) {
   if (!depts.has(dept)) report(`content/${dept}`, undefined, "Missing _department.md.");
 }
 
-console.log(problems ? `\n${problems} problem(s).` : `OK — ${anchorsByDoc.size} docs checked.`);
+console.log(problems ? `\n${problems} problem(s).` : `OK — ${anchorsByDoc.size} docs checked${warnings ? `, ${warnings} style warning(s)` : ""}.`);
 process.exit(problems ? 1 : 0);

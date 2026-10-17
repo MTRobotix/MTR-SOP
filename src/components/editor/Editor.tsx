@@ -4,15 +4,16 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AlertTriangle, CheckCircle2, Trash2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Info, Sparkles, Trash2 } from "lucide-react";
 import type { Role } from "@/lib/auth/roles";
 import "./Editor.css";
 
 const VisualEditor = dynamic(() => import("./VisualEditor"), { ssr: false, loading: () => <div className="editor-loading">Loading editor…</div> });
 const SourceEditor = dynamic(() => import("./SourceEditor"), { ssr: false, loading: () => <div className="editor-loading">Loading editor…</div> });
 
-export type Issue = { line?: number; message: string };
-type Mode = "visual" | "source" | "preview";
+/** `warning` = style advice that never blocks saving (validate.ts). */
+export type Issue = { line?: number; message: string; level?: "warning" };
+type Mode = "visual" | "plain" | "source" | "preview";
 
 type Props = {
   dept: string;
@@ -70,6 +71,8 @@ export function Editor(p: Props) {
   const [bodyOffset, setBodyOffset] = useState(0);
   // The raw text the current issues belong to; while it differs from `raw`, a lint is pending.
   const [lintedRaw, setLintedRaw] = useState<string | null>(null);
+  // The body as the save will write it (auto-fixed and formatted), from the last lint.
+  const [formatted, setFormatted] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const [result, setResult] = useState<{ ok: boolean; text: string; conflict?: boolean; url?: string } | null>(null);
@@ -106,8 +109,9 @@ export function Editor(p: Props) {
           body: JSON.stringify({ dept: p.dept, slug: slug || "untitled", content: raw }),
           signal: ctrl.signal,
         });
-        const j = (await res.json()) as { issues: Issue[]; bodyOffset: number; hasHtml: boolean };
+        const j = (await res.json()) as { issues: Issue[]; bodyOffset: number; hasHtml: boolean; formatted?: string };
         setIssues(j.issues ?? []);
+        setFormatted(j.formatted ?? null);
         setBodyOffset(j.bodyOffset ?? 0);
         setHasHtml(!!j.hasHtml);
         setLintedRaw(raw);
@@ -165,6 +169,17 @@ export function Editor(p: Props) {
     setMode(m);
   };
 
+  // Puts the auto-fixed, formatted body into the editor, so people see what the save will write.
+  const tidy = () => {
+    if (formatted === null) return;
+    setBody(formatted);
+    markDirty();
+    if (mode === "visual") {
+      setVisualCheck("pending");
+      setVisualKey((k) => k + 1);
+    }
+  };
+
   const onBodyChange = useCallback((md: string) => {
     setBody(md);
     markDirty();
@@ -216,7 +231,10 @@ export function Editor(p: Props) {
 
   const linting = lintedRaw !== raw;
   const isAdmin = p.role === "admin";
-  const blocking = issues.length > 0;
+  const errors = issues.filter((i) => i.level !== "warning");
+  const warnings = issues.filter((i) => i.level === "warning");
+  const blocking = errors.length > 0;
+  const canTidy = !linting && formatted !== null && formatted.trim() !== body.trim();
 
   return (
     <div className="shell page editor-page">
@@ -270,7 +288,7 @@ export function Editor(p: Props) {
           </fieldset>
 
           <div className="mode-tabs" role="tablist" aria-label="Editor mode">
-            {(["visual", "source", "preview"] as Mode[]).map((m) => (
+            {(["visual", "plain", "source", "preview"] as Mode[]).map((m) => (
               <button
                 key={m}
                 role="tab"
@@ -281,10 +299,11 @@ export function Editor(p: Props) {
                 title={m === "visual" && visualBlocked ? "Visual mode would change this section's formatting. Edit it in Markdown so nothing is lost." : undefined}
                 onClick={() => switchMode(m)}
               >
-                {m === "visual" ? "Visual" : m === "source" ? "Markdown / HTML" : "Preview"}
+                {m === "visual" ? "Visual" : m === "plain" ? "Plain text" : m === "source" ? "Markdown / HTML" : "Preview"}
               </button>
             ))}
           </div>
+          {mode === "plain" && <p className="hint">Type or paste as normal text. A blank line starts a new paragraph. Formatting is tidied when you save.</p>}
           {hasHtml && mode !== "preview" && <p className="hint">Contains HTML: visual mode is off so the HTML is not lost.</p>}
           {!hasHtml && visualCheck === "lossy" && mode !== "preview" && (
             <p className="hint">Visual mode cannot reproduce this section exactly (e.g. code inside numbered steps). Edit in Markdown.</p>
@@ -292,6 +311,16 @@ export function Editor(p: Props) {
 
           <div className="editor-surface">
             {mode === "visual" && <VisualEditor key={visualKey} initial={body} onChange={onBodyChange} onReady={onVisualReady} editable={visualCheck === "ok"} />}
+            {mode === "plain" && (
+              <textarea
+                className="plain-input"
+                aria-label="Section text"
+                value={body}
+                spellCheck
+                onChange={(e) => onBodyChange(e.target.value)}
+                placeholder="Write the steps here. Leave a blank line between paragraphs."
+              />
+            )}
             {mode === "source" && <SourceEditor value={body} onChange={onBodyChange} issues={issues} bodyOffset={bodyOffset} />}
             {mode === "preview" && <div className="prose preview" dangerouslySetInnerHTML={{ __html: preview }} />}
           </div>
@@ -300,13 +329,19 @@ export function Editor(p: Props) {
         <aside className="editor-side">
           <section className="card side-card">
             <h2 className="side-title">
-              {linting ? "Checking…" : blocking ? `${issues.length} issue${issues.length === 1 ? "" : "s"}` : "No issues"}
+              {linting
+                ? "Checking…"
+                : blocking
+                  ? `${errors.length} to fix before saving`
+                  : warnings.length
+                    ? `Ready to save · ${warnings.length} style note${warnings.length === 1 ? "" : "s"}`
+                    : "Ready to save"}
             </h2>
-            {blocking ? (
+            {issues.length > 0 && (
               <ul className="issues">
-                {issues.map((i, n) => (
-                  <li key={n}>
-                    <AlertTriangle size={14} strokeWidth={1.5} aria-hidden="true" />
+                {[...errors, ...warnings].map((i, n) => (
+                  <li key={n} className={i.level === "warning" ? "is-warning" : undefined}>
+                    {i.level === "warning" ? <Info size={14} strokeWidth={1.5} aria-hidden="true" /> : <AlertTriangle size={14} strokeWidth={1.5} aria-hidden="true" />}
                     <span>
                       {i.line && i.line > bodyOffset ? <strong>Line {i.line - bodyOffset}: </strong> : null}
                       {i.message}
@@ -314,10 +349,16 @@ export function Editor(p: Props) {
                   </li>
                 ))}
               </ul>
-            ) : (
+            )}
+            {!blocking && (
               <p className="hint">
-                <CheckCircle2 size={14} strokeWidth={1.5} aria-hidden="true" /> Passes the same checks as CI.
+                <CheckCircle2 size={14} strokeWidth={1.5} aria-hidden="true" /> Spacing, headings and code blocks are fixed automatically when you save.
               </p>
+            )}
+            {canTidy && (
+              <button type="button" className="btn btn-sm" onClick={tidy}>
+                <Sparkles size={16} strokeWidth={1.5} aria-hidden="true" /> Tidy formatting now
+              </button>
             )}
           </section>
 

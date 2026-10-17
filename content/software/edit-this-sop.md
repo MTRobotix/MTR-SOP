@@ -5,7 +5,7 @@ tags: [sop, editing]
 owner: Thong Huynh
 featured: true
 order: 90
-updated: 2026-10-14
+updated: 2026-10-17
 ---
 
 ## Roles
@@ -23,10 +23,11 @@ The only source of truth is `content/**/*.md` on `main` in the MTR-HOME repo. Th
 ## Edit in the app
 
 1. Open the section, select **Edit**.
-2. Use **Visual** for text, lists, tables. Use **Markdown / HTML** for callouts and HTML.
-3. Fix every item in the issues panel. Save is blocked until it is empty.
-4. Fill **What changed**, then **Save** (admin) or **Send for review** (editor).
-5. If you see "Someone changed this section", select **Reload** and redo your edit.
+2. Use **Visual** for text, lists, tables. Use **Plain text** to type or paste normal text. Use **Markdown / HTML** for callouts and HTML.
+3. Fix anything listed under "to fix before saving" (missing title or summary, broken link, HTML that is not allowed). Style notes do not block saving.
+4. Optional: select **Tidy formatting now** to see the cleaned-up text. Saving tidies it anyway: spacing, heading levels, trailing ":" in headings, code block languages and tabs.
+5. Fill **What changed**, then **Save** (admin) or **Send for review** (editor).
+6. If you see "Someone changed this section", select **Reload** and redo your edit.
 
 ## Edit outside the app (VS Code, agents)
 

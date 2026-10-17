@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { hasRole } from "@/lib/auth/roles";
 import { isValidId, getDepartment } from "@/lib/content/repo";
 import { prepareDoc } from "@/lib/content/save";
+import { isBlocking } from "@/lib/content/validate";
 import { store, ConflictError } from "@/lib/store";
 import { GitHubError } from "@/lib/store/github";
 
@@ -40,7 +41,7 @@ export async function POST(req: Request) {
   if (baseSha === null && !hasRole(user.role, "admin")) return NextResponse.json({ error: "Only admins create new sections." }, { status: 403 });
 
   const prepared = await prepareDoc(dept, slug, content);
-  if (prepared.issues.length) return NextResponse.json({ error: "Fix the issues before saving.", issues: prepared.issues }, { status: 422 });
+  if (prepared.issues.some(isBlocking)) return NextResponse.json({ error: "Fix the issues before saving.", issues: prepared.issues }, { status: 422 });
 
   const input = { dept, slug, content: prepared.content, baseSha, user, message: `sop(${dept}/${slug}): ${message}` };
   try {

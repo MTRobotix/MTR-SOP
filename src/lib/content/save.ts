@@ -41,12 +41,13 @@ export async function lintForEditor(dept: string, slug: string, raw: string) {
   const used = new Set<number>();
   const issues = prepared.issues.map((i) => {
     const k = rawIssues.findIndex((r, n) => !used.has(n) && r.message === i.message);
-    if (k < 0) return { message: i.message, line: i.line !== undefined && i.line <= 1 ? 1 : undefined };
+    if (k < 0) return { message: i.message, level: i.level, line: i.line !== undefined && i.line <= 1 ? 1 : undefined };
     used.add(k);
-    return { message: i.message, line: rawIssues[k].line };
+    return { message: i.message, level: i.level, line: rawIssues[k].line };
   });
   // Lines before the body in the raw text; editor line = file line - bodyOffset.
   const text = raw.replace(/\r\n?/g, "\n");
   const bodyOffset = text.split("\n").length - prepared.rawBody.split("\n").length;
-  return { issues, bodyOffset, hasHtml: prepared.hasHtml };
+  // What the body becomes on save, so the editor can offer "Tidy formatting" before saving.
+  return { issues, bodyOffset, hasHtml: prepared.hasHtml, formatted: normalizeBody(prepared.rawBody) };
 }

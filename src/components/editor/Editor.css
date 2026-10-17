@@ -81,6 +81,26 @@
   overflow: clip;
 }
 
+/* Plain text mode: a bare textarea, no toolbar, no markers. */
+.plain-input {
+  display: block;
+  width: 100%;
+  min-height: 28rem;
+  padding: var(--space-4) var(--space-5);
+  border: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-family: var(--font-body);
+  line-height: var(--leading);
+  resize: vertical;
+}
+
+.plain-input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
 .editor-loading {
   padding: var(--space-6);
   color: var(--color-text-muted);
@@ -199,6 +219,10 @@
 .issues li {
   display: flex;
   gap: var(--space-2);
+}
+
+.issues li.is-warning {
+  color: var(--color-text-muted);
 }
 
 .issues svg {
