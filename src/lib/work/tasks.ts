@@ -77,6 +77,15 @@ export async function listMyTasks(userId: number): Promise<MyTask[]> {
   return rows.map(toTask);
 }
 
+/** Open tasks in the projects someone leads that are assigned to someone else or to no one, soonest due first. */
+export async function listLedTasks(userId: number): Promise<MyTask[]> {
+  const rows = await query<Row>(
+    `${SELECT} WHERE p.lead_id = $1 AND t.assignee_id IS DISTINCT FROM $1 AND t.status <> 'done' AND p.status <> 'done' ORDER BY t.due_date NULLS LAST, t.id`,
+    [userId],
+  );
+  return rows.map(toTask);
+}
+
 export async function countOpenTasks(): Promise<number> {
   const [row] = await query<{ n: number }>(
     "SELECT COUNT(*)::int AS n FROM tasks t JOIN projects p ON p.id = t.project_id WHERE t.status <> 'done' AND p.status <> 'done'",

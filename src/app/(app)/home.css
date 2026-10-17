@@ -111,7 +111,11 @@
   color: var(--color-accent);
 }
 
-/* Task rows: home "Your open tasks". */
+/* Task rows: home "Your open tasks" and "In projects you lead". */
+.home-tasks + .home-tasks {
+  margin-top: var(--space-6);
+}
+
 .task-rows {
   margin: 0;
   padding: var(--space-1);
