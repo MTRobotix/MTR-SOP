@@ -22,6 +22,8 @@ export async function GET(req: Request, { params }: P) {
     "Accept-Ranges": "bytes",
     "Cache-Control": "private, max-age=300",
     "X-Content-Type-Options": "nosniff",
+    // An SVG opened on its own runs as a page on this origin: sandbox it so it can never run script.
+    ...(ref.kind === "svg" ? { "Content-Security-Policy": "sandbox; default-src 'none'; style-src 'unsafe-inline'; img-src data:" } : {}),
   };
 
   // Video players (Safari always) ask for byte ranges; answer with 206 so seeking works.

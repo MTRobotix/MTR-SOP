@@ -43,9 +43,9 @@ Open a pull request unless you are an admin.
 
 ## Embed files (Word, Excel, CSV, PDF, PowerPoint, video)
 
-Goal: show a `.docx`, `.xlsx`, `.csv`, `.pdf`, `.pptx` or `.mp4` file inside a SOP page, with **Open** and **Download** buttons.
+Goal: show a `.docx`, `.xlsx`, `.csv`, `.pdf`, `.pptx`, `.mp4`, `.png` or `.svg` file inside a SOP page, with **Open** and **Download** buttons.
 
-1. Name the file in lowercase kebab-case, for example `metriq-cost-model.xlsx`. Allowed types: `.pdf`, `.docx`, `.xlsx`, `.csv`, `.pptx`, `.mp4`. Keep each file under 4 MB; larger files fail to load on Vercel.
+1. Name the file in lowercase kebab-case, for example `metriq-cost-model.xlsx`. Allowed types: `.pdf`, `.docx`, `.xlsx`, `.csv`, `.pptx`, `.mp4`, `.png`, `.svg`. Keep each file under 4 MB; larger files fail to load on Vercel.
 2. Copy it to `content/<dept>/attachments/` in the same department as the doc.
 3. Put a link to it alone in its own paragraph, for example `[MetriQ cost model](attachments/metriq-cost-model.xlsx)`. The link text becomes the card title.
 4. For a plain download link instead of a preview, put the link inside a sentence: `Download the [Word version](attachments/business-proposal.docx).`

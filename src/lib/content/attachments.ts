@@ -9,13 +9,15 @@ export const EMBED_TYPES = {
   csv: { label: "CSV", mime: "text/csv; charset=utf-8" },
   pptx: { label: "PowerPoint", mime: "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
   mp4: { label: "Video", mime: "video/mp4" },
+  png: { label: "Image", mime: "image/png" },
+  svg: { label: "SVG", mime: "image/svg+xml" },
 } as const;
 
 export type EmbedKind = keyof typeof EMBED_TYPES;
 export type AttachmentRef = { file: string; kind: EmbedKind };
 
 /** Lowercase file name, no folders; the extension picks the preview. */
-const ATTACHMENT_RE = /^attachments\/([a-z0-9][a-z0-9._-]{0,99}\.(pdf|docx|xlsx|csv|pptx|mp4))$/;
+const ATTACHMENT_RE = /^attachments\/([a-z0-9][a-z0-9._-]{0,99}\.(pdf|docx|xlsx|csv|pptx|mp4|png|svg))$/;
 
 export function parseAttachmentLink(url: string): AttachmentRef | null {
   const m = ATTACHMENT_RE.exec(url);

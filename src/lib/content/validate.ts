@@ -86,7 +86,7 @@ export function validateFile(relPath: string, content: string, config: Configura
     if (l.url.startsWith("attachments/")) {
       const ref = parseAttachmentLink(l.url);
       if (!ref) {
-        issues.push({ line, message: `Attachment "${l.url}": use a lowercase file name ending in .pdf, .docx, .xlsx, .csv, .pptx or .mp4.` });
+        issues.push({ line, message: `Attachment "${l.url}": use a lowercase file name ending in .pdf, .docx, .xlsx, .csv, .pptx, .mp4, .png or .svg.` });
         return;
       }
       const stat = fs.statSync(path.join(process.cwd(), attachmentRelPath(m[1], ref.file)), { throwIfNoEntry: false });

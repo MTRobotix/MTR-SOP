@@ -37,7 +37,7 @@ content/
   <dept>/                 # software, mechanical, marketing, sales, business — lowercase, kebab-case
     _department.md        # department card: frontmatter only (title, summary, order)
     <slug>.md             # one SOP document; slug = [a-z0-9-]+, max 60 chars
-    attachments/          # optional: .pdf .docx .xlsx .csv .pptx .mp4 embedded by docs in this dept
+    attachments/          # optional: .pdf .docx .xlsx .csv .pptx .mp4 .png .svg embedded by docs in this dept
 ```
 
 Renaming or moving a file breaks links. Do it only as an admin, and update every link
@@ -74,8 +74,9 @@ every save; outside the app run `npm run content:format`. Do not fight it by han
 - Links: internal `/d/<dept>/<slug>#<heading-id>`; external full `https://` URLs.
 - No hard line wraps inside paragraphs. One blank line between blocks. LF line endings. File ends
   with one newline.
-- Images: not supported yet. Link to the file in its repo instead.
-- Attachments: `.pdf`, `.docx`, `.xlsx`, `.csv`, `.pptx`, `.mp4` only, under 4 MB each (Vercel caps a
+- Images: only as attachments (`.png`, `.svg`), embedded like any other attachment (below). No inline
+  `![]()` images.
+- Attachments: `.pdf`, `.docx`, `.xlsx`, `.csv`, `.pptx`, `.mp4`, `.png`, `.svg` only, under 4 MB each (Vercel caps a
   response at 4.5 MB), stored in `content/<dept>/attachments/`, file name `[a-z0-9._-]`. A paragraph holding only `[Title](attachments/<file>)` renders as an embedded
   preview; a link inside a sentence renders as a download link. `content:check` fails on a missing
   file, another type or a file over 4 MB. Attachments follow the same source and no-secrets rules as Markdown.

@@ -128,6 +128,9 @@ async function preview(file: string, ref: AttachmentRef, url: string, title: str
     }
     case "mp4":
       return [h("video", { className: ["embed-video"], src: url, controls: true, preload: "metadata", playsInline: true, title })];
+    case "png":
+    case "svg":
+      return [h("img", { className: ["embed-img"], src: url, alt: title, loading: "lazy" })];
     case "pptx":
       return [h("p", { className: ["embed-note"] }, [t("No preview for slides. Download the file to open it in PowerPoint.")])];
     case "docx": {
@@ -166,7 +169,7 @@ async function buildEmbed(contentDir: string, dept: string, ref: AttachmentRef, 
       h("span", { className: ["embed-title"] }, [t(title)]),
       h("span", { className: ["embed-meta"] }, [t(`${ref.file} · ${formatSize(stat.size)}`)]),
       h("span", { className: ["embed-actions"] }, [
-        ...(ref.kind === "pdf" ? [h("a", { className: ["btn", "btn-sm"], href: url, target: "_blank", rel: ["noopener"] }, [t("Open")])] : []),
+        ...(ref.kind === "pdf" || ref.kind === "png" || ref.kind === "svg" ? [h("a", { className: ["btn", "btn-sm"], href: url, target: "_blank", rel: ["noopener"] }, [t("Open")])] : []),
         h("a", { className: ["btn", "btn-sm"], href: `${url}?download=1`, download: ref.file }, [t("Download")]),
       ]),
     ]),
