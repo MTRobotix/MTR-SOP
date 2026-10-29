@@ -1,11 +1,11 @@
 ---
 title: MetriQ pitch deck and demo video
-summary: The 14-slide MetriQ deck (PowerPoint and PDF) and the 2-minute demo video for customer meetings and outreach.
+summary: The 14-slide MetriQ deck in English and Vietnamese (PowerPoint and PDF) and the 2-minute demo video for customer meetings and outreach.
 tags: [metriq, pitch, deck, video, sales]
 owner: Thong Huynh
 featured: true
 order: 10
-updated: 2026-10-14
+updated: 2026-10-29
 ---
 
 ## Demo video
@@ -40,6 +40,21 @@ The PDF shows each slide as it ends after its animations. Download the [PowerPoi
 | 14    | Close — book a 30-minute demo                                            |
 
 Source: `content/general/attachments/metriq-pitch-deck.pptx`
+
+## Vietnamese version
+
+[MetriQ pitch deck, Vietnamese](attachments/metriq-pitch-deck-vi.pdf)
+
+The same 14 slides, layout and animations as the English deck, with every slide, speaker note, chart label and picture description in Vietnamese. Download the [PowerPoint version](attachments/metriq-pitch-deck-vi.pptx) to present; the steps under Present the deck apply unchanged.
+
+- Kept in English: the MetriQ app screenshots on slides 8 and 12 (the app is in English), product codes (M4×20, M3×6) and prices ($30k–150k).
+- Decimal commas in readings and figures (>99,5%, 20,1 mm, ΔE 1,2), as on the Vietnamese website.
+- The demo video stays in English.
+
+> [!NOTE]
+> Translated by Claude from the English deck on 2026-10-29. Read it through once before the first customer meeting.
+
+Source: `content/general/attachments/metriq-pitch-deck-vi.pptx`, translated from `content/general/attachments/metriq-pitch-deck.pptx`; Vietnamese terms from `MTR-Site/src/data/content.ts`.
 
 ## Present the deck
 
