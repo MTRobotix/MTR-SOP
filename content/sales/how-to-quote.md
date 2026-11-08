@@ -5,7 +5,7 @@ tags: [quote, pricing]
 owner: TODO
 featured: true
 order: 10
-updated: 2026-10-08
+updated: 2026-11-08
 ---
 
 ## Before you quote
@@ -34,8 +34,10 @@ updated: 2026-10-08
 5. Margin.
 6. Approval.
 
+Templates: project proposal, quotation and BOM cost sheet in [Business document set](/d/documents/document-set#which-document-when). When to send them: [Proposal and quote](/d/sales/sales-roadmap#proposal-and-quote).
+
 > [!TODO]
-> Missing for every step: price list, labour rate, margin, currency, taxes, payment terms, warranty terms, validity period, quote template, approver. Owner: TODO — add before anyone sends a quote.
+> Missing for every step: approved price list, labour rate, margin, taxes, approver. Currency, payment terms, warranty and validity have draft defaults in [Commercial defaults](/d/sales/sales-roadmap#commercial-defaults), not yet approved. Owner: TODO — add before anyone sends a quote.
 
 ## Never
 
