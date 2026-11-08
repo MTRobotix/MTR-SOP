@@ -77,7 +77,7 @@ Optional in `.env.local`:
 
 New tables are created on the first request after a deploy; existing users and data stay.
 
-SOP content goes live without a deploy: an app save expires the content cache at once, and a push to `main` from git does so through the webhook. `vercel.json` skips production builds when only `content/` changed.
+SOP content goes live without a deploy: an app save expires the content cache at once, and a push to `main` from git does so through the webhook. `vercel.json` skips production builds when only `content/` changed; a redeploy of the same commit (for example after changing env vars) always builds.
 
 ## Renaming from MTR-SOP
 
