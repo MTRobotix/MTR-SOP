@@ -1,11 +1,11 @@
 ---
 title: Run the SensQ stack
 summary: Install dependencies, build ROS 2, start backend and UI with one script.
-tags: [sensq, ros2, setup]
+tags: [sensq, ros2]
 owner: Thong Huynh
 featured: true
 order: 10
-updated: 2026-09-28
+updated: 2026-11-08
 ---
 
 ## Goal
@@ -16,7 +16,7 @@ Start the SensQ operator app (FastAPI backend + React UI) on a machine with ROS 
 
 - Ubuntu with ROS 2 Humble installed at `/opt/ros/humble`.
 - Python 3 with `venv`.
-- Node.js 18 or newer. Ubuntu 22.04 `apt install nodejs` gives Node 12 — too old.
+- Node.js >= 18. Ubuntu 22.04 `apt install nodejs` gives Node 12 — too old.
 - The SensQ repo at `~/SensQ`.
 
 > [!NOTE]
