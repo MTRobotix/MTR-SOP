@@ -209,7 +209,7 @@ export function Editor(p: Props) {
       if (j.kind === "proposed") {
         setResult({ ok: true, text: "Sent for review. An admin must approve it before it goes live.", url: j.url });
       } else if (j.mode === "github") {
-        setResult({ ok: true, text: "Saved to main. Live after the site redeploys (~1–2 min)." });
+        setResult({ ok: true, text: "Saved to main. Live now." });
       } else {
         router.push(`/d/${p.dept}/${slug}`);
         router.refresh();

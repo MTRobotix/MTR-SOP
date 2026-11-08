@@ -1,6 +1,7 @@
 // Production store: every admin save is a commit on main; every editor save is a pull request.
 // Uses the GitHub REST API with a fine-grained token scoped to this repo (Contents + Pull requests RW).
 import { ConflictError, type ContentStore, type Proposal, type ProposalDetail, type SaveInput } from "./types";
+import { expireContent } from "../content/source";
 
 const API = "https://api.github.com";
 const META_RE = /<!-- sop-meta (\{.*?\}) -->/;
@@ -65,15 +66,17 @@ async function readAt(path: string, ref: string): Promise<{ content: string; sha
   }
 }
 
-async function putFile(input: SaveInput, branch: string): Promise<void> {
+/** Returns the new commit's SHA. */
+async function putFile(input: SaveInput, branch: string): Promise<string> {
   try {
-    await gh("PUT", `/contents/${filePath(input.dept, input.slug)}`, {
+    const r = await gh<{ commit: { sha: string } }>("PUT", `/contents/${filePath(input.dept, input.slug)}`, {
       message: input.message,
       content: b64(input.content),
       branch,
       ...(input.baseSha ? { sha: input.baseSha } : {}),
       author: { name: input.user.name, email: input.user.email },
     });
+    return r.commit.sha;
   } catch (e) {
     // 409: file changed since baseSha. 422: file exists but no sha given (create over existing).
     if (e instanceof GitHubError && (e.status === 409 || e.status === 422)) {
@@ -109,7 +112,7 @@ export const githubStore: ContentStore = {
     if ((current?.sha ?? null) !== input.baseSha) {
       throw new ConflictError(input.baseSha === null ? "A section with this name already exists." : undefined);
     }
-    await putFile(input, cfg().branch);
+    await expireContent(await putFile(input, cfg().branch));
   },
 
   async propose(input) {
@@ -131,17 +134,20 @@ export const githubStore: ContentStore = {
   },
 
   async remove(dept, slug, baseSha, user) {
+    let sha: string;
     try {
-      await gh("DELETE", `/contents/${filePath(dept, slug)}`, {
+      const r = await gh<{ commit: { sha: string } }>("DELETE", `/contents/${filePath(dept, slug)}`, {
         message: `sop(${dept}/${slug}): delete`,
         sha: baseSha,
         branch: cfg().branch,
         author: { name: user.name, email: user.email },
       });
+      sha = r.commit.sha;
     } catch (e) {
       if (e instanceof GitHubError && (e.status === 409 || e.status === 404)) throw new ConflictError();
       throw e;
     }
+    await expireContent(sha);
   },
 
   async listProposals() {
@@ -161,14 +167,16 @@ export const githubStore: ContentStore = {
 
   async approve(id) {
     const pull = await gh<Pull>("GET", `/pulls/${id}`);
+    let sha: string;
     try {
-      await gh("PUT", `/pulls/${id}/merge`, { merge_method: "squash", commit_title: `${pull.title} (#${id})` });
+      sha = (await gh<{ sha: string }>("PUT", `/pulls/${id}/merge`, { merge_method: "squash", commit_title: `${pull.title} (#${id})` })).sha;
     } catch (e) {
       if (e instanceof GitHubError && (e.status === 405 || e.status === 409)) {
         throw new ConflictError("This proposal conflicts with newer changes. Reject it and ask the editor to redo the edit.");
       }
       throw e;
     }
+    await expireContent(sha);
     await gh("DELETE", `/git/refs/heads/${pull.head.ref}`).catch(() => undefined);
   },
 

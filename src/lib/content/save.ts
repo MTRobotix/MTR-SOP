@@ -1,8 +1,15 @@
 import "server-only";
 import { normalizeFile, splitFrontmatter, stringifyFrontmatter, normalizeBody } from "./normalize";
 import { today } from "./schema";
-import { validateFile, lintConfig, hasRawHtml, type Issue } from "./validate";
+import { validateFile, lintConfig, hasRawHtml, type Issue, type SizeOf } from "./validate";
 import { getDoc } from "./repo";
+import { snapshot } from "./source";
+
+/** Attachment sizes from the content snapshot, so checks see GitHub's files in production. */
+async function sizeOf(): Promise<SizeOf> {
+  const { attachments } = await snapshot();
+  return (rel) => attachments[rel]?.size;
+}
 
 /** Normalize + stamp `updated` + validate. The only path by which app edits become file content. */
 export async function prepareDoc(dept: string, slug: string, raw: string, stampDate = true) {
@@ -11,7 +18,8 @@ export async function prepareDoc(dept: string, slug: string, raw: string, stampD
   const nb = normalizeBody(body);
   const content = normalizeFile(`${stringifyFrontmatter(data, "doc")}\n${nb}`, "doc");
   const path = `content/${dept}/${slug}.md`;
-  const { issues, links, anchors: ownAnchors } = validateFile(path, content, lintConfig());
+  const sizes = await sizeOf();
+  const { issues, links, anchors: ownAnchors } = validateFile(path, content, lintConfig(), sizes);
 
   for (const l of links) {
     if (l.dept === dept && l.slug === slug) {
@@ -23,7 +31,7 @@ export async function prepareDoc(dept: string, slug: string, raw: string, stampD
       issues.push({ line: l.line, message: `Broken link: /d/${l.dept}/${l.slug} does not exist.` });
       continue;
     }
-    const anchors = validateFile(`content/${l.dept}/${l.slug}.md`, target.raw, lintConfig()).anchors;
+    const anchors = validateFile(`content/${l.dept}/${l.slug}.md`, target.raw, lintConfig(), sizes).anchors;
     if (l.anchor && !anchors.includes(l.anchor)) issues.push({ line: l.line, message: `Broken link: #${l.anchor} not found in /d/${l.dept}/${l.slug}.` });
   }
 
@@ -37,7 +45,7 @@ export async function prepareDoc(dept: string, slug: string, raw: string, stampD
  */
 export async function lintForEditor(dept: string, slug: string, raw: string) {
   const prepared = await prepareDoc(dept, slug, raw);
-  const rawIssues = validateFile(`content/${dept}/${slug}.md`, raw.replace(/\r\n?/g, "\n"), lintConfig()).issues;
+  const rawIssues = validateFile(`content/${dept}/${slug}.md`, raw.replace(/\r\n?/g, "\n"), lintConfig(), await sizeOf()).issues;
   const used = new Set<number>();
   const issues = prepared.issues.map((i) => {
     const k = rawIssues.findIndex((r, n) => !used.has(n) && r.message === i.message);

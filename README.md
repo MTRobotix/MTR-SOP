@@ -13,6 +13,7 @@ The MTR staff app, behind one login:
 | SOP content (source of truth) | `content/<dept>/<slug>.md` on `main` |
 | Users, projects, tasks, hours | Postgres (Neon) in production, PGlite in `.data/` locally. Schema: `src/lib/db.ts` |
 | SOP saves | Admin → commit to `main`. Editor → pull request, approved in `/admin/reviews` |
+| SOP reads | Production: `main` on GitHub, one GraphQL call, cached until a save or the push webhook expires it. Locally: `content/` |
 | AI answer | Claude Haiku 4.5 over the top search hits (`src/lib/ai/`) |
 | Rules | `.claude/skills/mtr-home-ui`, `.claude/skills/mtr-sop-content` |
 
@@ -69,11 +70,14 @@ Optional in `.env.local`:
 1. Push this repo to a private GitHub repo.
 2. Create a Neon Postgres database; copy the pooled connection string.
 3. Create a fine-grained GitHub token for this repo only: Contents read/write, Pull requests read/write.
-4. Import the repo in Vercel and set env vars (see `.env.example`): `AUTH_SECRET`, `DATABASE_URL`, `ANTHROPIC_API_KEY`, `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH`, `APP_TIME_ZONE`.
+4. Import the repo in Vercel and set env vars (see `.env.example`): `AUTH_SECRET`, `DATABASE_URL`, `ANTHROPIC_API_KEY`, `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH`, `GITHUB_WEBHOOK_SECRET`, `APP_TIME_ZONE`.
 5. Run `DATABASE_URL=... ADMIN_EMAIL=... ADMIN_PASSWORD=... npm run db:setup` once from your machine.
 6. Protect `main` on GitHub: require the `check` workflow to pass.
+7. Add a GitHub webhook (repo Settings → Webhooks): payload URL `https://<app>/api/revalidate`, content type `application/json`, secret = `GITHUB_WEBHOOK_SECRET`, event: push.
 
-New tables are created on the first request after a deploy; existing users and data stay. Saved SOP edits go live after Vercel redeploys from the new commit (~1–2 min).
+New tables are created on the first request after a deploy; existing users and data stay.
+
+SOP content goes live without a deploy: an app save expires the content cache at once, and a push to `main` from git does so through the webhook. `vercel.json` skips production builds when only `content/` changed.
 
 ## Renaming from MTR-SOP
 

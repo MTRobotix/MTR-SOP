@@ -1,10 +1,9 @@
-// Serves SOP attachments (content/<dept>/attachments/<file>) to signed-in users.
-import fs from "node:fs/promises";
-import path from "node:path";
+// Serves SOP attachments (content/<dept>/attachments/<file>) to signed-in users, from the content source.
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { isValidId } from "@/lib/content/repo";
 import { EMBED_TYPES, attachmentRelPath, parseAttachmentLink } from "@/lib/content/attachments";
+import { attachmentBytes } from "@/lib/content/source";
 
 type P = { params: Promise<{ dept: string; file: string }> };
 
@@ -12,7 +11,7 @@ export async function GET(req: Request, { params }: P) {
   if (!(await getCurrentUser())) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
   const { dept, file } = await params;
   const ref = isValidId(dept) ? parseAttachmentLink(`attachments/${file}`) : null;
-  const data = ref ? await fs.readFile(path.join(process.cwd(), attachmentRelPath(dept, ref.file))).catch(() => null) : null;
+  const data = ref ? await attachmentBytes(attachmentRelPath(dept, ref.file)) : null;
   if (!ref || !data) return NextResponse.json({ error: "File not found." }, { status: 404 });
 
   const download = new URL(req.url).searchParams.has("download");
