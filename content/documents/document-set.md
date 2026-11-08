@@ -16,8 +16,8 @@ One row per template. Stages refer to [Stages and gates](/d/sales/sales-roadmap#
 | --- | ---------------------------------- | ---------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | 00  | Document index                     | Overview                           | —              | [PDF](attachments/en-00-document-index.pdf) · [Word](attachments/en-00-document-index.docx)                 | [PDF](attachments/vi-00-danh-muc-tai-lieu.pdf) · [Word](attachments/vi-00-danh-muc-tai-lieu.docx)                     |
 | 01  | Sales playbook (internal)          | All stages                         | —              | [PDF](attachments/en-01-sales-playbook.pdf) · [Word](attachments/en-01-sales-playbook.docx)                 | [PDF](attachments/vi-01-cam-nang-ban-hang.pdf) · [Word](attachments/vi-01-cam-nang-ban-hang.docx)                     |
-| 02  | Requirements form                  | Stages 1–3                         | Customer fills | [PDF](attachments/en-02-requirements-form.pdf) · [Word](attachments/en-02-requirements-form.docx)           | [PDF](attachments/vi-02-phieu-khao-sat-yeu-cau.pdf) · [Word](attachments/vi-02-phieu-khao-sat-yeu-cau.docx)           |
-| 03  | Site visit report                  | Stage 3                            | MTR            | [PDF](attachments/en-03-site-visit-report.pdf) · [Word](attachments/en-03-site-visit-report.docx)           | [PDF](attachments/vi-03-bao-cao-khao-sat.pdf) · [Word](attachments/vi-03-bao-cao-khao-sat.docx)                       |
+| 02  | Requirements form (customer)       | Stages 1–3                         | Customer       | [PDF](attachments/en-02-requirements-form.pdf) · [Word](attachments/en-02-requirements-form.docx)           | [PDF](attachments/vi-02-phieu-thong-tin-khao-sat.pdf) · [Word](attachments/vi-02-phieu-thong-tin-khao-sat.docx)       |
+| 03  | Site survey sheet (internal)       | Stage 3                            | MTR + customer | [PDF](attachments/en-03-site-survey-sheet.pdf) · [Word](attachments/en-03-site-survey-sheet.docx)           | [PDF](attachments/vi-03-phieu-khao-sat-hien-truong.pdf) · [Word](attachments/vi-03-phieu-khao-sat-hien-truong.docx)   |
 | 04  | Project proposal                   | Stage 5                            | Both           | [PDF](attachments/en-04-project-proposal.pdf) · [Word](attachments/en-04-project-proposal.docx)             | [PDF](attachments/vi-04-de-xuat-du-an.pdf) · [Word](attachments/vi-04-de-xuat-du-an.docx)                             |
 | 05  | Quotation                          | Stage 5                            | Both           | [PDF](attachments/en-05-quotation.pdf) · [Word](attachments/en-05-quotation.docx)                           | [PDF](attachments/vi-05-bao-gia.pdf) · [Word](attachments/vi-05-bao-gia.docx)                                         |
 | 06  | Terms and conditions of sale       | With every quotation               | —              | [PDF](attachments/en-06-terms-and-conditions.pdf) · [Word](attachments/en-06-terms-and-conditions.docx)     | [PDF](attachments/vi-06-dieu-khoan-ban-hang.pdf) · [Word](attachments/vi-06-dieu-khoan-ban-hang.docx)                 |
@@ -50,7 +50,7 @@ Source: templates drafted by Claude with Thong Huynh, November 2026.
 
 | Stage    | Documents                                                                                                                              |
 | -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Sell     | 02 Requirements form → 03 Site visit report → 04 Proposal + 05 Quotation + 06 Terms (07 NDA before data is shared)                     |
+| Sell     | 02 Requirements form → 03 Site survey sheet → 04 Proposal + 05 Quotation + 06 Terms (07 NDA before data is shared)                     |
 | Order    | Customer PO → 08 Order confirmation → 16 Payment request (50%)                                                                         |
 | Build    | 09 BOM → 10 Purchase orders → 13 Test record (FAT) → 14 Acceptance certificate (FAT) → 16 Payment request (40%)                        |
 | Install  | 15 Delivery and handover → 13 Test record (SAT) → 14 Acceptance certificate (SAT) → 17 Warranty certificate → 16 Payment request (10%) |
@@ -80,7 +80,7 @@ Source: templates drafted by Claude with Thong Huynh, November 2026.
 ## Numbering and filing
 
 - Number format: `CODE-YYYY-NNN`, one sequence per code per year, starting at `001`.
-- Codes: `RF` requirements form, `SV` site visit report, `P` proposal, `Q` quotation, `NDA`, `OC` order confirmation, `BOM`, `PO` purchase order, `CO` change order, `MM` minutes, `TR` test record, `AC` acceptance certificate, `DN` delivery note, `PR` payment request, `WC` warranty certificate, `SR` service report.
+- Codes: `RF` requirements form, `SV` site survey sheet, `P` proposal, `Q` quotation, `NDA`, `OC` order confirmation, `BOM`, `PO` purchase order, `CO` change order, `MM` minutes, `TR` test record, `AC` acceptance certificate, `DN` delivery note, `PR` payment request, `WC` warranty certificate, `SR` service report.
 - All documents of one project carry its proposal number `P-YYYY-NNN`.
 - Revisions: rev 0 on first issue, then rev 1, 2. A signed document is never edited; issue a new revision.
 - File name: `NN-CODE-YYYY-NNN-customer.pdf`, for example `05-Q-2026-004-customer.pdf`.
