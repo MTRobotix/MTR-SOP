@@ -1,4 +1,4 @@
-// Every page and API route requires a valid session, except the login page.
+// Every page and API route requires a valid session, except the login page and the signed GitHub webhook.
 // Role checks happen in the pages/routes themselves (requireUser), against the DB.
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE, verifySession } from "./lib/auth/token";
@@ -16,5 +16,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!login|_next/static|_next/image|favicon.ico|icon.svg).*)"],
+  matcher: ["/((?!login|api/revalidate|_next/static|_next/image|favicon.ico|icon.svg).*)"],
 };

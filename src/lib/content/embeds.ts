@@ -1,7 +1,5 @@
 // Turns a paragraph that holds only an `attachments/<file>` link into an embedded preview card.
 // Runs after sanitizing, so every node here is built from escaped text or re-sanitized HTML.
-import fs from "node:fs/promises";
-import path from "node:path";
 import { unified } from "unified";
 import rehypeParse from "rehype-parse";
 import rehypeSanitize from "rehype-sanitize";
@@ -9,7 +7,8 @@ import { visit } from "unist-util-visit";
 import mammoth from "mammoth";
 import readExcelFile from "read-excel-file/node";
 import type { Root, Element, ElementContent, Properties } from "hast";
-import { EMBED_TYPES, attachmentUrl, parseAttachmentLink, type AttachmentRef } from "./attachments";
+import { EMBED_TYPES, attachmentRelPath, attachmentUrl, parseAttachmentLink, type AttachmentRef } from "./attachments";
+import { attachmentBytes, snapshot } from "./source";
 
 const MAX_ROWS = 100;
 const MAX_COLS = 20;
@@ -107,16 +106,16 @@ function truncNote(shown: number, total: number): ElementContent[] {
 
 const docxSanitizer = unified().use(rehypeParse, { fragment: true }).use(rehypeSanitize);
 
-async function preview(file: string, ref: AttachmentRef, url: string, title: string): Promise<ElementContent[]> {
+async function preview(read: () => Promise<Buffer>, ref: AttachmentRef, url: string, title: string): Promise<ElementContent[]> {
   switch (ref.kind) {
     case "pdf":
       return [h("iframe", { className: ["embed-pdf"], src: url, title, loading: "lazy" })];
     case "csv": {
-      const { rows, total } = tidy(parseCsv(await fs.readFile(file, "utf8")));
+      const { rows, total } = tidy(parseCsv((await read()).toString("utf8")));
       return [h("div", { className: ["embed-scroll"] }, [table(rows, true)]), ...truncNote(Math.max(rows.length - 1, 0), Math.max(total - 1, 0))];
     }
     case "xlsx": {
-      const sheets = await readExcelFile(await fs.readFile(file));
+      const sheets = await readExcelFile(await read());
       const out: ElementContent[] = [];
       for (const s of sheets) {
         const { rows, total } = tidy(s.data.map((r) => r.map(formatCell)));
@@ -134,33 +133,34 @@ async function preview(file: string, ref: AttachmentRef, url: string, title: str
     case "pptx":
       return [h("p", { className: ["embed-note"] }, [t("No preview for slides. Download the file to open it in PowerPoint.")])];
     case "docx": {
-      const { value } = await mammoth.convertToHtml({ buffer: await fs.readFile(file) });
+      const { value } = await mammoth.convertToHtml({ buffer: await read() });
       const clean = docxSanitizer.runSync(docxSanitizer.parse(value)) as Root;
       return [h("div", { className: ["embed-doc"] }, clean.children as ElementContent[])];
     }
   }
 }
 
-const cache = new Map<string, { mtime: number; nodes: ElementContent[] }>();
+const cache = new Map<string, ElementContent[]>();
 
-async function buildEmbed(contentDir: string, dept: string, ref: AttachmentRef, label: string): Promise<Element> {
-  const file = path.join(contentDir, dept, "attachments", ref.file);
+async function buildEmbed(dept: string, ref: AttachmentRef, label: string): Promise<Element> {
+  const rel = attachmentRelPath(dept, ref.file);
   const url = attachmentUrl(dept, ref.file);
   const kind = EMBED_TYPES[ref.kind].label;
   const title = label.trim() || ref.file;
-  const stat = await fs.stat(file).catch(() => null);
+  const stat = (await snapshot()).attachments[rel];
   if (!stat) {
     return h("div", { className: ["embed", "embed-missing"] }, [h("p", {}, [t(`File not found: attachments/${ref.file}. Add it to content/${dept}/attachments/.`)])]);
   }
 
-  let nodes = cache.get(file)?.mtime === stat.mtimeMs ? cache.get(file)!.nodes : null;
+  const key = `${rel}@${stat.sha}`;
+  let nodes = cache.get(key) ?? null;
   if (!nodes) {
     try {
-      nodes = await preview(file, ref, url, title);
+      nodes = await preview(async () => (await attachmentBytes(rel)) ?? Promise.reject(new Error(`${rel} is gone`)), ref, url, title);
     } catch {
       nodes = [h("p", { className: ["embed-note"] }, [t("Preview unavailable. Download the file to open it.")])];
     }
-    cache.set(file, { mtime: stat.mtimeMs, nodes });
+    cache.set(key, nodes);
   }
 
   return h("figure", { className: ["embed", `embed-${ref.kind}`] }, [
@@ -177,7 +177,7 @@ async function buildEmbed(contentDir: string, dept: string, ref: AttachmentRef, 
   ]);
 }
 
-export function rehypeEmbeds(options: { dept: string; contentDir: string }) {
+export function rehypeEmbeds(options: { dept: string }) {
   return async (tree: Root) => {
     const jobs: Promise<void>[] = [];
     visit(tree, "element", (node: Element, index, parent) => {
@@ -194,7 +194,7 @@ export function rehypeEmbeds(options: { dept: string; contentDir: string }) {
       if (!ref) return;
       const slot = h("div", {});
       parent.children[index] = slot;
-      jobs.push(buildEmbed(options.contentDir, options.dept, ref, textOf(link)).then((el) => void Object.assign(slot, el)));
+      jobs.push(buildEmbed(options.dept, ref, textOf(link)).then((el) => void Object.assign(slot, el)));
     });
     await Promise.all(jobs);
   };

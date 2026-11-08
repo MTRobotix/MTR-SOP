@@ -13,7 +13,7 @@ export default async function EditPage({ params }: { params: Promise<{ dept: str
   const { dept, slug } = await params;
   const d = await getDepartment(dept);
   if (!d) notFound();
-  // Load the latest main, not the deployed copy, so saves compare against the real current version.
+  // Load the latest main, not the cached snapshot, so saves compare against the real current version.
   const file = await store().read(dept, slug);
   if (!file) notFound();
   const { data, body } = splitFrontmatter(file.content);

@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Content files are read at runtime by server code; make sure they ship with the deployment.
+  // SOP content is read from GitHub at runtime (src/lib/content/source.ts); only the lint config ships.
   outputFileTracingIncludes: {
-    "/**": ["./content/**/*.md", "./content/**/attachments/**", "./.markdownlint.jsonc"],
+    "/**": ["./.markdownlint.jsonc"],
   },
   serverExternalPackages: ["@electric-sql/pglite", "mammoth"],
 };

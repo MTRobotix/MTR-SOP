@@ -1,6 +1,5 @@
 // Markdown → safe HTML for doc pages.
 // Raw HTML outside the allowlist (mtr-sop-content §5) is shown as literal text, then everything is sanitized.
-import path from "node:path";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
@@ -89,5 +88,5 @@ const processor = base().use(rehypeStringify);
 export async function renderMarkdown(body: string, dept?: string): Promise<string> {
   if (!dept) return String(await processor.process(body));
   const { rehypeEmbeds } = await import("./embeds");
-  return String(await base().use(rehypeEmbeds, { dept, contentDir: path.join(process.cwd(), "content") }).use(rehypeStringify).process(body));
+  return String(await base().use(rehypeEmbeds, { dept }).use(rehypeStringify).process(body));
 }

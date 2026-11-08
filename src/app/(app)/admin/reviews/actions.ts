@@ -12,7 +12,7 @@ export async function decide(form: FormData): Promise<void> {
   try {
     if (op === "approve") {
       await store().approve(id, user);
-      msg = store().mode === "github" ? "Approved and merged. Live after the site redeploys (~1–2 min)." : "Approved. File written to content/.";
+      msg = store().mode === "github" ? "Approved and merged. Live now." : "Approved. File written to content/.";
     } else if (op === "reject") {
       await store().reject(id, user);
       msg = "Rejected.";

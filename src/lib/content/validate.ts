@@ -44,8 +44,18 @@ const parser = unified().use(remarkParse).use(remarkGfm);
 
 export type LinkTarget = { dept: string; slug: string; anchor: string | null; line?: number };
 
+/** Size in bytes of a file by its repo path, or undefined when it does not exist. Default: on disk. */
+export type SizeOf = (rel: string) => number | undefined;
+
+const sizeOnDisk: SizeOf = (rel) => fs.statSync(path.join(/*turbopackIgnore: true*/ process.cwd(), rel), { throwIfNoEntry: false })?.size;
+
 /** Structural checks on one file. `relPath` is like `content/software/foo.md`. */
-export function validateFile(relPath: string, content: string, config: Configuration): { issues: Issue[]; links: LinkTarget[]; anchors: string[] } {
+export function validateFile(
+  relPath: string,
+  content: string,
+  config: Configuration,
+  sizeOf: SizeOf = sizeOnDisk,
+): { issues: Issue[]; links: LinkTarget[]; anchors: string[] } {
   const issues: Issue[] = [];
   const links: LinkTarget[] = [];
   const anchors: string[] = [];
@@ -89,10 +99,10 @@ export function validateFile(relPath: string, content: string, config: Configura
         issues.push({ line, message: `Attachment "${l.url}": use a lowercase file name ending in .pdf, .docx, .xlsx, .csv, .pptx, .mp4, .png or .svg.` });
         return;
       }
-      const stat = fs.statSync(path.join(process.cwd(), attachmentRelPath(m[1], ref.file)), { throwIfNoEntry: false });
-      if (!stat) issues.push({ line, message: `Attachment not found: ${attachmentRelPath(m[1], ref.file)}.` });
-      else if (stat.size > MAX_ATTACHMENT_BYTES) {
-        issues.push({ line, message: `Attachment ${attachmentRelPath(m[1], ref.file)} is ${(stat.size / 1024 / 1024).toFixed(1)} MB. Keep attachments under 4 MB.` });
+      const size = sizeOf(attachmentRelPath(m[1], ref.file));
+      if (size === undefined) issues.push({ line, message: `Attachment not found: ${attachmentRelPath(m[1], ref.file)}.` });
+      else if (size > MAX_ATTACHMENT_BYTES) {
+        issues.push({ line, message: `Attachment ${attachmentRelPath(m[1], ref.file)} is ${(size / 1024 / 1024).toFixed(1)} MB. Keep attachments under 4 MB.` });
       }
       return;
     }

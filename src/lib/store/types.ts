@@ -31,7 +31,7 @@ export type ProposalDetail = Proposal & { content: string; current: string | nul
 
 export interface ContentStore {
   mode: "local" | "github";
-  /** Latest version on main (not the deployed copy, which can lag behind a redeploy). */
+  /** Latest version on main, uncached, so saves compare against the real current file. */
   read(dept: string, slug: string): Promise<{ content: string; sha: string } | null>;
   commit(input: SaveInput): Promise<void>;
   propose(input: SaveInput): Promise<{ id: string; url?: string }>;
