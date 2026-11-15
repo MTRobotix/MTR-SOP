@@ -16,6 +16,7 @@ Hard rules:
 - Run `npm run content:format` and `npm run content:check` after any content change.
 - `npm run check` must pass before commit.
 - Never invent facts about MTR, its people, customers, prices or products. Unknown → `> [!TODO]`.
+- Delete a branch as soon as its pull request is merged (`git push origin --delete <branch>`, or "Delete branch" on the PR). Next work starts on a fresh branch from the latest `main`; never reuse a merged branch. The app already does this for editor reviews (`src/lib/store/github.ts`). A branch with no open PR and no commits beyond `main` is merged: delete it.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
