@@ -64,6 +64,7 @@ Optional in `.env.local`:
 | `npm run content:check` | Validate frontmatter, lint, allowed HTML, links, format |
 | `npm run check` | content:check + typecheck + lint (CI runs this) |
 | `npm run db:setup` | Create tables and the first admin |
+| `npm run e2e` | End-to-end tests: production build, throwaway database, Chromium (see `e2e/README.md`; CI runs this) |
 
 ## Deploy (Vercel)
 

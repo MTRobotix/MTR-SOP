@@ -19,7 +19,7 @@ MTR Home is a tool, not a showcase. A person arrives with a job and must finish 
 steps. Three areas: SOP (`/sop`, docs at `/d/…`), Hours (`/hours`), Projects (`/projects`).
 
 - Every screen answers one question:
-  - Home `/`: "where do I go, and what is mine?" — one row per area, stacked top down, then "Your open tasks" (assigned to you) and, for a project lead, "In projects you lead" (open tasks there assigned to someone else or to no one, with who has it).
+  - Home `/`: "where do I go, and what is mine?" — search first, then one tile per area (Hours, Projects, New in the SOP), then "Your open tasks" (assigned to you) and, for a project lead, "In projects you lead" (open tasks there assigned to someone else or to no one, with who has it).
   - SOP: "where is it?" (SOP page, department) or "how do I do it?" (doc).
   - Hours: "what did I work on this week?" Team hours (admin): "who worked on what, when?"
   - Projects: "what is running, who works on it, what is next?"
@@ -43,6 +43,9 @@ steps. Three areas: SOP (`/sop`, docs at `/d/…`), Hours (`/hours`), Projects (
   ("Overdue", "Over by 12 h"), never colour alone: the two look alike to colour-blind readers.
   Nothing else is coloured, except the logo: the halftone mark (`BrandMark.tsx`, `icon.svg`) uses
   `--color-brand` for its largest dots, and nothing else may use that token.
+- One solid accent block per view at most, and only on home: the hero behind the greeting and search
+  (`--color-accent-solid`, text `--color-on-accent-solid`). Every other tile is a solid `--color-surface`
+  card. No second hue: areas are told apart by icon and label, never by their own colour.
 - Glass only on floating surfaces: header island (`.glass`) and AI answer bubble (`.glass-panel`,
   more opaque for text contrast). Content cards are solid `--color-surface`.
 - Never glass over dense text or code (e.g. the editor toolbar, the search suggestion list): the
@@ -79,7 +82,9 @@ steps. Three areas: SOP (`/sop`, docs at `/d/…`), Hours (`/hours`), Projects (
 | Editor toolbar | Solid surface pill, sticky under the header. Icon buttons with `aria-label`. |
 | Tag | Small pill, `--color-bg-soft` fill, muted text. |
 | TODO marker | `> [!TODO]` renders as a dashed-border callout — shows unwritten content honestly. |
-| Area list (home) | One solid card, one row per area (SOP, Hours, Projects), stacked top down with a hairline between rows. Row: Lucide icon, area name + one-line purpose (SOP adds its department links inline), the one number that matters (hours this week, ongoing projects), one link or button on the right. Below 900px the number and action move under the name. The home view's one primary button is "Log hours". |
+| Home bento | A 3-column grid, one column below 900px. **Hero** (2 columns, the solid accent block): the date, one `<h1>` "Hi, <first name>. What do you need?", the search bar. **Hours** (tall, right): week ring, hours per day, the view's one primary button "Log hours for today". **Projects**: ongoing count, Overdue flag (with the code when it is one project), "Open projects". **New in the SOP**: the 3 sections changed last with their department, "Browse all N sections". **Tasks** (full width): one row per task, project code + title + due date or Overdue; a second card "In projects you lead" adds who has it. No department links on home: search and the SOP page cover them. The hero renders at once; each tile streams in behind a skeleton. |
+| Week ring | Seven segments, Monday first, clockwise from the top. A day with hours is `--color-accent`, a day without `--color-line-strong`. Centre: the week total and "N of 7 days". `role="img"` with the same words as `aria-label`. Under it, hours per day: bar, hours, weekday; a past day or today links to that day on the timecard, a future day shows "–". |
+| Skeleton | `.skeleton` blocks on `--color-bg-soft`, shown by `loading.tsx` and the home tiles while data loads. They fade in after `--dur-fast`, so a fast load never flashes them. No spinners. |
 | Project list | One solid card, one row per project, stacked top down with a hairline between rows — not a card grid. Row: code + name + status tag, facts line (customer · lead · due · open tasks, Overdue flag), budget meter, "Log time". Below 900px everything stacks in that order. |
 | Stat tile | Solid surface, label in muted text, value `--text-xl` semibold. A row holds up to 4; 2 per row below 900px. No sparkline unless there is a trend to show. |
 | Budget meter | Track `--color-accent-soft`, fill `--color-accent`; warn/danger fills sit on their own `*-soft` track. Text under it always shows "37 of 120 h" plus the state word. `role="meter"` with `aria-valuetext`. No budget → hours only, no bar. |

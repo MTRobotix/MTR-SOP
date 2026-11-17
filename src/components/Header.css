@@ -178,3 +178,10 @@
     align-items: center;
   }
 }
+
+/* On the narrowest phones the brand keeps its mark and "MTR" only, so the menu button stays on screen. */
+@media (max-width: 380px) {
+  .brand-sub {
+    display: none;
+  }
+}
