@@ -18,35 +18,69 @@ export function isValidId(id: string): boolean {
   return SLUG_RE.test(id) && id.length <= 60;
 }
 
-export async function listDepartments(): Promise<Department[]> {
-  const { docs } = await snapshot();
+type Catalog = { depts: Department[]; byDept: Map<string, DocSummary[]>; all: DocSummary[] };
+
+let memo: { version: string; catalog: Catalog } | null = null;
+
+/**
+ * Departments and section summaries, parsed once per content version instead of on every call:
+ * home, the SOP page and search all list them, and parsing frontmatter is the slow part.
+ */
+async function catalog(): Promise<Catalog> {
+  const { version, docs } = await snapshot();
+  if (version && memo?.version === version) return memo.catalog;
   const depts: Department[] = [];
+  const byDept = new Map<string, DocSummary[]>();
   for (const [p, raw] of Object.entries(docs)) {
-    const [, id, file] = p.split("/");
-    if (file !== "_department.md" || !isValidId(id)) continue;
-    const v = validateDeptMeta(splitFrontmatter(raw).data);
-    if (v.ok) depts.push({ id, meta: v.value });
+    const [, dept, file] = p.split("/");
+    if (!isValidId(dept)) continue;
+    if (file === "_department.md") {
+      const v = validateDeptMeta(splitFrontmatter(raw).data);
+      if (v.ok) depts.push({ id: dept, meta: v.value });
+      continue;
+    }
+    const slug = file.slice(0, -3);
+    if (file.startsWith("_") || !isValidId(slug)) continue;
+    const v = validateDocMeta(splitFrontmatter(raw).data);
+    if (!v.ok) continue;
+    const list = byDept.get(dept) ?? [];
+    list.push({ dept, slug, meta: v.value });
+    byDept.set(dept, list);
   }
-  return depts.sort((a, b) => a.meta.order - b.meta.order);
+  depts.sort((a, b) => a.meta.order - b.meta.order);
+  for (const list of byDept.values()) list.sort((a, b) => a.meta.order - b.meta.order || a.meta.title.localeCompare(b.meta.title));
+  // Sections of a folder without a _department.md are not reachable, so they are not counted either.
+  const all = depts.flatMap((d) => byDept.get(d.id) ?? []);
+  const built = { depts, byDept, all };
+  if (version) memo = { version, catalog: built };
+  return built;
+}
+
+export async function listDepartments(): Promise<Department[]> {
+  return [...(await catalog()).depts];
 }
 
 export async function getDepartment(id: string): Promise<Department | null> {
   if (!isValidId(id)) return null;
-  return (await listDepartments()).find((d) => d.id === id) ?? null;
+  return (await catalog()).depts.find((d) => d.id === id) ?? null;
 }
 
 export async function listDocs(dept: string): Promise<DocSummary[]> {
   if (!isValidId(dept)) return [];
-  const { docs } = await snapshot();
-  const out: DocSummary[] = [];
-  for (const [p, raw] of Object.entries(docs)) {
-    const [, d, file] = p.split("/");
-    const slug = file.slice(0, -3);
-    if (d !== dept || file.startsWith("_") || !isValidId(slug)) continue;
-    const v = validateDocMeta(splitFrontmatter(raw).data);
-    if (v.ok) out.push({ dept, slug, meta: v.value });
-  }
-  return out.sort((a, b) => a.meta.order - b.meta.order || a.meta.title.localeCompare(b.meta.title));
+  return [...((await catalog()).byDept.get(dept) ?? [])];
+}
+
+export type RecentDoc = DocSummary & { deptTitle: string };
+
+/** For home: how many sections the SOP has, and the ones changed most recently (by their `updated` date). */
+export async function sopOverview(limit = 3): Promise<{ total: number; recent: RecentDoc[] }> {
+  const { depts, all } = await catalog();
+  const titles = new Map(depts.map((d) => [d.id, d.meta.title]));
+  const recent = [...all]
+    .sort((a, b) => b.meta.updated.localeCompare(a.meta.updated) || a.meta.title.localeCompare(b.meta.title))
+    .slice(0, limit)
+    .map((d) => ({ ...d, deptTitle: titles.get(d.dept) ?? d.dept }));
+  return { total: all.length, recent };
 }
 
 export async function getDoc(dept: string, slug: string): Promise<Doc | null> {

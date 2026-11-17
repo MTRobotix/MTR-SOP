@@ -15,7 +15,7 @@ export type Task = {
   updatedAt: string;
 };
 
-export type MyTask = Task & { projectName: string };
+export type MyTask = Task & { projectName: string; /** "P-007"; empty for a project without a code. */ projectCode: string };
 
 export type TaskInput = { title: string; notes: string; status: TaskStatus; assigneeId: number | null; dueDate: string | null };
 
@@ -31,11 +31,12 @@ type Row = {
   created_by_name: string | null;
   updated_at: string;
   project_name: string;
+  project_code: string;
 };
 
 const SELECT = `
 SELECT t.id, t.project_id, t.title, t.notes, t.status, t.assignee_id, a.name AS assignee_name,
-  t.due_date::text AS due_date, c.name AS created_by_name, t.updated_at::text AS updated_at, p.name AS project_name
+  t.due_date::text AS due_date, c.name AS created_by_name, t.updated_at::text AS updated_at, p.name AS project_name, COALESCE(p.code, '') AS project_code
 FROM tasks t
 JOIN projects p ON p.id = t.project_id
 LEFT JOIN users a ON a.id = t.assignee_id
@@ -54,6 +55,7 @@ function toTask(r: Row): MyTask {
     createdByName: r.created_by_name,
     updatedAt: r.updated_at,
     projectName: r.project_name,
+    projectCode: r.project_code,
   };
 }
 

@@ -5,6 +5,7 @@ import "server-only";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { revalidateTag, unstable_cache } from "next/cache";
+import { cache } from "react";
 
 export const CONTENT_TAG = "content";
 
@@ -97,9 +98,8 @@ async function fromDisk(): Promise<Snapshot> {
 
 const cached = unstable_cache((at: string) => fromGitHub(at), ["sop-content"], { tags: [CONTENT_TAG] });
 
-export function snapshot(): Promise<Snapshot> {
-  return github() ? cached(ref()) : fromDisk();
-}
+/** Read once per request: a page asks for departments, sections and the search index, all from this one snapshot. */
+export const snapshot = cache((): Promise<Snapshot> => (github() ? cached(ref()) : fromDisk()));
 
 // GitHub's GraphQL API can lag a REST write by up to about a second; expiring before it shows the new
 // commit would cache the old content again. Wait for it, up to this long.

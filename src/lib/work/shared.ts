@@ -66,6 +66,7 @@ const fmt = (opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat("en-GB
 const DAY_MONTH = fmt({ day: "numeric", month: "short" });
 const DAY_MONTH_YEAR = fmt({ day: "numeric", month: "short", year: "numeric" });
 const WEEKDAY = fmt({ weekday: "short" });
+const WEEKDAY_LONG = fmt({ weekday: "long" });
 
 /** "28 Sep", or "28 Sep 2025" outside the given year. */
 export function formatDate(iso: string, currentYear?: string): string {
@@ -75,6 +76,11 @@ export function formatDate(iso: string, currentYear?: string): string {
 
 export function formatWeekday(iso: string): string {
   return WEEKDAY.format(new Date(`${iso}T00:00:00Z`));
+}
+
+/** "Sunday 15 Nov" */
+export function formatLongDay(iso: string): string {
+  return `${WEEKDAY_LONG.format(new Date(`${iso}T00:00:00Z`))} ${formatDate(iso, iso.slice(0, 4))}`;
 }
 
 /** "28 Sep – 4 Oct 2026" */

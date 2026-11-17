@@ -103,6 +103,11 @@ CREATE TABLE IF NOT EXISTS login_events (
 CREATE INDEX IF NOT EXISTS login_events_at_idx ON login_events (at DESC);
 CREATE INDEX IF NOT EXISTS login_events_email_at_idx ON login_events (email, at DESC);
 CREATE INDEX IF NOT EXISTS login_events_ip_at_idx ON login_events (ip, at DESC);
+
+-- Home and the timecard read one person's week on every load; the unique indexes above are partial and cannot serve that.
+CREATE INDEX IF NOT EXISTS timesheet_rows_user_week_idx ON timesheet_rows (user_id, week_start);
+-- "In projects you lead" on home.
+CREATE INDEX IF NOT EXISTS projects_lead_idx ON projects (lead_id);
 `;
 
 async function connect(): Promise<Driver> {
@@ -131,7 +136,8 @@ async function connect(): Promise<Driver> {
   } else {
     if (process.env.VERCEL) throw new Error("DATABASE_URL is required in deployment.");
     const { PGlite: Lite } = await import("@electric-sql/pglite");
-    const dir = path.join(process.cwd(), ".data", "pglite");
+    // PGLITE_DIR: the end-to-end tests use their own, throwaway database (playwright.config.ts).
+    const dir = process.env.PGLITE_DIR || path.join(process.cwd(), ".data", "pglite");
     fs.mkdirSync(path.dirname(dir), { recursive: true });
     const lite: PGlite = new Lite(dir);
     driver = {

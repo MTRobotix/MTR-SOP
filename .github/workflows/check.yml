@@ -25,3 +25,8 @@ jobs:
         if: steps.changes.outputs.code == 'true'
       - run: npm run lint
         if: steps.changes.outputs.code == 'true'
+      # The app itself, end to end: sign-in, home, search, hours, projects, tasks, roles (e2e/README.md).
+      - run: npx playwright install --with-deps chromium
+        if: steps.changes.outputs.code == 'true'
+      - run: npm run e2e
+        if: steps.changes.outputs.code == 'true'

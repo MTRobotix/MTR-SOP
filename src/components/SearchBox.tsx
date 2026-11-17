@@ -7,6 +7,11 @@ import "./Search.css";
 
 type Item = { id: string; heading: string; docTitle: string; deptTitle: string; href: string };
 
+// Suggestions already fetched in this tab, by search term. Typing a term again (or deleting back to it)
+// shows them at once, with no request. The SOP changes rarely; a page reload starts fresh.
+const seen = new Map<string, Item[]>();
+const SEEN_MAX = 100;
+
 type Props = {
   initial?: string;
   /** Input id; the header's "/" shortcut focuses #sop-search on the SOP page. */
@@ -30,18 +35,31 @@ export function SearchBox({ initial = "", inputId = "sop-search", autoFocus = fa
   useEffect(() => {
     const term = q.trim();
     if (term.length < 2) return;
+    const key = term.toLowerCase();
     const ctrl = new AbortController();
-    const t = setTimeout(async () => {
-      try {
-        const res = await fetch(`/api/suggest?q=${encodeURIComponent(term)}`, { signal: ctrl.signal });
-        if (res.ok) {
-          setItems(((await res.json()) as { items: Item[] }).items);
-          setActive(-1);
+    const show = (next: Item[]) => {
+      setItems(next);
+      setActive(-1);
+    };
+    const hit = seen.get(key);
+    const t = setTimeout(
+      async () => {
+        if (hit) return show(hit);
+        try {
+          const res = await fetch(`/api/suggest?q=${encodeURIComponent(term)}`, { signal: ctrl.signal });
+          if (res.ok) {
+            const next = ((await res.json()) as { items: Item[] }).items;
+            if (seen.size >= SEEN_MAX) seen.clear();
+            seen.set(key, next);
+            show(next);
+          }
+        } catch {
+          /* aborted or offline: keep previous suggestions */
         }
-      } catch {
-        /* aborted or offline: keep previous suggestions */
-      }
-    }, 150);
+      },
+      // A short pause while typing saves a request per keystroke; a term seen before needs none.
+      hit ? 0 : 120,
+    );
     return () => {
       clearTimeout(t);
       ctrl.abort();
