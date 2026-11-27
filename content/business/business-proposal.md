@@ -5,12 +5,12 @@ tags: [proposal, funding, pitch, metriq, pricing]
 owner: Thong Huynh
 featured: true
 order: 10
-updated: 2026-10-08
+updated: 2026-11-27
 ---
 
 ## Summary
 
-MTRobotics builds MetriQ: a camera inspection station that sits on an existing production line and removes bad products automatically. It finds new defect types without weeks of photo collection and model training (zero-shot detection), and it is installed in hours, without stopping the line.
+MTRobotics builds MetriQ: a camera inspection station that sits on an existing production line and flags bad products automatically. The plant's PLC or reject system removes them, driven by MetriQ's pass/fail signal. It finds new defect types without weeks of photo collection and model training (zero-shot detection), and it is installed in hours, without stopping the line.
 
 We sell to small and mid-size food, agriculture and light manufacturing plants in Vietnam and Canada — plants that still check products by eye and cannot afford a USD 50,000+ vision system.
 
@@ -40,26 +40,28 @@ Source: averroes.ai and iFactory pricing guides (see [Sources](#sources)).
 
 ## What we do
 
-MetriQ is a complete inspection station: camera, lighting, edge computer, software and reject output, delivered and installed by one team.
+MetriQ is a complete inspection station: camera, lighting, edge computer, software and a pass/fail output to the plant's PLC or reject system, delivered and installed by one team.
 
 1. Mount the station over the existing conveyor. No line changes, no downtime.
 2. Tell MetriQ what a defect looks like. It starts finding it the same day.
-3. MetriQ checks every product in real time and signals the reject system to remove bad ones.
+3. MetriQ checks every product in real time and sends a pass/fail signal for each one. The plant's PLC or reject system removes the failed ones.
 4. The plant gets counts, defect types and reports for each shift.
 
 What it does on the line:
 
 - Finds defects and unusual products.
 - Detects, tracks and counts products.
-- Sorts and rejects bad products automatically.
+- Flags bad products with a pass/fail signal for the plant's PLC or reject system.
 - Produces shift and batch quality reports.
 
-Published performance: 100+ parts per second, under 1 mm accuracy, more than 99.5% of defects caught.
+Approved performance: surface defects down to ≤ 2 mm, end-to-end latency under 100 ms.
+
+Accuracy is stated for each project as escape rate and false-reject rate, agreed with the customer's QA and proven at FAT (see [Acceptance definitions](/d/sales/sales-roadmap#acceptance-definitions)).
 
 > [!TODO]
-> These numbers are from the website (`MTR-Site/src/data/products.ts`). Approved numbers in [Product one-liners](/d/marketing/product-messaging#approved-numbers) still say ≤ 2 mm and under 100 ms. Measure on a real line and update both before pitching. Owner: Thong Huynh.
+> Line speed (parts per second), smallest defect found and catch rate are not measured yet ([Remaining tasks](/d/business/remaining-tasks) W-5 and S-2). Add a number here only after it is measured and added to [Product one-liners](/d/marketing/product-messaging#approved-numbers). Owner: Thong Huynh.
 
-Source: `MTR-Site/src/data/products.ts`, mtrobotix website (MetriQ page).
+Source: `content/marketing/product-messaging.md`, `content/sales/sales-roadmap.md`, Thong Huynh (2026-11-27).
 
 ## Why we are different
 
@@ -163,7 +165,7 @@ Source: `content/sales/attachments/metriq-ai-box-bom.xlsx`, `content/business/at
 | Cognex, Keyence (via integrators)    | Smart cameras, needs integrator     | One team, installed in hours, no training data                                                              |
 | TOMRA, Satake, Chinese color sorters | Full optical sorting lines          | Retrofit on existing lines at a fraction of the price; catches shape and surface defects color sorters miss |
 | Musashi AI (Canada)                  | Turnkey AI for automotive parts     | We serve food, agriculture and light manufacturing                                                          |
-| FaceNet, SmartSys (Vietnam)          | AI software, often bundled with MES | Complete station with hardware and reject output                                                            |
+| FaceNet, SmartSys (Vietnam)          | AI software, often bundled with MES | Complete station with hardware and a pass/fail output to the line's reject system                           |
 | UnitX, iFactory                      | AI inspection for large factories   | Priced and supported for mid-size local plants                                                              |
 
 Source: `MTR-Q_Competitors_and_Customers` (Google Drive, September 2026).
@@ -173,7 +175,7 @@ Source: `MTR-Q_Competitors_and_Customers` (Google Drive, September 2026).
 | When    | Milestone                                                                        |
 | ------- | -------------------------------------------------------------------------------- |
 | Q4 2026 | Build 2 demo stations. Start 2 paid pilots with Vietnam food or farm processors. |
-| Q1 2027 | First sales. Reject kit and shift reports ready. Support plan launched.          |
+| Q1 2027 | First sales. Optional reject kit and shift reports ready. Support plan launched. |
 | Q2 2027 | First Canada pilot (Ontario food plant).                                         |
 | H2 2027 | 12 units installed in total. MTR-M mobile robot pilot.                           |
 | 2028    | Partner sales through consultancies and machine builders. 30 units per year.     |
@@ -187,15 +189,15 @@ Source: Draft plan, October 2026.
 
 We ask for **USD 120,000**, repaid over 5 years.
 
-| Use of funds                                    | USD         | Share    |
-| ----------------------------------------------- | ----------- | -------- |
-| Stock for 10 stations (hardware, landed)        | 43,000      | 35.8%    |
-| 2 demo stations (Vietnam, Canada)               | 12,000      | 10.0%    |
-| Engineering: reject kit, reports, installer     | 30,000      | 25.0%    |
-| Sales and marketing: trade shows, demos, travel | 12,000      | 10.0%    |
-| Electrical safety certification (CE / CSA)      | 8,000       | 6.7%     |
-| Contingency                                     | 15,000      | 12.5%    |
-| **Total**                                       | **120,000** | **100%** |
+| Use of funds                                         | USD         | Share    |
+| ---------------------------------------------------- | ----------- | -------- |
+| Stock for 10 stations (hardware, landed)             | 43,000      | 35.8%    |
+| 2 demo stations (Vietnam, Canada)                    | 12,000      | 10.0%    |
+| Engineering: optional reject kit, reports, installer | 30,000      | 25.0%    |
+| Sales and marketing: trade shows, demos, travel      | 12,000      | 10.0%    |
+| Electrical safety certification (CE / CSA)           | 8,000       | 6.7%     |
+| Contingency                                          | 15,000      | 12.5%    |
+| **Total**                                            | **120,000** | **100%** |
 
 ### Repayment
 
@@ -234,6 +236,9 @@ Source: mtrobotix website (About and Contact pages), Thong Huynh's resume.
 Pitch-ready version of this proposal:
 
 [Business proposal (PDF)](attachments/business-proposal.pdf)
+
+> [!TODO]
+> The PDF still shows the old claims (removes bad products; 100+ parts per second, under 1 mm, more than 99.5%). The Word version below is corrected. Export a new PDF from it in the same layout before sending. Owner: Thong Huynh.
 
 Cost model — change the blue input cells to test other prices and volumes:
 
