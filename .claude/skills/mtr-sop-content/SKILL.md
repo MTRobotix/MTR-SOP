@@ -118,7 +118,7 @@ Write for someone who has never seen the project and must act correctly on the f
 - Never invent prices, margins, customers, headcount, dates or product claims. Unknown →
   `> [!TODO]` with what is missing and who should fill it.
 - Product names are fixed: MetriQ (formerly MTR-Q and BoltEye — never use the old names), SensQ, robot arm
-  (work in progress — say so). Company: MTRobotics.
+  (work in progress — say so). Company: MTR, or MTROBOTIX in full (never MTRobotics).
 
 ## 7. Before committing (any tool)
 

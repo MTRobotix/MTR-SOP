@@ -1,6 +1,6 @@
 ---
 title: MetriQ pitch deck and demo video
-summary: The 14-slide MetriQ deck in English and Vietnamese (PowerPoint and PDF) and the 2-minute demo video for customer meetings and outreach.
+summary: The 16-slide MetriQ deck on the MTR template (English), the Vietnamese deck and the 2-minute demo video for customer meetings and outreach.
 tags: [metriq, pitch, deck, video, sales]
 owner: Thong Huynh
 featured: true
@@ -14,6 +14,9 @@ updated: 2026-11-27
 
 1 min 48 s, 1920 × 1080, background music, no voice-over. It plays every slide with its animations, except slide 5: the video shows the capabilities on the photo of real parts only. Send it with outreach emails or play it before a live demo.
 
+> [!TODO]
+> The video still shows the 14-slide deck from before 2026-11-27 (navy slides, old order, ">99.5%" and "<1 mm"). Re-record it from the 16-slide deck before sending it again. Owner: Thong Huynh.
+
 Source: `content/general/attachments/metriq-demo.mp4`
 
 ## Slides
@@ -22,22 +25,26 @@ Source: `content/general/attachments/metriq-demo.mp4`
 
 The PDF shows each slide as it ends after its animations. Download the [PowerPoint version](attachments/metriq-pitch-deck.pptx) to present.
 
-| Slide | Shows                                                                    |
-| ----- | ------------------------------------------------------------------------ |
-| 1     | MetriQ — installed in hours, zero downtime, catch any defect instantly   |
-| 2     | How it works — the line animation: inspect, sort, reject                 |
-| 3     | Line speed — parts per second, smallest defect, catch rate, install time |
-| 4     | Capabilities on a photo of real parts                                    |
-| 5     | Capabilities on generated cartons — 2D, then 3D for height and damage    |
-| 6     | Instant deploy — teach MetriQ a new product in minutes                   |
-| 7     | Colour grading in CIELAB                                                 |
-| 8     | Measurements screen — drift, recommendations, export                     |
-| 9     | Time and cost to go live against integrators and AI vision platforms     |
-| 10    | Integration — Mount, Calibrate, Teach, Live                              |
-| 11    | Comparison with manual QC, rule-based vision and AI vision platforms     |
-| 12    | Shift report                                                             |
-| 13    | Customization — camera, frame, checks, connection, compute               |
-| 14    | Close — book a 30-minute demo                                            |
+| Slide | Shows                                                                                                          |
+| ----- | -------------------------------------------------------------------------------------------------------------- |
+| 1     | MetriQ — installed in hours, zero downtime, catch any defect, instantly                                        |
+| 2     | Why MetriQ exists — a busy line, three questions, "This is where MetriQ comes in"                              |
+| 3     | Every unit inspected, any defect caught — inspect, grade, send the reject signal                               |
+| 4     | Real-time analysis — < 100 ms, ≤ 2 mm, every unit, hours to go live; accuracy measured on the customer's parts |
+| 5     | Capabilities on a photo of real parts                                                                          |
+| 6     | Capabilities on generated cartons — 2D, then 3D for height and damage                                          |
+| 7     | Colour grading in CIELAB                                                                                       |
+| 8     | Instant deploy — teach MetriQ a new product in minutes                                                         |
+| 9     | Shift report                                                                                                   |
+| 10    | See drift before parts fail — measurements screen                                                              |
+| 11    | Live same day, fast commissioning — time and cost chart with Mount, Calibrate, Teach, Live                     |
+| 12    | Benefits and competitiveness — comparison with manual QC, rule-based vision and AI vision platforms            |
+| 13    | Built around your line — camera, frame, checks, connection, compute                                            |
+| 14    | Section: MetriQ Expansion                                                                                      |
+| 15    | Plug into any reject system — laser marking, pusher, robot pick, air jet (3D animations)                       |
+| 16    | Close — book a 30-minute demo                                                                                  |
+
+Every slide uses the MTR slide template: warm white, Barlow fonts, halftone dots, logo files from the [Logo kit](/d/business/logo-kit). Rules: [Brand templates](/d/documents/brand-templates).
 
 Source: `content/general/attachments/metriq-pitch-deck.pptx`
 
@@ -45,7 +52,10 @@ Source: `content/general/attachments/metriq-pitch-deck.pptx`
 
 [MetriQ pitch deck, Vietnamese](attachments/metriq-pitch-deck-vi.pdf)
 
-The same 14 slides, layout and animations as the English deck, with every slide, speaker note, chart label and picture description in Vietnamese. Download the [PowerPoint version](attachments/metriq-pitch-deck-vi.pptx) to present; the steps under Present the deck apply unchanged.
+The 14-slide deck from before 2026-11-27, with every slide, speaker note, chart label and picture description in Vietnamese. Download the [PowerPoint version](attachments/metriq-pitch-deck-vi.pptx) to present; the steps under Present the deck use the English slide numbers.
+
+> [!TODO]
+> The Vietnamese deck does not have the 2026-11-27 changes yet (MTR template, new slides 2, 14 and 15, new order, approved numbers on slide 4). Translate the new English deck before the next Vietnamese meeting. Owner: Thong Huynh.
 
 - Kept in English: the MetriQ app screenshots on slides 8 and 12 (the app is in English), product codes (M4×20, M3×6) and prices ($30k–150k).
 - Decimal commas in readings and figures (>99,5%, 20,1 mm, ΔE 1,2), as on the Vietnamese website.
@@ -60,18 +70,23 @@ Source: `content/general/attachments/metriq-pitch-deck-vi.pptx`, translated from
 
 1. Download the [PowerPoint version](attachments/metriq-pitch-deck.pptx).
 2. Open it in PowerPoint and start the slideshow.
-3. Click to advance. Each click shows the next build step; slide 2's video plays and loops on its own.
-4. To return to the capabilities, click **All capabilities** at the bottom of slides 2, 6, 7, 8 and 12. It jumps to slide 4.
+3. Click to advance. Each click shows the next build step. The videos on slides 2, 3 and 15 play and loop on their own.
+4. On slide 2, click once per question; the fourth click shows "This is where MetriQ comes in."
+5. To return to the capabilities, click **All capabilities** at the bottom of slides 3, 7, 8, 9 and 10. It jumps to slide 5.
 
-Expected: slide 11 shows the competitor columns first; the MetriQ column appears on the next click.
+Expected: slide 12 shows the competitor columns first; the MetriQ column appears on the next click.
+
+Install the Barlow fonts from `agent-plugin/fonts/office/` before presenting from PowerPoint; without them it falls back to Arial (the layout still fits). Send customers the PDF.
 
 Source: `content/general/attachments/metriq-pitch-deck.pptx`
 
 ## Before sending
 
-Slides 4 and 5 show the same capabilities two ways: on a photo of real parts and on generated cartons. Both stay in the deck.
+Slides 5 and 6 show the same capabilities two ways: on a photo of real parts and on generated cartons. Both stay in the deck.
 
 > [!TODO]
-> Slide 9 has no MetriQ price. Add it once the price is confirmed (see [Business proposal](/d/business/business-proposal)).
+> Slide 11 has no MetriQ price. Add it once the price is confirmed (see [Business proposal](/d/business/business-proposal)).
 
-Source: Thong Huynh.
+Slide 4 uses only the approved numbers from [Product one-liners](/d/marketing/product-messaging). Don't quote a catch-rate percentage: measure catch rate and false-reject rate on the customer's parts in a trial and record them in the FAT/SAT document.
+
+Source: Thong Huynh; `content/marketing/product-messaging.md`.
