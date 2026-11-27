@@ -5,7 +5,7 @@ tags: [metriq, pitch, deck, video, sales]
 owner: Thong Huynh
 featured: true
 order: 10
-updated: 2026-10-29
+updated: 2026-11-27
 ---
 
 ## Demo video
