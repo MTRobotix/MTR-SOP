@@ -1,6 +1,6 @@
 ---
 title: MetriQ pitch deck and demo video
-summary: The 16-slide MetriQ deck on the MTR template (English), the Vietnamese deck and the 2-minute demo video for customer meetings and outreach.
+summary: The 16-slide MetriQ deck on the MTR template and the demo video, each in English and Vietnamese, for customer meetings and outreach.
 tags: [metriq, pitch, deck, video, sales]
 owner: Thong Huynh
 featured: true
@@ -12,12 +12,13 @@ updated: 2026-11-27
 
 [MetriQ demo video](attachments/metriq-demo.mp4)
 
-1 min 48 s, 1920 × 1080, background music, no voice-over. It plays every slide with its animations, except slide 5: the video shows the capabilities on the photo of real parts only. Send it with outreach emails or play it before a live demo.
+1 min 39 s, 1920 × 1080, background music, no voice-over. It plays every slide of the 16-slide deck with its build steps and videos, except slide 6: the video shows the capabilities on the photo of real parts only. Send it with outreach emails or play it before a live demo.
 
-> [!TODO]
-> The video still shows the 14-slide deck from before 2026-11-27 (navy slides, old order, ">99.5%" and "<1 mm"). Re-record it from the 16-slide deck before sending it again. Owner: Thong Huynh.
+[MetriQ demo video, Vietnamese](attachments/metriq-demo-vi.mp4)
 
-Source: `content/general/attachments/metriq-demo.mp4`
+The same video made from the Vietnamese deck, for Vietnamese customers.
+
+Source: `content/general/attachments/metriq-demo.mp4`, `content/general/attachments/metriq-demo-vi.mp4`, rendered from the two decks on 2026-11-27.
 
 ## Slides
 
@@ -44,7 +45,7 @@ The PDF shows each slide as it ends after its animations. Download the [PowerPoi
 | 15    | Plug into any reject system — laser marking, pusher, robot pick, air jet (3D animations)                       |
 | 16    | Close — book a 30-minute demo                                                                                  |
 
-In the PDF, slides 5 and 6 show only the final pass/reject boxes; the PowerPoint builds every check step by step.
+In both PDFs, slides 5 and 6 show only the final pass/reject boxes; the PowerPoint builds every check step by step.
 
 Every slide uses the MTR slide template: warm white, Barlow fonts, halftone dots, logo files from the [Logo kit](/d/business/logo-kit). Rules: [Brand templates](/d/documents/brand-templates).
 
@@ -54,17 +55,13 @@ Source: `content/general/attachments/metriq-pitch-deck.pptx`
 
 [MetriQ pitch deck, Vietnamese](attachments/metriq-pitch-deck-vi.pdf)
 
-The 14-slide deck from before 2026-11-27, with every slide, speaker note, chart label and picture description in Vietnamese. Download the [PowerPoint version](attachments/metriq-pitch-deck-vi.pptx) to present; the steps under Present the deck use the English slide numbers.
+The same 16 slides, layout and animations as the English deck, with every slide, speaker note, chart label and picture description in Vietnamese. Download the [PowerPoint version](attachments/metriq-pitch-deck-vi.pptx) to present; the steps under Present the deck apply unchanged.
 
-> [!TODO]
-> The Vietnamese deck does not have the 2026-11-27 changes yet (MTR template, new slides 2, 14 and 15, new order, approved numbers on slide 4). Translate the new English deck before the next Vietnamese meeting. Owner: Thong Huynh.
-
-- Kept in English: the MetriQ app screenshots on slides 8 and 12 (the app is in English), product codes (M4×20, M3×6) and prices ($30k–150k).
-- Decimal commas in readings and figures (>99,5%, 20,1 mm, ΔE 1,2), as on the Vietnamese website.
-- The demo video stays in English.
+- Kept in English: the MetriQ app screenshots on slides 9 and 10 (the app is in English), product codes (M4×20, M3×6) and prices ($30k–150k).
+- Decimal commas in readings (20,1 mm, ΔE 1,2), as on the Vietnamese website.
 
 > [!NOTE]
-> Translated by Claude from the English deck on 2026-10-29. Read it through once before the first customer meeting.
+> Translated by Claude from the English deck on 2026-11-27, reusing the wording of the 2026-10-29 translation where the text did not change. Read it through once before the first customer meeting.
 
 Source: `content/general/attachments/metriq-pitch-deck-vi.pptx`, translated from `content/general/attachments/metriq-pitch-deck.pptx`; Vietnamese terms from `MTR-Site/src/data/content.ts`.
 
