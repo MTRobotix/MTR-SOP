@@ -1,0 +1,10 @@
+{
+  "name": "mtr-brand",
+  "version": "1.0.1",
+  "description": "MTR / MTROBOTIX brand rules and design system: names, logo, colour, type, layout, copy, approved facts, slide and Word templates, layout QA.",
+  "author": {
+    "name": "MTROBOTIX",
+    "email": "mtrobotix@gmail.com"
+  },
+  "homepage": "https://github.com/MTRobotix/MTR-SOP/tree/main/agent-plugin"
+}

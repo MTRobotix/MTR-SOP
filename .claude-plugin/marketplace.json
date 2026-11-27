@@ -1,0 +1,15 @@
+{
+  "name": "mtr-sop",
+  "owner": {
+    "name": "MTROBOTIX",
+    "email": "mtrobotix@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "mtr-brand",
+      "source": "./agent-plugin",
+      "description": "MTR brand rules and design system skills for any agent making MTR work.",
+      "version": "1.0.1"
+    }
+  ]
+}
