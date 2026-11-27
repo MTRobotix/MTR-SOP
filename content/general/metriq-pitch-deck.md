@@ -44,6 +44,8 @@ The PDF shows each slide as it ends after its animations. Download the [PowerPoi
 | 15    | Plug into any reject system — laser marking, pusher, robot pick, air jet (3D animations)                       |
 | 16    | Close — book a 30-minute demo                                                                                  |
 
+In the PDF, slides 5 and 6 show only the final pass/reject boxes; the PowerPoint builds every check step by step.
+
 Every slide uses the MTR slide template: warm white, Barlow fonts, halftone dots, logo files from the [Logo kit](/d/business/logo-kit). Rules: [Brand templates](/d/documents/brand-templates).
 
 Source: `content/general/attachments/metriq-pitch-deck.pptx`
