@@ -83,8 +83,7 @@ On performance, quote only the published numbers (≤ 2 mm, < 100 ms). Catch rat
 
 > [!TODO]
 > Slide 9's market ranges (integrator-built $30k–150k, AI vision platforms ≈ $16k–87k) have no source in the SOP, and the [Business proposal](/d/business/business-proposal) gives USD 50,000–150,000 plus install for mid-range systems. Confirm the source or correct the slide. Owner: Thong Huynh.
-
-> [!TODO]
+>
 > Slide 9 has no MetriQ price. Add it once the price is confirmed (see [Business proposal](/d/business/business-proposal)).
 
 Source: Thong Huynh.
